@@ -1,5 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using TPI_GESTION_HOGAR.Datos;
+
 var builder = WebApplication.CreateBuilder(args);
 
+//Cofiguramos cadena de concexión a la base de datos
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
