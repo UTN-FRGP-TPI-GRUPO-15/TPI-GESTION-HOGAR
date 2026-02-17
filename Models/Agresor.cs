@@ -1,6 +1,6 @@
 ﻿namespace TPI_GESTION_HOGAR.Models
 {
-    public class Mujer
+    public class Agresor
     {
         public required int ID { get; set; }
         public required int DNI { get; set; }
@@ -14,8 +14,10 @@
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
         public string? Locaclidad { get; set; }
-        public bool estado { get; set; }
 
-        public List<Hijo>? Hijos { get; set; }
+        //FK
+        public required int RegistroId { get; set; }
+        //RELACION
+        public required Registro Registro { get; set; }
     }
 }

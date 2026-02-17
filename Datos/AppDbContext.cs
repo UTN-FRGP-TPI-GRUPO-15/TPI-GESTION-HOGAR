@@ -9,7 +9,14 @@ namespace TPI_GESTION_HOGAR.Datos
         {
         }
         //DbSets
+        public DbSet<Agresor> Agresores { get; set; }
+        public DbSet<Denuncia> Denuncias { get; set; }
+        public DbSet<Egreso> Egresos { get; set; }
+        public DbSet<Habitacion> Habitaciones { get; set; }
         public DbSet<Hijo> Hijos { get; set; }
-        public DbSet<Mujer> mujeres { get; set; }
+        public DbSet<Medida> Medidas { get; set; }
+        public DbSet<Mujer> Mujeres { get; set; }
+        public DbSet<Observacion> Observaciones { get; set; }
+        public DbSet<Registro> Registros { get; set; }
     }
 }

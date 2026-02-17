@@ -9,8 +9,9 @@
         public required DateOnly FechaNac { get; set; }
 
         //FK
-        public required int IDMadre { get; set; }
+        public required int MujerId { get; set; }
 
+        //RELACION
         public required Mujer Mujer { get; set; }
     }
 }
