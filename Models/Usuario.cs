@@ -2,12 +2,12 @@
 {
     public class Usuario
     {
-        public required int Id { get; set; }
+        public int Id { get; set; }
         public required string NombreUsuario { get; set; }
         public required string Clave { get; set; }
 
         //FK
-        public required int PersonalId { get; set; }
+        public int PersonalId { get; set; }
         public required int RolId { get; set; }
 
         //Relaciones

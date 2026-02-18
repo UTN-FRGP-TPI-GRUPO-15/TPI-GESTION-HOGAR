@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
+using TPI_GESTION_HOGAR.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,28 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 
     //Acá se puede hacer seed de registros necesarios por defecto (por ejemplo roles de usuario, usuarios de prueba, mujeres de prueba, etc.)
+    if(db.Usuarios.FirstOrDefault(u => u.NombreUsuario == "admin") == null)
+    {
+        PasswordHasher<Usuario> hasher = new();
+
+        Personal personalAdmin = new Personal
+        {
+            Legajo = 0,
+            Apellido = "Apellido",
+            Nombre = "Nombre",
+            DNI = 0,
+            FechaNac = new DateOnly(2000, 1, 1),
+            estado = true,
+            Nacionalidad = "Nacionalidad"
+        };
+
+        db.Personal.Add(personalAdmin);
+
+        db.Usuarios.Add(
+            new Usuario { NombreUsuario = "admin", Clave = hasher.HashPassword(null!, "admin"), Personal = personalAdmin, RolId = 1}
+        );
+        db.SaveChanges();
+    }
 }
 
 // Configure the HTTP request pipeline.
