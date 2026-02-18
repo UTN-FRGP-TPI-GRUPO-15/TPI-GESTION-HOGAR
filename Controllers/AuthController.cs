@@ -25,17 +25,35 @@ namespace TPI_GESTION_HOGAR.Controllers
         [HttpPost]
         public IActionResult Login(string usuario, string password)
         {
-            var user = _context.Usuarios.FirstOrDefault(u => u.NombreUsuario == usuario && u.Clave == password);
-
-            if (user == null)
+            try
             {
-                ViewBag.Message = "Credenciales incorrectas";
+                var user = _context.Usuarios.FirstOrDefault(u => u.NombreUsuario == usuario);
+
+                if (user == null)
+                    return BadLogin();
+
+                var resultado = _hasher.VerifyHashedPassword(user, user.Clave, password);
+
+                if (resultado != PasswordVerificationResult.Success)
+                    return BadLogin();
+
+                ViewBag.Message = "Sesión iniciada correctamente";
+                ViewBag.IsError = false;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                //Para testing, si hay un error dejar que pase al front
+                ViewBag.Message = ex.Message;
                 ViewBag.IsError = true;
                 return View();
             }
+        }
 
-            ViewBag.Message = "Sesión iniciada correctamente";
-            ViewBag.IsError = false;
+        private IActionResult BadLogin()
+        {
+            ViewBag.Message = "Credenciales incorrectas";
+            ViewBag.IsError = true;
             return View();
         }
     }

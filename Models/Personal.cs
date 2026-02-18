@@ -2,7 +2,7 @@
 {
     public class Personal
     {
-        public required int ID { get; set; }
+        public int ID { get; set; }
         public required int Legajo { get; set; }
         public required string Apellido { get; set; }
         public required string Nombre { get; set; }
