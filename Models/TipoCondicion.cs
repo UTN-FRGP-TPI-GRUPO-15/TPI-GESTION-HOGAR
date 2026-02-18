@@ -4,6 +4,6 @@
     {
         public required int Id { get; set; }
         public required string Descripcion { get; set; }
-        public List<Condicion>? Condiciones { get; set; } = null;
+        public List<Condicion>? Condiciones { get; set; }
     }
 }

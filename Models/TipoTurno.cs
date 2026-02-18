@@ -5,6 +5,6 @@
         public required int Id { get; set; }
         public required string Descripcion { get; set; }
 
-        public List<Turno>? Turnos { get; set; }   = null;
+        public List<Turno>? Turnos { get; set; }
     }
 }
