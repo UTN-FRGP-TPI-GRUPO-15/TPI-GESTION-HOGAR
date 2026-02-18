@@ -12,6 +12,6 @@
         public required int MujerId { get; set; }
 
         //RELACION
-        public required Mujer Mujer { get; set; }
+        public   Mujer? Mujer { get; set; }
     }
 }

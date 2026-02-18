@@ -10,7 +10,7 @@
         //FK
         public required int RegistroId { get; set; }
         //RElacion
-        public required Registro Registro { get; set; }
-        public required List<Medida> Medida { get; set; }
+        public  Registro? Registro { get; set; }
+        public  List<Medida>? Medida { get; set; }
     }
 }

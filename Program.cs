@@ -3,7 +3,7 @@ using TPI_GESTION_HOGAR.Datos;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Cofiguramos cadena de concexiÛn a la base de datos
+//Cofiguramos cadena de concexi√≥n a la base de datos
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -11,6 +11,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+//Crear base si no existe y/o aplicar migraciones pendientes
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
 
 //Crear base si no existe y/o aplicar migraciones pendientes
 using (var scope = app.Services.CreateScope())
@@ -18,7 +23,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 
-    //Ac· se puede hacer seed de registros necesarios por defecto (por ejemplo roles de usuario, usuarios de prueba, mujeres de prueba, etc.)
+    //Ac√° se puede hacer seed de registros necesarios por defecto (por ejemplo roles de usuario, usuarios de prueba, mujeres de prueba, etc.)
 }
 
 // Configure the HTTP request pipeline.

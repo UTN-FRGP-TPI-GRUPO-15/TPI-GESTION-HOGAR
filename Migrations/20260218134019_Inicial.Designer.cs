@@ -12,8 +12,8 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260217112441_TablasRegistros")]
-    partial class TablasRegistros
+    [Migration("20260218134019_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace TPI_GESTION_HOGAR.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("PersonalTurno", b =>
+                {
+                    b.Property<int>("PersonalID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TurnoID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PersonalID", "TurnoID");
+
+                    b.HasIndex("TurnoID");
+
+                    b.ToTable("PersonalTurno");
+                });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
                 {
@@ -49,10 +64,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Genero")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdRegistro")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Locaclidad")
+                    b.Property<string>("Localidad")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nacionalidad")
@@ -82,6 +94,35 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.ToTable("Agresores");
                 });
 
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Condicion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("MujerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ObservacionCondicionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoCondicionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MujerId");
+
+                    b.HasIndex("ObservacionCondicionId");
+
+                    b.HasIndex("TipoCondicionId")
+                        .IsUnique();
+
+                    b.ToTable("Condiciones");
+                });
+
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Denuncia", b =>
                 {
                     b.Property<int>("ID")
@@ -92,9 +133,6 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
-
-                    b.Property<int>("IdRegistro")
-                        .HasColumnType("int");
 
                     b.Property<int?>("NroExp")
                         .HasColumnType("int");
@@ -132,19 +170,22 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
-                    b.Property<int>("Idregistro")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocaclidadRef")
+                    b.Property<string>("LocalidadRef")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreRef")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RegistroId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TelefonoRef")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("RegistroId")
+                        .IsUnique();
 
                     b.ToTable("Egresos");
                 });
@@ -162,9 +203,6 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
-
-                    b.Property<int>("IdRegistro")
-                        .HasColumnType("int");
 
                     b.Property<int>("NroHabitacion")
                         .HasColumnType("int");
@@ -192,10 +230,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<DateOnly>("FechaNac")
                         .HasColumnType("date");
 
-                    b.Property<int>("IDMadre")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MujerID")
+                    b.Property<int>("MujerId")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
@@ -204,7 +239,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("MujerID");
+                    b.HasIndex("MujerId");
 
                     b.ToTable("Hijos");
                 });
@@ -217,19 +252,16 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DenunciaID")
+                    b.Property<int>("DenunciaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdDenuncia")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("DenunciaID");
+                    b.HasIndex("DenunciaId");
 
                     b.ToTable("Medidas");
                 });
@@ -258,7 +290,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Genero")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Locaclidad")
+                    b.Property<string>("Localidad")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nacionalidad")
@@ -297,9 +329,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
-                    b.Property<int>("IdRegistro")
-                        .HasColumnType("int");
-
                     b.Property<int>("RegistroId")
                         .HasColumnType("int");
 
@@ -314,7 +343,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.ToTable("Observaciones");
                 });
 
-            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.ObservacionCondicion", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -322,8 +351,68 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("EgresoID")
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ObservacionCondiciones");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Personal", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DNI")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Domicilio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("FechaNac")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Legajo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Localidad")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nacionalidad")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("estado")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Personal");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
@@ -337,24 +426,143 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<int>("HabitacionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdHabitacion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdMujer")
-                        .HasColumnType("int");
-
                     b.Property<int>("MujerID")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EgresoID");
 
                     b.HasIndex("HabitacionId");
 
                     b.HasIndex("MujerID");
 
                     b.ToTable("Registros");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Rol", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoCondicion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipoCondiciones");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoTurno", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipoTurnos");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Turno", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<DateOnly>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Horas")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoTurnoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("TipoTurnoId")
+                        .IsUnique();
+
+                    b.ToTable("Turnos");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Usuario", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Clave")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NombreUsuario")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PersonalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PersonalId")
+                        .IsUnique();
+
+                    b.HasIndex("RolId")
+                        .IsUnique();
+
+                    b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("PersonalTurno", b =>
+                {
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Personal", null)
+                        .WithMany()
+                        .HasForeignKey("PersonalID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Turno", null)
+                        .WithMany()
+                        .HasForeignKey("TurnoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
@@ -368,6 +576,33 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Navigation("Registro");
                 });
 
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Condicion", b =>
+                {
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Mujer", "Mujer")
+                        .WithMany("Condiciones")
+                        .HasForeignKey("MujerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TPI_GESTION_HOGAR.Models.ObservacionCondicion", "ObservacionCondicion")
+                        .WithMany("Condicion")
+                        .HasForeignKey("ObservacionCondicionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TPI_GESTION_HOGAR.Models.TipoCondicion", "TipoCondicion")
+                        .WithOne("Condicion")
+                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Condicion", "TipoCondicionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mujer");
+
+                    b.Navigation("ObservacionCondicion");
+
+                    b.Navigation("TipoCondicion");
+                });
+
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Denuncia", b =>
                 {
                     b.HasOne("TPI_GESTION_HOGAR.Models.Registro", "Registro")
@@ -379,11 +614,22 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Navigation("Registro");
                 });
 
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Egreso", b =>
+                {
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Registro", "Registro")
+                        .WithOne("Egreso")
+                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Egreso", "RegistroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Registro");
+                });
+
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Hijo", b =>
                 {
                     b.HasOne("TPI_GESTION_HOGAR.Models.Mujer", "Mujer")
                         .WithMany("Hijos")
-                        .HasForeignKey("MujerID")
+                        .HasForeignKey("MujerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -394,7 +640,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                 {
                     b.HasOne("TPI_GESTION_HOGAR.Models.Denuncia", "Denuncia")
                         .WithMany("Medida")
-                        .HasForeignKey("DenunciaID")
+                        .HasForeignKey("DenunciaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -414,10 +660,6 @@ namespace TPI_GESTION_HOGAR.Migrations
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>
                 {
-                    b.HasOne("TPI_GESTION_HOGAR.Models.Egreso", "Egreso")
-                        .WithMany()
-                        .HasForeignKey("EgresoID");
-
                     b.HasOne("TPI_GESTION_HOGAR.Models.Habitacion", "Habitacion")
                         .WithMany("Registros")
                         .HasForeignKey("HabitacionId")
@@ -430,11 +672,39 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Egreso");
-
                     b.Navigation("Habitacion");
 
                     b.Navigation("Mujer");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Turno", b =>
+                {
+                    b.HasOne("TPI_GESTION_HOGAR.Models.TipoTurno", "TipoTurno")
+                        .WithOne("Turno")
+                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Turno", "TipoTurnoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TipoTurno");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Usuario", b =>
+                {
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Personal", "Personal")
+                        .WithOne("Usuario")
+                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Usuario", "PersonalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Rol", "Rol")
+                        .WithOne("Usuario")
+                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Usuario", "RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Personal");
+
+                    b.Navigation("Rol");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Denuncia", b =>
@@ -449,7 +719,19 @@ namespace TPI_GESTION_HOGAR.Migrations
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Mujer", b =>
                 {
+                    b.Navigation("Condiciones");
+
                     b.Navigation("Hijos");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.ObservacionCondicion", b =>
+                {
+                    b.Navigation("Condicion");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Personal", b =>
+                {
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>
@@ -458,7 +740,24 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.Navigation("Denuncias");
 
+                    b.Navigation("Egreso");
+
                     b.Navigation("Observaciones");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Rol", b =>
+                {
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoCondicion", b =>
+                {
+                    b.Navigation("Condicion");
+                });
+
+            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoTurno", b =>
+                {
+                    b.Navigation("Turno");
                 });
 #pragma warning restore 612, 618
         }
