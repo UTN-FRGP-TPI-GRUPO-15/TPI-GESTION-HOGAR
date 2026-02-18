@@ -9,9 +9,9 @@
         public  required int TipoCondicionId { get; set; }
         public  required int ObservacionCondicionId { get; set; }
         //Relaciones
-        public required Mujer Mujer { get; set; }
-        public required TipoCondicion TipoCondicion { get; set; }
-        public required ObservacionCondicion ObservacionCondicion { get; set; }
+        public  Mujer? Mujer { get; set; }
+        public  TipoCondicion? TipoCondicion { get; set; }
+        public  ObservacionCondicion? ObservacionCondicion { get; set; }
 
 
     }

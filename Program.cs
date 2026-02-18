@@ -10,7 +10,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+//Crear base si no existe y/o aplicar migraciones pendientes
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
 
+    //Acá se puede hacer seed de registros necesarios por defecto (por ejemplo roles de usuario, usuarios de prueba, mujeres de prueba, etc.)
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

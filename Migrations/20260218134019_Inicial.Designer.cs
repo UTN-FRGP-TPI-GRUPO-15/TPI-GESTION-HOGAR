@@ -12,7 +12,7 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260218124623_Inicial")]
+    [Migration("20260218134019_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -24,6 +24,21 @@ namespace TPI_GESTION_HOGAR.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("PersonalTurno", b =>
+                {
+                    b.Property<int>("PersonalID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TurnoID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PersonalID", "TurnoID");
+
+                    b.HasIndex("TurnoID");
+
+                    b.ToTable("PersonalTurno");
+                });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
                 {
@@ -49,7 +64,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Genero")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Locaclidad")
+                    b.Property<string>("Localidad")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nacionalidad")
@@ -155,7 +170,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
-                    b.Property<string>("LocaclidadRef")
+                    b.Property<string>("LocalidadRef")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NombreRef")
@@ -190,9 +205,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int>("NroHabitacion")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RegistroId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -278,7 +290,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Genero")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Locaclidad")
+                    b.Property<string>("Localidad")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nacionalidad")
@@ -372,7 +384,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<int>("Legajo")
                         .HasColumnType("int");
 
-                    b.Property<string>("Locaclidad")
+                    b.Property<string>("Localidad")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nacionalidad")
@@ -386,15 +398,10 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Telefono")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TurnoID")
-                        .HasColumnType("int");
-
                     b.Property<bool>("estado")
                         .HasColumnType("bit");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("TurnoID");
 
                     b.ToTable("Personal");
                 });
@@ -543,6 +550,21 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("PersonalTurno", b =>
+                {
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Personal", null)
+                        .WithMany()
+                        .HasForeignKey("PersonalID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Turno", null)
+                        .WithMany()
+                        .HasForeignKey("TurnoID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
                 {
                     b.HasOne("TPI_GESTION_HOGAR.Models.Registro", "Registro")
@@ -634,15 +656,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired();
 
                     b.Navigation("Registro");
-                });
-
-            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Personal", b =>
-                {
-                    b.HasOne("TPI_GESTION_HOGAR.Models.Turno", "Turno")
-                        .WithMany("Personal")
-                        .HasForeignKey("TurnoID");
-
-                    b.Navigation("Turno");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>
@@ -745,11 +758,6 @@ namespace TPI_GESTION_HOGAR.Migrations
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoTurno", b =>
                 {
                     b.Navigation("Turno");
-                });
-
-            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Turno", b =>
-                {
-                    b.Navigation("Personal");
                 });
 #pragma warning restore 612, 618
         }

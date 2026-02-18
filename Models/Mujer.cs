@@ -13,7 +13,7 @@
         public string? Ocupacion { get; set; }
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
-        public string? Locaclidad { get; set; }
+        public string? Localidad { get; set; }
         public bool estado { get; set; }
 
         public List<Hijo>? Hijos { get; set; }

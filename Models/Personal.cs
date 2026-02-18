@@ -11,11 +11,11 @@
         public required DateOnly FechaNac { get; set; }
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
-        public string? Locaclidad { get; set; }
+        public string? Localidad { get; set; }
         public bool estado { get; set; }
 
         public Usuario? Usuario { get; set; }
 
-        public Turno? Turno { get; set; }
+        public List<Turno>? Turno { get; set; }
     }
 }

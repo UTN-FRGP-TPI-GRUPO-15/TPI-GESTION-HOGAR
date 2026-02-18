@@ -19,8 +19,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NroHabitacion = table.Column<int>(type: "int", nullable: false),
                     Capacidad = table.Column<int>(type: "int", nullable: true),
-                    Estado = table.Column<bool>(type: "bit", nullable: false),
-                    RegistroId = table.Column<int>(type: "int", nullable: false)
+                    Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +42,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     Ocupacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Domicilio = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Locaclidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Localidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -62,6 +61,28 @@ namespace TPI_GESTION_HOGAR.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ObservacionCondiciones", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Personal",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Legajo = table.Column<int>(type: "int", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DNI = table.Column<int>(type: "int", nullable: false),
+                    Nacionalidad = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaNac = table.Column<DateOnly>(type: "date", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Domicilio = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Localidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    estado = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Personal", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +177,34 @@ namespace TPI_GESTION_HOGAR.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Usuarios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PersonalId = table.Column<int>(type: "int", nullable: false),
+                    RolId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Personal_PersonalId",
+                        column: x => x.PersonalId,
+                        principalTable: "Personal",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Usuarios_Roles_RolId",
+                        column: x => x.RolId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Condiciones",
                 columns: table => new
                 {
@@ -226,7 +275,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     Ocupacion = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Domicilio = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Locaclidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Localidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistroId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -274,7 +323,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     DNIRef = table.Column<int>(type: "int", nullable: true),
                     TelefonoRef = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DomicilioRef = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LocaclidadRef = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocalidadRef = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegistroId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -310,31 +359,27 @@ namespace TPI_GESTION_HOGAR.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Personal",
+                name: "PersonalTurno",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Legajo = table.Column<int>(type: "int", nullable: false),
-                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DNI = table.Column<int>(type: "int", nullable: false),
-                    Nacionalidad = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaNac = table.Column<DateOnly>(type: "date", nullable: false),
-                    Telefono = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Domicilio = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Locaclidad = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    estado = table.Column<bool>(type: "bit", nullable: false),
-                    TurnoID = table.Column<int>(type: "int", nullable: true)
+                    PersonalID = table.Column<int>(type: "int", nullable: false),
+                    TurnoID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Personal", x => x.ID);
+                    table.PrimaryKey("PK_PersonalTurno", x => new { x.PersonalID, x.TurnoID });
                     table.ForeignKey(
-                        name: "FK_Personal_Turnos_TurnoID",
+                        name: "FK_PersonalTurno_Personal_PersonalID",
+                        column: x => x.PersonalID,
+                        principalTable: "Personal",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PersonalTurno_Turnos_TurnoID",
                         column: x => x.TurnoID,
                         principalTable: "Turnos",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -354,34 +399,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                         column: x => x.DenunciaId,
                         principalTable: "Denuncias",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Usuarios",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NombreUsuario = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Clave = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PersonalId = table.Column<int>(type: "int", nullable: false),
-                    RolId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Usuarios", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Usuarios_Personal_PersonalId",
-                        column: x => x.PersonalId,
-                        principalTable: "Personal",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Usuarios_Roles_RolId",
-                        column: x => x.RolId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -433,8 +450,8 @@ namespace TPI_GESTION_HOGAR.Migrations
                 column: "RegistroId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Personal_TurnoID",
-                table: "Personal",
+                name: "IX_PersonalTurno_TurnoID",
+                table: "PersonalTurno",
                 column: "TurnoID");
 
             migrationBuilder.CreateIndex(
@@ -488,6 +505,9 @@ namespace TPI_GESTION_HOGAR.Migrations
                 name: "Observaciones");
 
             migrationBuilder.DropTable(
+                name: "PersonalTurno");
+
+            migrationBuilder.DropTable(
                 name: "Usuarios");
 
             migrationBuilder.DropTable(
@@ -500,6 +520,9 @@ namespace TPI_GESTION_HOGAR.Migrations
                 name: "Denuncias");
 
             migrationBuilder.DropTable(
+                name: "Turnos");
+
+            migrationBuilder.DropTable(
                 name: "Personal");
 
             migrationBuilder.DropTable(
@@ -509,16 +532,13 @@ namespace TPI_GESTION_HOGAR.Migrations
                 name: "Registros");
 
             migrationBuilder.DropTable(
-                name: "Turnos");
+                name: "TipoTurnos");
 
             migrationBuilder.DropTable(
                 name: "Habitaciones");
 
             migrationBuilder.DropTable(
                 name: "Mujeres");
-
-            migrationBuilder.DropTable(
-                name: "TipoTurnos");
         }
     }
 }

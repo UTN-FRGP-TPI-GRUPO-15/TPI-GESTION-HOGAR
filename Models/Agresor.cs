@@ -13,11 +13,11 @@
         public string? Ocupacion { get; set; }
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
-        public string? Locaclidad { get; set; }
+        public string? Localidad { get; set; }
 
         //FK
         public required int RegistroId { get; set; }
         //RELACION
-        public required Registro Registro { get; set; }
+        public  Registro? Registro { get; set; }
     }
 }

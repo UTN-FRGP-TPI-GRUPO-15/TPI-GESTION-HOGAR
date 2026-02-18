@@ -11,7 +11,7 @@
         public required int RolId { get; set; }
 
         //Relaciones
-        public required Personal Personal { get; set; }
-        public required Rol Rol { get; set; }
+        public Personal? Personal { get; set; }
+        public Rol? Rol { get; set; }
     }
 }

@@ -11,7 +11,7 @@
         public required int  PersonalId { get; set; }
 
         //Relaciones
-        public required TipoTurno TipoTurno { get; set; }
+        public TipoTurno? TipoTurno { get; set; }
         public List<Personal>? Personal { get; set; }
     }
 }

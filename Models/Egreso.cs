@@ -9,14 +9,14 @@
         public  int? DNIRef { get; set; }
         public string? TelefonoRef { get; set; }
         public string? DomicilioRef { get; set; }
-        public string? LocaclidadRef { get; set; }
+        public string? LocalidadRef { get; set; }
 
 
         //FK
         public required int RegistroId { get; set; }
         
         //Relacion
-        public required Registro Registro { get; set; }
+        public  Registro? Registro { get; set; }
 
     }
 }

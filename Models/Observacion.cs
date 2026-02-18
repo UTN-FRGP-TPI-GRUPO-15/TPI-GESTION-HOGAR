@@ -9,6 +9,6 @@
         //FK
         public required int RegistroId { get; set; }
         //RELACIOM
-        public required Registro Registro { get; set; }
+        public Registro? Registro { get; set; }
     }   
 }

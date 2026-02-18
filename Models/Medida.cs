@@ -8,6 +8,6 @@
         //FK
         public required int DenunciaId  { get; set; }
         //RELACION
-        public required Denuncia Denuncia { get; set; }
+        public Denuncia? Denuncia { get; set; }
     }
 }
