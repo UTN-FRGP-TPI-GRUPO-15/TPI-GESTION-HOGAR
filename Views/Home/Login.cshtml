@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<form method="post">
+    <input name="usuario" />
+    <input name="password" type="password" />
+    <button type="submit">Ingresar</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div style="color:@(ViewBag.IsError ? "red" : "green")">
+        @ViewBag.Message
+    </div>
+}
+
