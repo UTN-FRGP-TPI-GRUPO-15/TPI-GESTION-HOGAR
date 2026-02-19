@@ -4,7 +4,6 @@
     {
         public required int Id { get; set; }
         public required DateOnly Fecha { get; set; }
-        public DateOnly? FechaEgreso { get; set; }
         public bool Estado { get; set; }
 
         //FK

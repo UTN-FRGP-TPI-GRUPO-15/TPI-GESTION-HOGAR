@@ -132,8 +132,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("ObservacionCondicionId");
 
-                    b.HasIndex("TipoCondicionId")
-                        .IsUnique();
+                    b.HasIndex("TipoCondicionId");
 
                     b.ToTable("Condiciones");
 
@@ -560,9 +559,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("FechaEgreso")
-                        .HasColumnType("date");
-
                     b.Property<int>("HabitacionId")
                         .HasColumnType("int");
 
@@ -722,8 +718,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("TipoTurnoId")
-                        .IsUnique();
+                    b.HasIndex("TipoTurnoId");
 
                     b.ToTable("Turnos");
                 });
@@ -755,8 +750,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("PersonalId")
                         .IsUnique();
 
-                    b.HasIndex("RolId")
-                        .IsUnique();
+                    b.HasIndex("RolId");
 
                     b.ToTable("Usuarios");
 
@@ -812,8 +806,8 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired();
 
                     b.HasOne("TPI_GESTION_HOGAR.Models.TipoCondicion", "TipoCondicion")
-                        .WithOne("Condicion")
-                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Condicion", "TipoCondicionId")
+                        .WithMany("Condiciones")
+                        .HasForeignKey("TipoCondicionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -901,8 +895,8 @@ namespace TPI_GESTION_HOGAR.Migrations
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Turno", b =>
                 {
                     b.HasOne("TPI_GESTION_HOGAR.Models.TipoTurno", "TipoTurno")
-                        .WithOne("Turno")
-                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Turno", "TipoTurnoId")
+                        .WithMany("Turnos")
+                        .HasForeignKey("TipoTurnoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -918,8 +912,8 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired();
 
                     b.HasOne("TPI_GESTION_HOGAR.Models.Rol", "Rol")
-                        .WithOne("Usuario")
-                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Usuario", "RolId")
+                        .WithMany("Usuarios")
+                        .HasForeignKey("RolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -968,17 +962,17 @@ namespace TPI_GESTION_HOGAR.Migrations
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Rol", b =>
                 {
-                    b.Navigation("Usuario");
+                    b.Navigation("Usuarios");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoCondicion", b =>
                 {
-                    b.Navigation("Condicion");
+                    b.Navigation("Condiciones");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoTurno", b =>
                 {
-                    b.Navigation("Turno");
+                    b.Navigation("Turnos");
                 });
 #pragma warning restore 612, 618
         }

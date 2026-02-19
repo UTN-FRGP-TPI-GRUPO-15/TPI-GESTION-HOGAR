@@ -157,7 +157,6 @@ namespace TPI_GESTION_HOGAR.Datos
                 {
                     Id = 1,
                     Fecha = new DateOnly(2026, 2, 10),
-                    FechaEgreso = null,
                     Estado = true,
                     MujerID = 1,
                     HabitacionId = 1

@@ -6,6 +6,6 @@
         public required string Descripcion { get; set; }
 
 
-        public Usuario? Usuario { get; set; }
+        public List<Usuario>? Usuarios { get; set; }
     }
 }

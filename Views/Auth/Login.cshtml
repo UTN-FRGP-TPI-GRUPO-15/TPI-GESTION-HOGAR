@@ -6,9 +6,16 @@
 <h1>Login</h1>
 
 <form method="post">
-    <input name="usuario" />
-    <input name="password" type="password" />
+    <div>
+        <input name="usuario" placeholder="Usuario"/>
+    </div>
+    
+    <div>
+        <input name="password" type="password" placeholder="Contraseña"/>
+    </div>
+       
     <button type="submit">Ingresar</button>
+
 </form>
 
 @if (ViewBag.Message != null)
