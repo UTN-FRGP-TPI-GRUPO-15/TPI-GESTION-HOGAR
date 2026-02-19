@@ -1,11 +1,20 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.Models;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly AppDbContext _context;
+
+        public HomeController(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             return View();
