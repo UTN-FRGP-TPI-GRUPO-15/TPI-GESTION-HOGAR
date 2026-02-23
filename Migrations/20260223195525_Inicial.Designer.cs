@@ -12,7 +12,7 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260218134019_Inicial")]
+    [Migration("20260223195525_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -92,6 +92,24 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("RegistroId");
 
                     b.ToTable("Agresores");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Apellido = "Pérez",
+                            DNI = 29888777,
+                            Domicilio = "Av. San Martín 456",
+                            FechaNac = new DateOnly(1982, 8, 5),
+                            Genero = "Masculino",
+                            Localidad = "Mar de Ajó",
+                            Nacionalidad = "Argentina",
+                            NivelEducativo = "Primario",
+                            Nombre = "Carlos",
+                            Ocupacion = "Albañil",
+                            RegistroId = 1,
+                            Telefono = "2246-998877"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Condicion", b =>
@@ -117,10 +135,18 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("ObservacionCondicionId");
 
-                    b.HasIndex("TipoCondicionId")
-                        .IsUnique();
+                    b.HasIndex("TipoCondicionId");
 
                     b.ToTable("Condiciones");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MujerId = 1,
+                            ObservacionCondicionId = 1,
+                            TipoCondicionId = 1
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Denuncia", b =>
@@ -148,6 +174,16 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("RegistroId");
 
                     b.ToTable("Denuncias");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Fecha = new DateOnly(2026, 2, 9),
+                            NroExp = 67890,
+                            NroIPP = 12345,
+                            RegistroId = 1
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Egreso", b =>
@@ -210,6 +246,36 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Habitaciones");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Capacidad = 4,
+                            Estado = true,
+                            NroHabitacion = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Capacidad = 5,
+                            Estado = true,
+                            NroHabitacion = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Capacidad = 6,
+                            Estado = true,
+                            NroHabitacion = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Capacidad = 2,
+                            Estado = true,
+                            NroHabitacion = 4
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Hijo", b =>
@@ -242,6 +308,17 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("MujerId");
 
                     b.ToTable("Hijos");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Apellido = "Pérez López",
+                            DNI = 50333444,
+                            FechaNac = new DateOnly(2015, 3, 15),
+                            MujerId = 1,
+                            Nombre = "Mateo"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Medida", b =>
@@ -264,6 +341,20 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("DenunciaId");
 
                     b.ToTable("Medidas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DenunciaId = 1,
+                            Descripcion = "Perimetral 300 metros"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DenunciaId = 1,
+                            Descripcion = "Entrega de botón antipánico"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Mujer", b =>
@@ -316,6 +407,24 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Mujeres");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Apellido = "López",
+                            DNI = 30111222,
+                            Domicilio = "Av. San Martín 456",
+                            FechaNac = new DateOnly(1985, 10, 20),
+                            Genero = "Femenino",
+                            Localidad = "Mar de Ajó",
+                            Nacionalidad = "Argentina",
+                            NivelEducativo = "Secundario Completo",
+                            Nombre = "María",
+                            Ocupacion = "Empleada de Comercio",
+                            Telefono = "2246-554433",
+                            estado = true
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Observacion", b =>
@@ -358,6 +467,23 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ObservacionCondiciones");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "En Tratamiento Médico"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "Sin Tratamiento Actual"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "Requiere Atención/Derivación"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Personal", b =>
@@ -404,6 +530,22 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Personal");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Apellido = "García",
+                            DNI = 25123456,
+                            Domicilio = "Calle 4 Nro 123",
+                            FechaNac = new DateOnly(1980, 5, 12),
+                            Legajo = 1001,
+                            Localidad = "San Clemente del Tuyú",
+                            Nacionalidad = "Argentina",
+                            Nombre = "Laura",
+                            Telefono = "2246-112233",
+                            estado = true
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>
@@ -420,9 +562,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
-                    b.Property<DateOnly?>("FechaEgreso")
-                        .HasColumnType("date");
-
                     b.Property<int>("HabitacionId")
                         .HasColumnType("int");
 
@@ -436,6 +575,16 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("MujerID");
 
                     b.ToTable("Registros");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Estado = true,
+                            Fecha = new DateOnly(2026, 2, 10),
+                            HabitacionId = 1,
+                            MujerID = 1
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Rol", b =>
@@ -453,6 +602,23 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "Administradora"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "Equipo Técnico"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "Operadora"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoCondicion", b =>
@@ -470,6 +636,33 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TipoCondiciones");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "Enfermedad Crónica"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "Discapacidad Física"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "Discapacidad Intelectual/Mental"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Descripcion = "Adicción (Consumo Problemático)"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Descripcion = "Otra Condición Médica"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoTurno", b =>
@@ -487,6 +680,23 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TipoTurnos");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Descripcion = "Mañana (08:00 a 14:00)"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Descripcion = "Tarde (14:00 a 20:00)"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Descripcion = "Noche (20:00 a 08:00)"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Turno", b =>
@@ -511,8 +721,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("TipoTurnoId")
-                        .IsUnique();
+                    b.HasIndex("TipoTurnoId");
 
                     b.ToTable("Turnos");
                 });
@@ -544,10 +753,19 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("PersonalId")
                         .IsUnique();
 
-                    b.HasIndex("RolId")
-                        .IsUnique();
+                    b.HasIndex("RolId");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Clave = "123456",
+                            NombreUsuario = "lgarcia",
+                            PersonalId = 1,
+                            RolId = 2
+                        });
                 });
 
             modelBuilder.Entity("PersonalTurno", b =>
@@ -591,8 +809,8 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired();
 
                     b.HasOne("TPI_GESTION_HOGAR.Models.TipoCondicion", "TipoCondicion")
-                        .WithOne("Condicion")
-                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Condicion", "TipoCondicionId")
+                        .WithMany("Condiciones")
+                        .HasForeignKey("TipoCondicionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -680,8 +898,8 @@ namespace TPI_GESTION_HOGAR.Migrations
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Turno", b =>
                 {
                     b.HasOne("TPI_GESTION_HOGAR.Models.TipoTurno", "TipoTurno")
-                        .WithOne("Turno")
-                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Turno", "TipoTurnoId")
+                        .WithMany("Turnos")
+                        .HasForeignKey("TipoTurnoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -697,8 +915,8 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired();
 
                     b.HasOne("TPI_GESTION_HOGAR.Models.Rol", "Rol")
-                        .WithOne("Usuario")
-                        .HasForeignKey("TPI_GESTION_HOGAR.Models.Usuario", "RolId")
+                        .WithMany("Usuarios")
+                        .HasForeignKey("RolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -747,17 +965,17 @@ namespace TPI_GESTION_HOGAR.Migrations
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Rol", b =>
                 {
-                    b.Navigation("Usuario");
+                    b.Navigation("Usuarios");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoCondicion", b =>
                 {
-                    b.Navigation("Condicion");
+                    b.Navigation("Condiciones");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.TipoTurno", b =>
                 {
-                    b.Navigation("Turno");
+                    b.Navigation("Turnos");
                 });
 #pragma warning restore 612, 618
         }
