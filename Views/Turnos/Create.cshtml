@@ -1,0 +1,32 @@
+﻿@model TPI_GESTION_HOGAR.Models.Turno
+
+<h2>Crear Turno</h2>
+
+<form asp-action="Create" method="POST">
+	<div>
+		<label>Fecha</label>
+		<input asp-for="Fecha" type="date">
+	</div>
+	<div>
+		<label>Horario</label>
+	@* 	<select asp-for="TipoTurnoId" asp-items="ViewBag.TipoTurnos">
+			<option value="">Seleccione un horario</option>
+			@foreach (var tipoTurno in ViewBag.TipoTurnos)
+			{
+				<option value="@tipoTurno.Id">@tipoTurno.Descripcion</option>
+			}
+		</select> *@
+	</div>
+	<div>
+		<label>Personal</label>
+	@* 	<select asp-for="PersonalId" asp-items="ViewBag.Personal">
+			<option value="">Seleccione al Personal</option>
+			@foreach (var personal in ViewBag.Personal)
+			{
+				<option value="@personal.Id">@personal.Nombre @personal.Apellido</option>
+			}
+		</select> *@
+	</div>
+	<button type="submit">Guardar</button>
+	<a class="btn" href="/Turnos/Index">Volver</a>
+</form>

@@ -1,0 +1,49 @@
+﻿@using TPI_GESTION_HOGAR.Models
+@using static System.Runtime.InteropServices.JavaScript.JSType
+@model IEnumerable<Turno>
+
+<h2>Turnos</h2>
+
+<a class="btn" href="/Turnos/Create">Crear Turno</a>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				<label>ID</label>
+			</th>
+			<th>
+				<label>Fecha</label>
+			</th>
+			<th>
+				<label>Horario</label>
+			</th>
+			<th>
+				<label>Personal</label>
+			</th>			
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var turno in Model)
+		{
+
+			if (turno.Fecha.ToDateTime(TimeOnly.MaxValue) >= DateTime.Now)
+			{
+				<tr>
+					<td>
+						<label>@turno.ID</label>
+					</td>
+					<td>
+						<label>@turno.Fecha</label>
+					</td>
+					<td>
+						<label>@turno.TipoTurno.Descripcion</label>
+					</td>
+					<td>
+						<label>@turno.Personal.Nombre @turno.Personal.Apellido</label>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>
