@@ -3,8 +3,7 @@
     public class Turno
     {
         public required int ID { get; set; }
-        public required DateOnly Fecha { get; set; }       
-        public required int Horas { get; set; }
+        public required DateOnly Fecha { get; set; }     
         
         //FK
         public required int TipoTurnoId { get; set; }
@@ -12,6 +11,6 @@
 
         //Relaciones
         public TipoTurno? TipoTurno { get; set; }
-        public List<Personal>? Personal { get; set; }
+        public Personal? Personal { get; set; }
     }
 }
