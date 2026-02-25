@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.DTOs;
+using TPI_GESTION_HOGAR.Models;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
@@ -11,6 +13,7 @@ namespace TPI_GESTION_HOGAR.Controllers
     public class PersonalController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly PasswordHasher<Usuario> _hasher = new();
 
         public PersonalController(AppDbContext context)
         {
@@ -79,9 +82,35 @@ namespace TPI_GESTION_HOGAR.Controllers
                 }
 
 
-                //registrar personal
+                // Registrar Personal
+                var personal = new Personal
+                {
+                    Legajo = dto.Legajo,
+                    Apellido = dto.Apellido,
+                    Nombre = dto.Nombre,
+                    DNI = dto.DNI,
+                    Nacionalidad = dto.Nacionalidad,
+                    FechaNac = dto.FechaNac!.Value,
+                    Telefono = dto.Telefono,
+                    Domicilio = dto.Domicilio,
+                    Localidad = dto.Localidad,
+                    Activo = true
+                };
 
-                //registrar usuario
+                _context.Personal.Add(personal);
+
+                // Registrar Usuario
+                var usuario = new Usuario
+                {
+                    NombreUsuario = dto.NombreUsuario,
+                    Clave = _hasher.HashPassword(null!, dto.ClavePlana),
+                    Email = dto.Email,
+                    RolId = dto.RolId,
+                    Personal = personal
+                };
+
+                _context.Usuarios.Add(usuario);
+                await _context.SaveChangesAsync();
 
                 ViewBag.Message = "Nuevo personal registrado con éxito.";
                 ViewBag.IsError = false;
