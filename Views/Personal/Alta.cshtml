@@ -16,7 +16,7 @@
         <input name="Nombre" type="text" placeholder="Nombre" required />
     </div>
     <div>
-        <input name="DNI" type="text" placeholder="DNI" required />
+        <input name="DNI" type="text" placeholder="DNI" required pattern="\d+" />
     </div>
     <div>
         <input name="Nacionalidad" type="text" placeholder="Nacionalidad" required />
@@ -45,7 +45,13 @@
         <input name="ClavePlana" type="password" placeholder="Contraseña" required />
     </div>
     <div>
-        <input name="RolId" type="number" placeholder="RolId" required />
+        <select name="RolId" required>
+            <option value="">--Seleccione un rol--</option>
+            @foreach (var rol in ViewBag.Roles)
+                {
+                    <option value="@rol.Value">@rol.Text</option>
+                }
+            </select>
     </div>
 
     <button type="submit">Crear Personal</button>
