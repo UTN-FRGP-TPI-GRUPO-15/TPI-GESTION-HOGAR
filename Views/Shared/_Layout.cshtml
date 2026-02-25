@@ -26,9 +26,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
-                        </li>
+
+                        @if (User.IsInRole("Administradora"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Personal" asp-action="Alta">Alta de Personal</a>
+                            </li>
+                        }
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form asp-controller="Auth" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        Cerrar Sesión
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-primary" asp-area="" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
