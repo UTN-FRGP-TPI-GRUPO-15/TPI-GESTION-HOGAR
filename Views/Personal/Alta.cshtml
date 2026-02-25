@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Nuevo Personal";
+}
+
+<h1>Nuevo Personal</h1>
+
+<form method="post">
+    <h3>Datos de Personal</h3>
+    <div>
+        <input name="Legajo" type="number" placeholder="Legajo" required />
+    </div>
+    <div>
+        <input name="Apellido" type="text" placeholder="Apellido" required />
+    </div>
+    <div>
+        <input name="Nombre" type="text" placeholder="Nombre" required />
+    </div>
+    <div>
+        <input name="DNI" type="text" placeholder="DNI" required />
+    </div>
+    <div>
+        <input name="Nacionalidad" type="text" placeholder="Nacionalidad" required />
+    </div>
+    <div>
+        <input name="FechaNac" type="date" placeholder="Fecha de Nacimiento" required />
+    </div>
+    <div>
+        <input name="Telefono" type="text" placeholder="Teléfono" />
+    </div>
+    <div>
+        <input name="Domicilio" type="text" placeholder="Domicilio" />
+    </div>
+    <div>
+        <input name="Localidad" type="text" placeholder="Localidad" />
+    </div>
+
+    <h3>Datos de Usuario</h3>
+    <div>
+        <input name="NombreUsuario" type="text" placeholder="Nombre de Usuario" required />
+    </div>
+    <div>
+        <input name="Email" type="email" placeholder="Email" required />
+    </div>
+    <div>
+        <input name="ClavePlana" type="password" placeholder="Contraseña" required />
+    </div>
+    <div>
+        <input name="RolId" type="number" placeholder="RolId" required />
+    </div>
+
+    <button type="submit">Crear Personal</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div style="color:@(ViewBag.IsError ? "red" : "green")">
+        @ViewBag.Message
+    </div>
+}

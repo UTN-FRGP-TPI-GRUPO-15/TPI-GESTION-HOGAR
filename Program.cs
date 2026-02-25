@@ -41,16 +41,16 @@ using (var scope = app.Services.CreateScope())
             Legajo = 0,
             Apellido = "Apellido",
             Nombre = "Nombre",
-            DNI = 0,
+            DNI = "",
             FechaNac = new DateOnly(2000, 1, 1),
-            estado = true,
+            Activo = true,
             Nacionalidad = "Nacionalidad"
         };
 
         db.Personal.Add(personalAdmin);
 
         db.Usuarios.Add(
-            new Usuario { NombreUsuario = "admin", Clave = hasher.HashPassword(null!, "admin"), Personal = personalAdmin, RolId = 1}
+            new Usuario { NombreUsuario = "admin", Email = "admin@admin.com", Clave = hasher.HashPassword(null!, "admin"), Personal = personalAdmin, RolId = 1}
         );
         db.SaveChanges();
     }
