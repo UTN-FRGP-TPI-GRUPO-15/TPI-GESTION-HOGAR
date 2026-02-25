@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Verificar DNI";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-search"></i> Paso 1: Verificar DNI</h4>
+            </div>
+            <div class="card-body p-4">
+                <p class="text-muted">Ingrese el DNI para verificar si la residente ya tiene un perfil en el Hogar.</p>
+                <form asp-action="VerificarDni" method="post">
+                    <div class="mb-4">
+                        <label for="dniBuscado" class="form-label fw-bold">Número de Documento</label>
+
+                        <input type="number" class="form-control form-control-lg" id="dniBuscado" name="dniBuscado"
+                               
+                               placeholder="Ej: 35123456">
+
+                        @Html.ValidationMessage("dniBuscado", "", new { @class = "text-danger fw-bold mt-2 d-block" })
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Continuar</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

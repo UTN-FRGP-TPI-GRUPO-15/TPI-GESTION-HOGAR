@@ -1,17 +1,23 @@
-﻿namespace TPI_GESTION_HOGAR.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TPI_GESTION_HOGAR.Models
 {
+    [Index(nameof(NombreUsuario), IsUnique = true)]
+    [Index(nameof(Email), IsUnique = true)]
+    [Index(nameof(PersonalId), IsUnique = true)]
     public class Usuario
     {
         public int Id { get; set; }
         public required string NombreUsuario { get; set; }
+        public required string Email { get; set; }
         public required string Clave { get; set; }
 
         //FK
         public int PersonalId { get; set; }
-        public required int RolId { get; set; }
+        public int RolId { get; set; }
 
         //Relaciones
-        public Personal? Personal { get; set; }
-        public Rol? Rol { get; set; }
+        public Personal Personal { get; set; } = null!;
+        public Rol Rol { get; set; } = null!;
     }
 }

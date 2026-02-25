@@ -81,17 +81,17 @@ namespace TPI_GESTION_HOGAR.Datos
             modelBuilder.Entity<Personal>().HasData(
                 new Personal
                 {
-                    ID = 1,
+                    Id = 1,
                     Legajo = 1001,
                     Apellido = "García",
                     Nombre = "Laura",
-                    DNI = 25123456,
+                    DNI = "25123456",
                     Nacionalidad = "Argentina",
                     FechaNac = new DateOnly(1980, 5, 12),
                     Telefono = "2246-112233",
                     Domicilio = "Calle 4 Nro 123",
                     Localidad = "San Clemente del Tuyú",
-                    estado = true
+                    Activo = true
                 }
             );
 
@@ -100,6 +100,7 @@ namespace TPI_GESTION_HOGAR.Datos
                 {
                     Id = 1,
                     NombreUsuario = "lgarcia",
+                    Email = "lgarcia@test.com",
                     Clave = "123456",
                     PersonalId = 1,
                     RolId = 2
