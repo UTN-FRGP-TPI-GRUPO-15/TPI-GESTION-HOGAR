@@ -1,5 +1,9 @@
-﻿namespace TPI_GESTION_HOGAR.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TPI_GESTION_HOGAR.Models
 {
+    [Index(nameof(Legajo), IsUnique = true)]
+    [Index(nameof(DNI), IsUnique = true)]
     public class Personal
     {
         public int Id { get; set; }

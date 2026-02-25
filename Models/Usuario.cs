@@ -1,5 +1,10 @@
-﻿namespace TPI_GESTION_HOGAR.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TPI_GESTION_HOGAR.Models
 {
+    [Index(nameof(NombreUsuario), IsUnique = true)]
+    [Index(nameof(Email), IsUnique = true)]
+    [Index(nameof(PersonalId), IsUnique = true)]
     public class Usuario
     {
         public int Id { get; set; }
