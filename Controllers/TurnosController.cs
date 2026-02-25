@@ -30,8 +30,16 @@ namespace TPI_GESTION_HOGAR.Controllers
 
         public IActionResult Create()
         {
-            ViewBag.TipoTurnoId = new SelectList(_context.TipoTurnos, "Id", "Descripcion");
-            ViewBag.PersonalId = new SelectList(_context.Personal, "Id", "Nombre", "Apellido");
+            var tipoTurnos = _context.TipoTurnos.ToList();
+            ViewBag.TipoTurnos = new SelectList(tipoTurnos, "Id", "Descripcion");
+
+            var personal = _context.Personal.Select(e => new
+            {
+                ID = e.ID,
+                Name = e.Nombre + " " + e.Apellido
+            });
+
+            ViewBag.Personal = new SelectList(personal, "ID", "Name");
 
             return View();
         }
