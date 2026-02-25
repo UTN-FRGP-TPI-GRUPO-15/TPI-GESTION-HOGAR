@@ -19,26 +19,49 @@ namespace TPI_GESTION_HOGAR.Controllers
 
         public async Task<IActionResult> Alta()
         {
-            var roles = await _context.Roles.ToListAsync();
-
-            ViewBag.Roles = new SelectList(roles, "Id", "Descripcion");
+            await CargarRoles();
 
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Alta(NuevoPersonalDTO nuevoPersonal)
+        public async Task<IActionResult> Alta(NuevoPersonalDTO dto)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                ViewBag.Message = "Debe completar todos los campos oblgiatorios.";
-                ViewBag.IsError = true;
+                if (dto.FechaNac > DateOnly.FromDateTime(DateTime.Today))
+                {
+                    ModelState.AddModelError("FechaNac", "La fecha de nacimiento no puede ser futura");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    ViewBag.Message = "Debe completar todos los campos obligatorios";
+                    ViewBag.IsError = true;
+                    await CargarRoles();
+                    return View(dto);
+                }
+
+                ViewBag.Message = "Nuevo personal registrado con éxito.";
+                ViewBag.IsError = false;
+                ModelState.Clear();
+                await CargarRoles();
                 return View();
             }
+            catch (Exception ex)
+            {
+                ViewBag.Message = "Error al registrar nuevo personal: " + ex.Message;
+                ViewBag.IsError = true;
+                await CargarRoles();
+                return View(dto);
+            }
+        }
 
-            ViewBag.Message = "Nuevo personal registrado con éxito.";
-            ViewBag.IsError = false;
-            return View();
+        private async Task CargarRoles()
+        {
+            var roles = await _context.Roles.ToListAsync();
+
+            ViewBag.Roles = new SelectList(roles, "Id", "Descripcion");
         }
     }
 }
