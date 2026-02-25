@@ -50,7 +50,7 @@ namespace TPI_GESTION_HOGAR.Datos
                 new TipoTurno { Id = 3, Descripcion = "Noche (20:00 a 08:00)" }
             );
 
-            
+
             modelBuilder.Entity<TipoCondicion>().HasData(
                 new TipoCondicion { Id = 1, Descripcion = "Enfermedad Crónica" },
                 new TipoCondicion { Id = 2, Descripcion = "Discapacidad Física" },
@@ -65,7 +65,7 @@ namespace TPI_GESTION_HOGAR.Datos
                 new ObservacionCondicion { Id = 3, Descripcion = "Requiere Atención/Derivación" }
             );
 
-          
+
             modelBuilder.Entity<Habitacion>().HasData(
                 new Habitacion { Id = 1, NroHabitacion = 1, Capacidad = 4, Estado = true },
                 new Habitacion { Id = 2, NroHabitacion = 2, Capacidad = 5, Estado = true },
@@ -77,7 +77,7 @@ namespace TPI_GESTION_HOGAR.Datos
             // 2. PERSONAL Y USUARIOS
             // =========================================================
 
-            
+
             modelBuilder.Entity<Personal>().HasData(
                 new Personal
                 {
@@ -200,7 +200,6 @@ namespace TPI_GESTION_HOGAR.Datos
         }
     }
 }
-    
-   
 
-    
+
+
