@@ -1,13 +1,18 @@
-﻿namespace TPI_GESTION_HOGAR.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TPI_GESTION_HOGAR.Models
 {
     public class Condicion
     {
-        public required int  Id { get; set; }
+        public int  Id { get; set; }
 
         //FK
-        public  required int MujerId { get; set; }
-        public  required int TipoCondicionId { get; set; }
-        public  required int ObservacionCondicionId { get; set; }
+        [Required]
+        public int MujerId { get; set; }
+        [Required]
+        public int TipoCondicionId { get; set; }
+        [Required]
+        public int ObservacionCondicionId { get; set; }
         //Relaciones
         public  Mujer? Mujer { get; set; }
         public  TipoCondicion? TipoCondicion { get; set; }

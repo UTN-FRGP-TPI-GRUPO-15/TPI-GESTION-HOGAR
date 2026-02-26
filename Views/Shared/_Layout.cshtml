@@ -32,6 +32,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Personal" asp-action="Alta">Alta de Personal</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Mujeres" asp-action="Index">
+                                    <i class="bi bi-people"></i> Gestión de Residentes
+                                </a>
+                            </li>
+
                         }
 
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
@@ -58,6 +64,15 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["MensajeExito"] != null)
+            {
+                <div class="container mt-3">
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["MensajeExito"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
             @RenderBody()
         </main>
     </div>
