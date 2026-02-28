@@ -1,0 +1,166 @@
+﻿@model TPI_GESTION_HOGAR.Models.Agresor
+
+@{
+    ViewData["Title"] = "Editar Datos del Agresor";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-dark"><i class="bi bi-pencil-square"></i> Editar Datos del Agresor</h2>
+    <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@Model.RegistroId" class="btn btn-outline-secondary shadow-sm">
+        <i class="bi bi-arrow-left"></i> Cancelar
+    </a>
+</div>
+
+<div class="card shadow-sm border-0 border-top border-dark border-3 mb-4">
+    <div class="card-body p-4">
+        <form asp-action="Editar" method="post">
+            <div asp-validation-summary="All" class="text-danger mb-3 fw-bold alert alert-warning"></div>
+
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="RegistroId" />
+
+            <h5 class="mb-3 border-bottom pb-2 text-dark"><i class="bi bi-person-bounding-box"></i> Identidad</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="DNI" class="form-label fw-bold">DNI</label>
+                    <input asp-for="DNI" class="form-control" type="number" />
+                    <span asp-validation-for="DNI" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Nombre" class="form-label fw-bold">Nombre/s</label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Apellido" class="form-label fw-bold">Apellido/s</label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label asp-for="FechaNac" class="form-label fw-bold">Fecha de Nacimiento</label>
+                    <input asp-for="FechaNac" class="form-control" type="date" />
+                    <span asp-validation-for="FechaNac" class="text-danger"></span>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Genero" class="form-label fw-bold">Género</label>
+                    <select asp-for="Genero" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Trans">Trans</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label asp-for="Nacionalidad" class="form-label fw-bold">Nacionalidad</label>
+                    <input asp-for="Nacionalidad" class="form-control" />
+                    <span asp-validation-for="Nacionalidad" class="text-danger"></span>
+                </div>
+            </div>
+
+            <h5 class="mb-3 mt-4 border-bottom pb-2 text-dark"><i class="bi bi-geo-alt-fill"></i> Ubicación</h5>
+            <div class="row bg-light p-3 rounded border mx-0 mb-3">
+                <div class="col-md-6 mb-3">
+                    <label for="selectProvincia" class="form-label fw-bold">Provincia</label>
+                    <select id="selectProvincia" class="form-select border-secondary">
+                        <option value="">Cargando provincias...</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Localidad" class="form-label fw-bold">Localidad</label>
+                    <select asp-for="Localidad" id="selectLocalidad" class="form-select border-secondary">
+                        @if (!string.IsNullOrEmpty(Model?.Localidad))
+                        {
+                            <option value="@Model.Localidad" selected>@Model.Localidad</option>
+                        }
+                        else
+                        {
+                            <option value="">Seleccione una provincia primero...</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Domicilio" class="form-label fw-bold">Domicilio Exacto</label>
+                    <input asp-for="Domicilio" class="form-control" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Telefono" class="form-label fw-bold">Teléfono de Contacto</label>
+                    <input asp-for="Telefono" class="form-control" />
+                </div>
+            </div>
+
+            <h5 class="mb-3 mt-4 border-bottom pb-2 text-dark"><i class="bi bi-briefcase-fill"></i> Perfil</h5>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="NivelEducativo" class="form-label fw-bold">Nivel Educativo</label>
+                    <select asp-for="NivelEducativo" class="form-select">
+                        <option value="">-- Seleccione Nivel --</option>
+                        <option value="Sin instrucción">Sin instrucción</option>
+                        <option value="Primario Incompleto">Primario Incompleto</option>
+                        <option value="Primario Completo">Primario Completo</option>
+                        <option value="Secundario Completo">Secundario Completo</option>
+                        <option value="Terciario/Universitario">Terciario / Universitario</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Ocupacion" class="form-label fw-bold">Ocupación / Oficio</label>
+                    <input asp-for="Ocupacion" class="form-control" />
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4 border-top pt-3">
+                <button type="submit" class="btn btn-dark shadow-sm fw-bold">
+                    <i class="bi bi-save2"></i> Actualizar Agresor
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectProvincia = document.getElementById("selectProvincia");
+            const selectLocalidad = document.getElementById("selectLocalidad");
+
+            fetch("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre&max=100")
+                .then(response => response.json())
+                .then(data => {
+                    let provincias = data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    selectProvincia.innerHTML = '<option value="">-- Cambiar Provincia --</option>';
+                    provincias.forEach(prov => {
+                        selectProvincia.innerHTML += `<option value="${prov.nombre}" data-id="${prov.id}">${prov.nombre}</option>`;
+                    });
+                })
+                .catch(error => console.error("Error cargando provincias:", error));
+
+            selectProvincia.addEventListener("change", function () {
+                let provinciaId = this.options[this.selectedIndex].getAttribute("data-id");
+                if (!provinciaId) {
+                    selectLocalidad.innerHTML = '<option value="">Seleccione una provincia primero...</option>';
+                    return;
+                }
+                selectLocalidad.innerHTML = '<option value="">Cargando localidades...</option>';
+                fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaId}&campos=id,nombre&max=1000`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let localidades = data.localidades.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        selectLocalidad.innerHTML = '<option value="">-- Seleccione nueva localidad --</option>';
+                        localidades.forEach(loc => {
+                            selectLocalidad.innerHTML += `<option value="${loc.nombre}">${loc.nombre}</option>`;
+                        });
+                    })
+                    .catch(error => console.error("Error cargando localidades:", error));
+            });
+        });
+    </script>
+}

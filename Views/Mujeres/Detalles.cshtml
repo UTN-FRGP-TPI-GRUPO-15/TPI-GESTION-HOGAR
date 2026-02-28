@@ -1,0 +1,143 @@
+﻿@model TPI_GESTION_HOGAR.Models.Mujer
+
+@{
+    ViewData["Title"] = "Ficha Técnica";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-info"><i class="bi bi-person-badge-fill"></i> Ficha Técnica de la Residente</h2>
+    <div>
+        <a asp-action="Editar" asp-route-id="@Model.ID" class="btn btn-warning shadow-sm me-2">
+            <i class="bi bi-pencil-square"></i> Editar Datos
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left"></i> Volver al Listado
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-info text-white fw-bold">
+                <i class="bi bi-person-lines-fill"></i> Información Personal
+            </div>
+            <div class="card-body">
+                <div class="mb-3 border-bottom pb-2">
+                    <small class="text-muted d-block fw-bold">Nombre Completo</small>
+                    <span class="fs-5">@Model.Nombre @Model.Apellido</span>
+                </div>
+
+                <div class="mb-3 border-bottom pb-2">
+                    <small class="text-muted d-block fw-bold">Documento (DNI)</small>
+                    <span class="fs-5">@Model.DNI</span>
+                </div>
+
+                <div class="mb-3 border-bottom pb-2">
+                    <small class="text-muted d-block fw-bold">Lugar de Procedencia</small>
+                    <span class="fs-5"><i class="bi bi-geo-alt-fill text-danger"></i> @Model.Localidad</span>
+                </div>
+
+                <div class="mb-3">
+                    <small class="text-muted d-block fw-bold">Estado en el Sistema</small>
+                    @if (Model.estado)
+                    {
+                        <span class="badge bg-success fs-6"><i class="bi bi-check-circle"></i> Residente Activa</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary fs-6"><i class="bi bi-x-circle"></i> Inactiva / Egresada</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header bg-secondary text-white fw-bold d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-people-fill"></i> Menores a cargo </span>
+                <span class="badge bg-light text-dark fs-6 rounded-pill">
+                    Total: @(Model.Hijos?.Count ?? 0)
+                </span>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Hijos != null && Model.Hijos.Any())
+                {
+                    <table class="table table-sm table-striped mb-0 text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>DNI</th>
+                                <th>Apellido y Nombre</th>
+                                <th>Edad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var hijo in Model.Hijos)
+                                {
+                                    <tr>
+                                        <td class="fw-bold text-secondary">@hijo.DNI</td>
+                                        <td>@hijo.Apellido, @hijo.Nombre</td>
+                                        <td>@hijo.Edad Años</td>
+                                        <td>
+                                            <a asp-controller="Hijos" asp-action="Editar" asp-route-id="@hijo.ID" class="btn btn-sm btn-outline-secondary" title="Editar Menor">
+                                                <i class="bi bi-pencil">Editar</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="text-center p-3 text-muted">
+                        <small>No se registran menores a cargo.</small>
+                    </div>
+                }
+                <div class="p-2 bg-light border-top text-center">
+                    <a asp-controller="Hijos" asp-action="AgregarHijo" asp-route-id="@Model.ID" class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="bi bi-person-plus"></i> Registrar Menor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-danger text-white fw-bold d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-heart-pulse-fill"></i> Resumen de Condiciones</span>
+                <a asp-action="VerCondicion" asp-route-id="@Model.ID" class="btn btn-sm btn-light text-danger fw-bold">
+                    Ver Historial Completo
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Condiciones != null && Model.Condiciones.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var condicion in Model.Condiciones)
+                        {
+                            <li class="list-group-item">
+                                <span class="fw-bold text-danger">@(condicion.TipoCondicion?.Descripcion ?? "Sin especificar")</span>
+                                <br />
+                                <small class="text-muted">@(condicion.ObservacionCondicion?.Descripcion ?? "Sin detalles")</small>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="text-center p-4 text-muted">
+                        <i class="bi bi-shield-check fs-2 text-success mb-2 d-block"></i>
+                        <p class="mb-0">No se registran condiciones médicas particulares.</p>
+                    </div>
+                }
+
+                <div class="p-3 bg-light border-top text-center">
+                    <a asp-action="AgregarCondicion" asp-route-id="@Model.ID" class="btn btn-outline-danger btn-sm w-100">
+                        <i class="bi bi-plus-circle"></i> Añadir Nueva Condición
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

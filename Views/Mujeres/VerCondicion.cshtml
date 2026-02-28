@@ -1,0 +1,59 @@
+﻿@model TPI_GESTION_HOGAR.Models.Mujer
+
+@{
+    ViewData["Title"] = "Condiciones de la Residente";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-danger"><i class="bi bi-heart-pulse-fill"></i> Condiciones de Salud / Particulares</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Volver al Listado</a>
+</div>
+
+<div class="card shadow-sm border-0 mb-4 bg-light">
+    <div class="card-body">
+        <h5 class="card-title fw-bold">@Model.Nombre @Model.Apellido</h5>
+        <h6 class="card-subtitle mb-2 text-muted">DNI: @Model.DNI | Edad: @Model.Edad</h6>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-white fw-bold">
+        Historial Registrado
+    </div>
+    <div class="card-body p-0">
+        @if (Model.Condiciones != null && Model.Condiciones.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Tipo de Condición</th>
+                            <th>Observaciones / Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var condicion in Model.Condiciones)
+                        {
+                            <tr>
+                                <td class="fw-bold text-danger">
+                                    @(condicion.TipoCondicion?.Descripcion ?? "Sin especificar")
+                                </td>
+                                <td>
+                                    @(condicion.ObservacionCondicion?.Descripcion ?? "No hay observaciones adicionales.")
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center p-5 text-muted">
+                <i class="bi bi-clipboard2-check fs-1 text-success mb-3 d-block"></i>
+                <h5>Sin condiciones registradas</h5>
+                <p class="mb-0">Esta residente no tiene condiciones iniciales cargadas en el sistema.</p>
+            </div>
+        }
+    </div>
+</div>
