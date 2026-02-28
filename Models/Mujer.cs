@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace TPI_GESTION_HOGAR.Models
 {
@@ -25,7 +26,24 @@ namespace TPI_GESTION_HOGAR.Models
         public string? Localidad { get; set; }
         public bool estado { get; set; }
 
-        public List<Hijo>? Hijos { get; set; }
-        public List<Condicion>? Condiciones { get; set; }
+        public ICollection<Hijo> Hijos { get; set; } = new List<Hijo>();
+        public ICollection<Condicion> Condiciones { get; set; } = new List<Condicion>();
+
+        public int Edad
+        {
+            get
+            {
+                var hoy = DateOnly.FromDateTime(DateTime.Today);
+                int edadCalculada = hoy.Year - FechaNac.Year;
+
+              
+                if (FechaNac > hoy.AddYears(-edadCalculada))
+                {
+                    edadCalculada--;
+                }
+
+                return edadCalculada;
+            }
+        }
     }
 }
