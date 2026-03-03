@@ -97,7 +97,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             var personal = _context.Personal.Select(e => new
             {
-                ID = e.ID,
+                Id = e.Id,
                 Name = e.Apellido + ", " + e.Nombre
             });
 
@@ -127,7 +127,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
                     var personal = _context.Personal.Select(e => new
                     {
-                        ID = e.ID,
+                        Id = e.Id,
                         Name = e.Apellido + ", " + e.Nombre
                     });
 
@@ -170,7 +170,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
                         var personal = _context.Personal.Select(e => new
                         {
-                            ID = e.ID,
+                            Id = e.Id,
                             Name = e.Apellido + ", " + e.Nombre
                         });
 
@@ -208,7 +208,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             var personal = _context.Personal.Select(e => new
             {
-                ID = e.ID,
+                Id = e.Id,
                 Name = e.Apellido + ", " + e.Nombre
             });
 
