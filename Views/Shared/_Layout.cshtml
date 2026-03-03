@@ -27,11 +27,39 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Turnos" asp-action="Index">Turnos</a>
                         </li>
+
+                        @if (User.IsInRole("Administradora"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Personal" asp-action="Alta">Alta de Personal</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Mujeres" asp-action="Index">
+                                    <i class="bi bi-people"></i> Gestión de Residentes
+                                </a>
+                            </li>
+
+                        }
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <form asp-controller="Auth" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-outline-primary">
+                                        Cerrar Sesión
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-primary" asp-area="" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>
@@ -39,6 +67,15 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["MensajeExito"] != null)
+            {
+                <div class="container mt-3">
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["MensajeExito"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

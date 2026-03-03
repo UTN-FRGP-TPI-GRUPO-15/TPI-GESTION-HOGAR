@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Nuevo Personal";
+}
+
+@model TPI_GESTION_HOGAR.DTOs.NuevoPersonalDTO
+
+<h1 class="mb-4 text-center">Nuevo Personal</h1>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Datos de Personal</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Legajo" class="form-label"></label>
+                                <input asp-for="Legajo" type="number" placeholder="1264" class="form-control" required />
+                                <span asp-validation-for="Legajo" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DNI" class="form-label"></label>
+                                <input asp-for="DNI" type="text" placeholder="37482483" class="form-control" required pattern="\d+" />
+                                <span asp-validation-for="DNI" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nombre" class="form-label"></label>
+                                <input asp-for="Nombre" type="text" placeholder="María" class="form-control" required />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Apellido" class="form-label"></label>
+                                <input asp-for="Apellido" type="text" placeholder="Pérez" class="form-control" required />
+                                <span asp-validation-for="Apellido" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Nacionalidad" class="form-label"></label>
+                                <input asp-for="Nacionalidad" type="text" placeholder="Argentina" class="form-control" required />
+                                <span asp-validation-for="Nacionalidad" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FechaNac" class="form-label">Fecha de nacimiento</label>
+                                <input asp-for="FechaNac" type="date" class="form-control" required />
+                                <span asp-validation-for="FechaNac" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Telefono" class="form-label">Teléfono</label>
+                            <input asp-for="Telefono" type="text" placeholder="+5411283847" class="form-control" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Domicilio" class="form-label"></label>
+                            <input asp-for="Domicilio" type="text" placeholder="Belgrano 291" class="form-control" />
+                            <span asp-validation-for="Domicilio" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Localidad" class="form-label"></label>
+                            <input asp-for="Localidad" type="text" placeholder="General Pacheco" class="form-control" />
+                            <span asp-validation-for="Localidad" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Datos de Usuario</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="NombreUsuario" class="form-label">Nombre de usuario</label>
+                            <input asp-for="NombreUsuario" type="text" placeholder="mperez" class="form-control" required />
+                            <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" type="email" placeholder="mariaperez@gmail.com" class="form-control" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="ClavePlana" class="form-label">Contraseña</label>
+                            <input asp-for="ClavePlana" type="password" placeholder="********" class="form-control" required />
+                            <span asp-validation-for="ClavePlana" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="RepetirClavePlana" class="form-label">Repetir contraseña</label>
+                            <input asp-for="RepetirClavePlana" type="password" placeholder="********" class="form-control" required />
+                            <span asp-validation-for="RepetirClavePlana" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="RolId" class="form-label">Rol</label>
+                            <select asp-for="RolId" asp-items="ViewBag.Roles" class="form-select" required>
+                                <option value="">--Seleccione un Rol--</option>
+                            </select>
+                            <span asp-validation-for="RolId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Agregar Personal</button>
+
+                @if (ViewBag.Message != null)
+                {
+                    <div class="mt-3" style="color:@(ViewBag.IsError ? "red" : "green")">
+                        @ViewBag.Message
+                    </div>
+                }
+            </form>
+        </div>
+    </div>
+</div>

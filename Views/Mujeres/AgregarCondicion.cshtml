@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Agregar Condición";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-danger"><i class="bi bi-heart-plus-fill"></i> Nueva Condición Médica</h2>
+    <a asp-action="VerCondicion" asp-route-id="@ViewBag.MujerId" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a la Ficha
+    </a>
+</div>
+
+<div class="card shadow-sm border-0 bg-light mb-4">
+    <div class="card-body">
+        <h5 class="mb-0">Agregando registro para: <span class="fw-bold text-primary">@ViewBag.MujerNombre</span></h5>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+        <form asp-action="AgregarCondicion" method="post">
+            <input type="hidden" name="MujerId" value="@ViewBag.MujerId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <label for="TipoCondicionId" class="form-label fw-bold">Tipo de Condición <span class="text-danger">*</span></label>
+                    <select class="form-select border-danger" id="TipoCondicionId" name="TipoCondicionId" required>
+                        <option value="">-- Seleccione una condición --</option>
+                        @if (ViewBag.TipoCondiciones != null)
+                        {
+                            foreach (var tipo in ViewBag.TipoCondiciones)
+                            {
+                                <option value="@tipo.Id">@tipo.Descripcion</option>
+                            }
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <label for="ObservacionesCondicion" class="form-label fw-bold">Observaciones / Detalles</label>
+                    <input type="text" class="form-control" id="ObservacionesCondicion" name="ObservacionesCondicion" placeholder="Ej: Tratamiento en curso, pastillas cada 8hs...">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-2">
+                <button type="submit" class="btn btn-danger shadow-sm">
+                    <i class="bi bi-save"></i> Guardar Condición
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

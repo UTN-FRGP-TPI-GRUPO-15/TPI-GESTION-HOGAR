@@ -1,0 +1,183 @@
+﻿﻿@using TPI_GESTION_HOGAR.Models
+@model Mujer
+
+<h2>Alta de Mujer</h2>
+
+<form asp-action="AltaMujer" method="post" class="mt-4">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="DNI" class="form-label fw-bold">Número de Documento</label>
+
+            <input asp-for="DNI" class="form-control bg-light" readonly />
+
+            <span asp-validation-for="DNI" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="FechaNac" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" id="FechaNac" name="FechaNac" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="Nombre" name="Nombre" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Apellido" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="Apellido" name="Apellido" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Nacionalidad" class="form-label">Nacionalidad</label>
+            <input type="text" class="form-control" id="Nacionalidad" name="Nacionalidad" value="Argentina" required>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Genero" class="form-label">Identidad de Género</label>
+            <select class="form-select" id="Genero" name="Genero" required>
+                <option value="">Seleccione una opción...</option>
+                <option value="Mujer (Cis)">Mujer</option>
+                <option value="Mujer Trans">Mujer Trans</option>
+                <option value="No Binario">No Binario</option>
+                <option value="Otro">Otro</option>
+            </select>
+        </div>
+
+        <hr class="mt-4 mb-4">
+        <h5 class="mb-3">Datos de Contacto y Socioeducativos</h5>
+
+        <div class="col-md-6 mb-3">
+            <label for="Telefono" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="Telefono" name="Telefono">
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="NivelEducativo" class="form-label">Nivel Educativo</label>
+            <select class="form-select" id="NivelEducativo" name="NivelEducativo" required>
+                <option value="">Seleccione el nivel...</option>
+                <option value="Sin Educacion formal">Sin instrucción formal</option>
+                <option value="Primario Incompleto">Primario Incompleto</option>
+                <option value="Primario Completo">Primario Completo</option>
+                <option value="Secundario Incompleto">Secundario Incompleto</option>
+                <option value="Secundario Completo">Secundario Completo</option>
+                <option value="Terciario/Universitario Incompleto">Terciario/Universitario Incompleto</option>
+                <option value="Terciario/Universitario Completo">Terciario/Universitario Completo</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Ocupacion" class="form-label">Ocupación</label>
+            <input type="text" class="form-control" id="Ocupacion" name="Ocupacion">
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Provincia" class="form-label">Provincia</label>
+            <select class="form-select" id="Provincia" name="Provincia" required>
+                <option value="">Seleccione una provincia...</option>
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="Localidad" class="form-label">Localidad</label>
+            <select class="form-select" id="Localidad" name="Localidad" required disabled>
+                <option value="">Seleccione una provincia primero...</option>
+            </select>
+        </div>
+
+        <div class="col-md-12 mb-3">
+            <label for="Domicilio" class="form-label">Domicilio</label>
+            <input type="text" class="form-control" id="Domicilio" name="Domicilio">
+        </div>
+    </div>
+    <h5 class="mt-4 mb-3 border-bottom pb-2 text-danger"><i class="bi bi-heart-pulse"></i> Condición Inicial (Opcional)</h5>
+
+    <div class="row bg-light p-3 rounded border mx-0">
+        <div class="col-md-6 mb-3">
+            <label for="TipoCondicionId" class="form-label fw-bold">Tipo de Condición</label>
+            <select class="form-select" id="TipoCondicionId" name="TipoCondicionId">
+                <option value="">Ninguna / Declarar más adelante...</option>
+
+                @if (ViewBag.TipoCondiciones != null)
+                {
+                    foreach (var tipo in ViewBag.TipoCondiciones)
+                    {
+                        <option value="@tipo.Id">@tipo.Descripcion</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="ObservacionesCondicion" class="form-label fw-bold">Observaciones / Detalles</label>
+            <input type="text" class="form-control" id="ObservacionesCondicion" name="ObservacionesCondicion" placeholder="Ej: Requiere medicación, tratamiento en curso...">
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-save"></i> Guardar Residente
+        </button>
+        <a href="/Mujeres" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectProvincia = document.getElementById("Provincia");
+            const selectLocalidad = document.getElementById("Localidad");
+
+            // 1. Apenas carga la página, buscamos las provincias
+            fetch("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre&orden=nombre")
+                .then(response => response.json())
+                .then(data => {
+                    data.provincias.forEach(prov => {
+                        let option = document.createElement("option");
+                        // Guardamos el nombre como "value" para que viaje a tu base de datos
+                        option.value = prov.nombre;
+                        option.textContent = prov.nombre;
+                        // Guardamos el ID oculto para usarlo en la búsqueda de localidades
+                        option.dataset.id = prov.id;
+                        selectProvincia.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error al cargar provincias:", error));
+
+            // 2. Cuando el usuario cambia la provincia, buscamos sus localidades
+            selectProvincia.addEventListener("change", function () {
+                // Limpiamos el combo de localidades y ponemos mensaje de carga
+                selectLocalidad.innerHTML = '<option value="">Cargando localidades...</option>';
+                selectLocalidad.disabled = true;
+
+                // Obtenemos el ID de la provincia seleccionada
+                const selectedOption = this.options[this.selectedIndex];
+                const provId = selectedOption.dataset.id;
+
+                if (!provId) {
+                    selectLocalidad.innerHTML = '<option value="">Seleccione una provincia primero...</option>';
+                    return;
+                }
+
+                // Llamamos a la API pidiendo las localidades de esa provincia (max=1000 para que traiga todas)
+                fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provId}&campos=id,nombre&max=1000&orden=nombre`)
+                    .then(response => response.json())
+                    .then(data => {
+                        selectLocalidad.innerHTML = '<option value="">Seleccione una localidad...</option>';
+                        data.localidades.forEach(loc => {
+                            let option = document.createElement("option");
+                            option.value = loc.nombre;
+                            option.textContent = loc.nombre;
+                            selectLocalidad.appendChild(option);
+                        });
+                        // Habilitamos el combo para que la usuaria pueda elegir
+                        selectLocalidad.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error("Error al cargar localidades:", error);
+                        selectLocalidad.innerHTML = '<option value="">Error al cargar localidades</option>';
+                    });
+            });
+        });
+    </script>
+}

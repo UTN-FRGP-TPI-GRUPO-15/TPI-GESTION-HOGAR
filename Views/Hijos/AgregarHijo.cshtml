@@ -1,0 +1,62 @@
+﻿@model TPI_GESTION_HOGAR.Models.Hijo
+
+@{
+    ViewData["Title"] = "Registro de Menor a Cargo";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-secondary"><i class="bi bi-person-plus-fill"></i> Registrar Menor a Cargo</h2>
+    <a asp-controller="Mujeres" asp-action="Detalles" asp-route-id="@ViewBag.MujerId" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a la Ficha
+    </a>
+</div>
+
+<div class="card shadow-sm border-0 mb-4 bg-light">
+    <div class="card-body">
+        <h5 class="mb-0 text-muted">Añadiendo registro para la residente: <span class="fw-bold text-dark">@ViewBag.MujerNombre</span></h5>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+        <form asp-action="AgregarHijo" method="post">
+            <input type="hidden" asp-for="MujerId" value="@ViewBag.MujerId" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DNI" class="form-label fw-bold">Número de Documento</label>
+                    <input asp-for="DNI" class="form-control" type="number" placeholder="Ej: 50123456" />
+                    <span asp-validation-for="DNI" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FechaNac" class="form-label fw-bold">Fecha de Nacimiento</label>
+                    <input asp-for="FechaNac" class="form-control" type="date" />
+                    <span asp-validation-for="FechaNac" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Nombre" class="form-label fw-bold">Nombre</label>
+                    <input asp-for="Nombre" class="form-control" placeholder="Ingrese los nombres" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Apellido" class="form-label fw-bold">Apellido</label>
+                    <input asp-for="Apellido" class="form-control" placeholder="Ingrese los apellidos" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-secondary shadow-sm"><i class="bi bi-save"></i> Guardar Registro</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
