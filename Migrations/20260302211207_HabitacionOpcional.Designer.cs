@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPI_GESTION_HOGAR.Datos;
 
@@ -11,9 +12,11 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302211207_HabitacionOpcional")]
+    partial class HabitacionOpcional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,10 +87,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Telefono")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Vinculo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ID");
 
                     b.HasIndex("RegistroId");
@@ -109,8 +108,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                             Nombre = "Carlos",
                             Ocupacion = "Albañil",
                             RegistroId = 1,
-                            Telefono = "2246-998877",
-                            Vinculo = "Ex-Pareja"
+                            Telefono = "2246-998877"
                         });
                 });
 

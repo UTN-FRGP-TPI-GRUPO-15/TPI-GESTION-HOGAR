@@ -1,0 +1,50 @@
+﻿@model TPI_GESTION_HOGAR.Models.Registro
+
+@{
+    ViewData["Title"] = "Asignar Habitación";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+    <h2 class="text-success fw-bold"><i class="bi bi-door-open-fill"></i> Asignar Cama</h2>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+        <i class="bi bi-arrow-left"></i> Cancelar
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 border-top border-success border-4">
+            <div class="card-body p-4 text-center">
+
+                <h5 class="text-muted mb-1">Residente a alojar:</h5>
+                <h3 class="fw-bold text-primary mb-4">
+                    <i class="bi bi-person-circle me-2"></i> @Model.Mujer?.Apellido, @Model.Mujer?.Nombre
+                </h3>
+
+                <form asp-action="AsignarHabitacion" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="mb-4 text-start bg-light p-3 rounded border">
+                        <label for="habitacionId" class="form-label fw-bold text-dark">Seleccione el cuarto disponible:</label>
+
+                        <select name="habitacionId" id="habitacionId" class="form-select form-select-lg border-success"
+                                asp-items="@ViewBag.Habitaciones">
+                            <option value="">-- Sin habitación (En tránsito) --</option>
+                        </select>
+
+                        <div class="form-text mt-2 text-muted">
+                            <i class="bi bi-info-circle"></i> Las habitaciones llenas o en mantenimiento se ocultan automáticamente de esta lista.
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg shadow-sm fw-bold">
+                            <i class="bi bi-check2-circle"></i> Confirmar Asignación
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

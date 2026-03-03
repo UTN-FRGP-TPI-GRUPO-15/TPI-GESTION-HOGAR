@@ -12,6 +12,8 @@ namespace TPI_GESTION_HOGAR.Models
         public string Apellido { get; set; }
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         public string Nombre { get; set; }
+        [Required(ErrorMessage = "Debe especificar el vínculo con la residente.")]
+        public string Vinculo { get; set; }
         [Required(ErrorMessage = "La nacionalidad es obligatoria.")]
         public string Nacionalidad { get; set; }
         [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]

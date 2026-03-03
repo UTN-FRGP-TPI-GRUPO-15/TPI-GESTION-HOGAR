@@ -1,31 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Verificar DNI";
+    ViewData["Title"] = "Verificar Residente";
 }
 
 <div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0"><i class="bi bi-search"></i> Paso 1: Verificar DNI</h4>
-            </div>
-            <div class="card-body p-4">
-                <p class="text-muted">Ingrese el DNI para verificar si la residente ya tiene un perfil en el Hogar.</p>
+    <div class="col-md-5 mt-4">
+        <div class="card shadow-sm border-0 border-top border-primary border-4">
+            <div class="card-body p-5 text-center">
+
+                <div class="mb-4">
+                    <i class="bi bi-person-badge text-primary" style="font-size: 3rem;"></i>
+                </div>
+
+                <h4 class="text-dark fw-bold mb-3">Buscar Residente</h4>
+                <p class="text-muted mb-4">Ingrese el DNI para verificar si la mujer ya se encuentra registrada en el sistema del hogar.</p>
+
                 <form asp-action="VerificarDni" method="post">
-                    <div class="mb-4">
-                        <label for="dniBuscado" class="form-label fw-bold">Número de Documento</label>
+                    <div class="mb-4 text-start">
+                        <label for="dniBuscado" class="form-label fw-bold text-secondary">Número de Documento</label>
+                        <input type="number" id="dniBuscado" name="dniBuscado" class="form-control form-control-lg text-center fw-bold fs-4 text-primary" required placeholder="Ej: 30123456" min="1000000" max="99999999" autofocus />
 
-                        <input type="number" class="form-control form-control-lg" id="dniBuscado" name="dniBuscado"
-                               
-                               placeholder="Ej: 35123456">
-
-                        @Html.ValidationMessage("dniBuscado", "", new { @class = "text-danger fw-bold mt-2 d-block" })
+                        @Html.ValidationMessage("dniBuscado", new { @class = "text-danger mt-2 d-block fw-bold small text-center" })
                     </div>
+
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">Continuar</button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                            Continuar <i class="bi bi-arrow-right-circle ms-1"></i>
+                        </button>
                     </div>
                 </form>
+
             </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a asp-controller="Home" asp-action="Index" class="text-muted text-decoration-none fw-bold">
+                <i class="bi bi-arrow-left"></i> Volver al Panel de Control
+            </a>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

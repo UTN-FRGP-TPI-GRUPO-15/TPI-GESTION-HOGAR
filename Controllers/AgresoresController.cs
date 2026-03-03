@@ -71,6 +71,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 agresorOriginal.DNI = agresorModificado.DNI;
                 agresorOriginal.Nombre = agresorModificado.Nombre;
                 agresorOriginal.Apellido = agresorModificado.Apellido;
+                agresorOriginal.Vinculo = agresorModificado.Vinculo;
                 agresorOriginal.FechaNac = agresorModificado.FechaNac;
                 agresorOriginal.Nacionalidad = agresorModificado.Nacionalidad;
                 agresorOriginal.Genero = agresorModificado.Genero;

@@ -1,14 +1,17 @@
-﻿namespace TPI_GESTION_HOGAR.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TPI_GESTION_HOGAR.Models
 {
     public class Registro
     {
-        public required int Id { get; set; }
-        public required DateOnly Fecha { get; set; }
+        public int Id { get; set; }
+        [Required(ErrorMessage = "El campo Fecha es obligatorio.")]
+        public DateOnly Fecha { get; set; }
         public bool Estado { get; set; }
 
         //FK
-        public required int MujerID { get; set; }
-        public required int HabitacionId { get; set; }
+        public int MujerID { get; set; }
+        public int? HabitacionId { get; set; }
 
         //Relaciones principales
         public Mujer? Mujer { get; set; }
