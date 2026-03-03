@@ -29,6 +29,20 @@
                     <input asp-for="DNI" class="form-control" type="number" />
                     <span asp-validation-for="DNI" class="text-danger"></span>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Vinculo" class="form-label fw-bold text-danger">Vínculo con la Residente <span class="text-danger">*</span></label>
+                    <select asp-for="Vinculo" class="form-select border-danger">
+                        <option value="">-- Seleccione el Vínculo --</option>
+                        <option value="Ex-Pareja">Ex-Pareja</option>
+                        <option value="Pareja Actual">Pareja Actual</option>
+                        <option value="Padre">Padre</option>
+                        <option value="Hermano/a">Hermano/a</option>
+                        <option value="Otro Familiar">Otro Familiar</option>
+                        <option value="Conocido/Vecino">Conocido / Vecino</option>
+                        <option value="Desconocido">Desconocido</option>
+                    </select>
+                    <span asp-validation-for="Vinculo" class="text-danger"></span>
+                </div>
                 <div class="col-md-4 mb-3">
                     <label asp-for="Nombre" class="form-label fw-bold">Nombre/s</label>
                     <input asp-for="Nombre" class="form-control" />

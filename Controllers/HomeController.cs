@@ -1,7 +1,5 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.Models;
 
@@ -16,20 +14,34 @@ namespace TPI_GESTION_HOGAR.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            var modelo = new DashboardViewModel();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            // 1. Traemos los ingresos activos con toda la info colgada
+            modelo.IngresosActivos = await _context.Registros
+                .Include(r => r.Mujer)
+                    .ThenInclude(m => m.Hijos)
+                .Include(r => r.Habitacion)
+                .Where(r => r.Estado == true)
+                .OrderByDescending(r => r.Fecha)
+                .ToListAsync();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            // 2. Calculamos los contadores de personas
+            modelo.TotalMujeres = modelo.IngresosActivos.Count;
+            modelo.TotalMenores = modelo.IngresosActivos.Sum(r => r.Mujer?.Hijos?.Count ?? 0);
+
+            // 3. Calculamos la ocupación de habitaciones operativas
+            var habitacionesActivas = await _context.Habitaciones
+                .Include(h => h.Registros.Where(r => r.Estado == true))
+                .Where(h => h.Estado == true)
+                .ToListAsync();
+
+            modelo.HabitacionesTotales = habitacionesActivas.Count;
+            // Contamos como "ocupada" si tiene al menos un registro adentro
+            modelo.HabitacionesOcupadas = habitacionesActivas.Count(h => h.Registros.Any());
+
+            return View(modelo);
         }
     }
 }

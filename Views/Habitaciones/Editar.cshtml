@@ -1,0 +1,59 @@
+﻿@model TPI_GESTION_HOGAR.Models.Habitacion
+
+@{
+    ViewData["Title"] = "Editar Habitación";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-secondary"><i class="bi bi-gear-fill"></i> Configurar Habitación @Model.NroHabitacion</h2>
+    <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+        <i class="bi bi-arrow-left"></i> Volver al Mapa
+    </a>
+</div>
+
+<div class="card shadow-sm border-0 col-md-6 mx-auto">
+    <div class="card-body p-4">
+        <form asp-action="Editar" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-4">
+                <label asp-for="NroHabitacion" class="form-label fw-bold">Número de Habitación</label>
+                <input asp-for="NroHabitacion" class="form-control bg-light" readonly />
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Capacidad" class="form-label fw-bold">Capacidad Máxima (Camas/Cunas)</label>
+                <input asp-for="Capacidad" class="form-control" type="number" min="1" max="10" />
+                <span asp-validation-for="Capacidad" class="text-danger"></span>
+                <div class="form-text">Indique el total de plazas físicas disponibles en este cuarto.</div>
+            </div>
+
+            <div class="mb-4 border p-3 rounded bg-light">
+                <label class="form-label fw-bold d-block mb-2">Estado Operativo</label>
+                <div class="form-check form-switch fs-5">
+                    <input class="form-check-input" type="checkbox" asp-for="Estado" id="switchEstado">
+                    <label class="form-check-label ms-2" for="switchEstado">
+                        Habitación Habilitada para alojar residentes
+                    </label>
+                </div>
+                <div class="form-text mt-2 text-muted">
+                    <i class="bi bi-info-circle"></i> Apague este interruptor si la habitación está en refacción o desinfección.
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-secondary shadow-sm fw-bold">
+                    <i class="bi bi-save"></i> Guardar Configuración
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

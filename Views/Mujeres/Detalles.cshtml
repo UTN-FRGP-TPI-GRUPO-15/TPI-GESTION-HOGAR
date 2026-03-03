@@ -18,7 +18,7 @@
 
 <div class="row">
     <div class="col-md-6 mb-4">
-        <div class="card shadow-sm border-0 h-100">
+        <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-info text-white fw-bold">
                 <i class="bi bi-person-lines-fill"></i> Información Personal
             </div>
@@ -33,25 +33,14 @@
                     <span class="fs-5">@Model.DNI</span>
                 </div>
 
-                <div class="mb-3 border-bottom pb-2">
+                <div class="mb-0">
                     <small class="text-muted d-block fw-bold">Lugar de Procedencia</small>
                     <span class="fs-5"><i class="bi bi-geo-alt-fill text-danger"></i> @Model.Localidad</span>
                 </div>
-
-                <div class="mb-3">
-                    <small class="text-muted d-block fw-bold">Estado en el Sistema</small>
-                    @if (Model.estado)
-                    {
-                        <span class="badge bg-success fs-6"><i class="bi bi-check-circle"></i> Residente Activa</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-secondary fs-6"><i class="bi bi-x-circle"></i> Inactiva / Egresada</span>
-                    }
-                </div>
             </div>
         </div>
-        <div class="card shadow-sm border-0 mt-4">
+
+        <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-secondary text-white fw-bold d-flex justify-content-between align-items-center">
                 <span><i class="bi bi-people-fill"></i> Menores a cargo </span>
                 <span class="badge bg-light text-dark fs-6 rounded-pill">
@@ -72,18 +61,18 @@
                         </thead>
                         <tbody>
                             @foreach (var hijo in Model.Hijos)
-                                {
-                                    <tr>
-                                        <td class="fw-bold text-secondary">@hijo.DNI</td>
-                                        <td>@hijo.Apellido, @hijo.Nombre</td>
-                                        <td>@hijo.Edad Años</td>
-                                        <td>
-                                            <a asp-controller="Hijos" asp-action="Editar" asp-route-id="@hijo.ID" class="btn btn-sm btn-outline-secondary" title="Editar Menor">
-                                                <i class="bi bi-pencil">Editar</i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
+                            {
+                                <tr>
+                                    <td class="fw-bold text-secondary">@hijo.DNI</td>
+                                    <td>@hijo.Apellido, @hijo.Nombre</td>
+                                    <td>@hijo.Edad Años</td>
+                                    <td>
+                                        <a asp-controller="Hijos" asp-action="Editar" asp-route-id="@hijo.ID" class="btn btn-sm btn-outline-secondary" title="Editar Menor">
+                                            <i class="bi bi-pencil">Editar</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 }
@@ -97,6 +86,24 @@
                     <a asp-controller="Hijos" asp-action="AgregarHijo" asp-route-id="@Model.ID" class="btn btn-outline-secondary btn-sm w-100">
                         <i class="bi bi-person-plus"></i> Registrar Menor
                     </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white fw-bold">
+                <i class="bi bi-info-circle"></i> Estado en el Sistema
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    @if (Model.estado)
+                    {
+                        <span class="badge bg-success fs-6 p-2 w-100"><i class="bi bi-check-circle"></i> Residente Activa</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary fs-6 p-2 w-100"><i class="bi bi-x-circle"></i> Inactiva / Egresada</span>
+                    }
                 </div>
             </div>
         </div>

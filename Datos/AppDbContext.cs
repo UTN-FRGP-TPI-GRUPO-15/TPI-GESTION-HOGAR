@@ -179,6 +179,7 @@ namespace TPI_GESTION_HOGAR.Datos
                     Telefono = "2246-998877",
                     Domicilio = "Av. San Martín 456",
                     Localidad = "Mar de Ajó",
+                    Vinculo = "Ex-Pareja",
                     RegistroId = 1
                 }
             );

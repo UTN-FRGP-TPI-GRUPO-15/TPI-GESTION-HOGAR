@@ -1,0 +1,161 @@
+﻿@model TPI_GESTION_HOGAR.Models.Registro
+
+@{
+    ViewData["Title"] = "Ficha de Ingreso";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div>
+        <h2 class="text-primary fw-bold mb-0">
+            <i class="bi bi-folder2-open"></i> Expediente de Ingreso N° @Model.Id
+        </h2>
+        <span class="text-muted">Ingresada el @Model.Fecha.ToString("dd/MM/yyyy")</span>
+    </div>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+        <i class="bi bi-arrow-left"></i> Volver al Dashboard
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+
+        <div class="card shadow-sm border-0 border-top border-primary border-4 mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-primary fw-bold"><i class="bi bi-person-fill"></i> Datos de la Residente</h5>
+                <hr />
+                <h4 class="fw-bold">@Model.Mujer?.Apellido, @Model.Mujer?.Nombre</h4>
+                <p class="mb-1"><strong>DNI:</strong> @Model.Mujer?.DNI</p>
+                <p class="mb-1"><strong>Teléfono:</strong> @Model.Mujer?.Telefono</p>
+                <p class="mb-1"><strong>Localidad:</strong> @Model.Mujer?.Localidad</p>
+
+                <div class="mt-3">
+                    <a asp-controller="Mujeres" asp-action="Editar" asp-route-id="@Model.MujerID" class="btn btn-sm btn-outline-primary w-100">
+                        <i class="bi bi-pencil-square"></i> Editar Datos Personales
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 border-top border-success border-4 mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-success fw-bold"><i class="bi bi-door-closed-fill"></i> Alojamiento</h5>
+                <hr />
+                @if (Model.Habitacion != null)
+                {
+                    <h4 class="fw-bold">Habitación @Model.Habitacion.NroHabitacion</h4>
+                    <p class="text-muted mb-3">Capacidad de la habitación: @Model.Habitacion.Capacidad plazas</p>
+                    <a asp-action="AsignarHabitacion" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-success w-100">
+                        <i class="bi bi-arrow-left-right"></i> Cambiar Habitación
+                    </a>
+                }
+                else
+                {
+                    <div class="alert alert-warning text-dark mb-3">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Sin habitación asignada (En tránsito).
+                    </div>
+                    <a asp-action="AsignarHabitacion" asp-route-id="@Model.Id" class="btn btn-sm btn-success w-100 fw-bold">
+                        <i class="bi bi-plus-circle"></i> Asignar Cama Ahora
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 border-top border-info border-4 mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="card-title text-info fw-bold mb-0"><i class="bi bi-people-fill"></i> Menores a Cargo</h5>
+                                   </div>
+                <hr />
+                @if (Model.Mujer?.Hijos != null && Model.Mujer.Hijos.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var hijo in Model.Mujer.Hijos)
+                        {
+                            <li class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="fw-bold d-block">@hijo.Nombre @hijo.Apellido</span>
+                                    <small class="text-muted">DNI: @hijo.DNI</small>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted text-center mb-0 mt-3">No registra menores ingresados.</p>
+                }
+                <div class="p-2 bg-light border-top text-center">
+                    <a asp-controller="Hijos" asp-action="AgregarHijo" asp-route-id="@Model.Mujer.ID" class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="bi bi-person-plus"></i> Registrar Menor
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+
+        <div class="card shadow-sm border-0 border-top border-danger border-4 mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom-0 pt-3 pb-0">
+                <h5 class="card-title text-danger fw-bold mb-0"><i class="bi bi-person-x-fill"></i> Agresores Identificados</h5>
+                <a asp-controller="Agresores" asp-action="Alta" asp-route-registroId="@Model.Id" class="btn btn-sm btn-danger fw-bold shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Cargar Agresor
+                </a>
+            </div>
+            <div class="card-body">
+                <hr class="mt-2" />
+                @if (Model.Agresores != null && Model.Agresores.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre Completo</th>
+                                    <th>Vínculo</th>
+                                    <th>DNI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var agresor in Model.Agresores)
+                                {
+                                    <tr>
+                                        <td class="fw-bold">@agresor.Apellido, @agresor.Nombre</td>
+                                        <td>@agresor.Vinculo</td>
+                                        <td>@agresor.DNI</td>                                        
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center p-4 text-muted border rounded bg-light">
+                        <i class="bi bi-shield-check fs-2 d-block mb-2 text-secondary"></i>
+                        Aún no se han cargado datos de agresores para este expediente.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 border-top border-warning border-4 mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom-0 pt-3 pb-0">
+                <h5 class="card-title text-warning fw-bold mb-0 text-dark"><i class="bi bi-file-earmark-text-fill"></i> Denuncias y Medidas Judiciales</h5>
+                <button class="btn btn-sm btn-warning text-dark fw-bold shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Nueva Denuncia
+                </button>
+            </div>
+            <div class="card-body">
+                <hr class="mt-2" />
+
+                <div class="text-center p-5 text-muted border rounded bg-light border-warning border-opacity-25">
+                    <i class="bi bi-cone-striped fs-1 d-block mb-3 text-warning"></i>
+                    <h6 class="fw-bold text-dark">Módulo en Construcción</h6>
+                    <p class="mb-0 small">Aquí se listarán las comisarías, juzgados, fechas de restricción perimetral y botones antipánico asignados.</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

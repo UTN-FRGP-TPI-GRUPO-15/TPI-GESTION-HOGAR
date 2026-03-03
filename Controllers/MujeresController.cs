@@ -118,13 +118,25 @@ namespace TPI_GESTION_HOGAR.Controllers
                     _context.Condiciones.Add(nuevaCondicion);
                     await _context.SaveChangesAsync();
                 }
+                var primerIngreso = new Registro
+                {
+                    Fecha = DateOnly.FromDateTime(DateTime.Today), 
+                    Estado = true,                                 
+                    MujerID = nuevaMujer.ID                        
+                                                                   
+                };
 
-                return RedirectToAction(nameof(Index));
+                _context.Registros.Add(primerIngreso);
+                await _context.SaveChangesAsync();
+               
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.TipoCondiciones = _context.TipoCondiciones.ToList();
             return View(nuevaMujer);
         }
+
+         
 
         [HttpGet]
         public async Task<IActionResult> VerCondicion(int? id)
@@ -231,88 +243,91 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             return View(mujer);
         }
-        [HttpGet]
-        public async Task<IActionResult> AgregarHijo(int id)
-        {
-            var mujer = await _context.Mujeres.FindAsync(id);
-            if (mujer == null) return NotFound();
 
-            ViewBag.MujerId = mujer.ID;
-            ViewBag.MujerNombre = $"{mujer.Nombre} {mujer.Apellido}";
 
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AgregarHijo(Hijo nuevoHijo)
-        {
-            nuevoHijo.ID = 0;
-            if (ModelState.IsValid)
-            {
-                _context.Hijos.Add(nuevoHijo);
-                await _context.SaveChangesAsync();
-                TempData["MensajeExito"] = "Registro estadístico guardado correctamente.";
-
-               
-                return RedirectToAction("Detalles", new { id = nuevoHijo.MujerId });
-            }
-
-            
-            var mujer = await _context.Mujeres.FindAsync(nuevoHijo.MujerId);
-            ViewBag.MujerId = mujer.ID;
-            ViewBag.MujerNombre = $"{mujer.Nombre} {mujer.Apellido}";
-            return View(nuevoHijo);
-        }
-
+        // ==========================================
+        // EDITAR DATOS Y/O GENERAR RE-INGRESO
+        // ==========================================
         [HttpGet]
         public async Task<IActionResult> Editar(int? id)
         {
-            if (id == null) return NotFound();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            // Buscamos a la residente por su ID
             var mujer = await _context.Mujeres.FindAsync(id);
-            if (mujer == null) return NotFound();
+            if (mujer == null)
+            {
+                return NotFound();
+            }
 
-            // La mandamos a la pantalla. Como ya tiene datos, los casilleros aparecerán llenos.
+            // Podés cargar acá los ViewBag de Provincias o Condiciones si los usás en la vista
             return View(mujer);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Editar(int id, Mujer mujerModificada)
+        public async Task<IActionResult> Editar(int id, Mujer mujerModificada, bool generarIngreso = false)
         {
-            if (id != mujerModificada.ID) return NotFound();
+            if (id != mujerModificada.ID)
+            {
+                return NotFound();
+            }
 
             if (ModelState.IsValid)
             {
-                // 1. Buscamos a la residente original
-                var mujerOriginal = await _context.Mujeres.FindAsync(id);
-                if (mujerOriginal == null) return NotFound();
+                try
+                {
+                   
+                    _context.Update(mujerModificada);
+                    await _context.SaveChangesAsync();
 
-                // 2. Actualizamos los campos
-                mujerOriginal.DNI = mujerModificada.DNI;
-                mujerOriginal.Nombre = mujerModificada.Nombre;
-                mujerOriginal.Apellido = mujerModificada.Apellido;
-                mujerOriginal.FechaNac = mujerModificada.FechaNac;
-                mujerOriginal.Nacionalidad = mujerModificada.Nacionalidad;
-                mujerOriginal.Genero = mujerModificada.Genero;
-                mujerOriginal.NivelEducativo = mujerModificada.NivelEducativo;
-                mujerOriginal.Ocupacion = mujerModificada.Ocupacion;
-                mujerOriginal.Telefono = mujerModificada.Telefono;
-                mujerOriginal.Domicilio = mujerModificada.Domicilio;
-                mujerOriginal.Localidad = mujerModificada.Localidad;
+                    
+                    if (generarIngreso)
+                    {
+                        var nuevoIngreso = new Registro
+                        {
+                            Fecha = DateOnly.FromDateTime(DateTime.Today), 
+                            Estado = true,                                 
+                            MujerID = mujerModificada.ID                   
+                                                                           
+                        };
 
-               
-                // 3. Guardamos los cambios
-                await _context.SaveChangesAsync();
-                TempData["MensajeExito"] = "Los datos de la residente se actualizaron correctamente.";
+                        _context.Registros.Add(nuevoIngreso);
+                        await _context.SaveChangesAsync();
 
-                return RedirectToAction("Detalles", new { id = mujerOriginal.ID });
+                        TempData["MensajeExito"] = "Los datos de la residente fueron actualizados y se registró su nuevo ingreso al hogar.";
+
+                     
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                   
+                    TempData["MensajeExito"] = "Los datos de la residente se actualizaron correctamente.";
+                    return RedirectToAction(nameof(Index)); 
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MujerExists(mujerModificada.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
 
-            // Si algo falla, recarga la vista
+         
             return View(mujerModificada);
+        }
+
+       
+        private bool MujerExists(int id)
+        {
+            return _context.Mujeres.Any(e => e.ID == id);
         }
 
 
