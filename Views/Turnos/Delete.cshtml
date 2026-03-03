@@ -1,0 +1,18 @@
+﻿@model TPI_GESTION_HOGAR.Models.Turno
+
+<h2>Eliminar Turno</h2>
+
+<form asp-action="Delete" method="POST">
+
+	<input type="hidden" asp-for="ID" />
+
+	<h3 class="text-center">@Model.Fecha</h3>
+
+	<h3 class="text-center">@Model.TipoTurno.Descripcion</h3>
+
+	<h3 class="text-center">@Model.Personal.Nombre @Model.Personal.Apellido</h3>
+
+	<button type="submit" class="btn btn-primary">Eliminar</button>
+	<a class="btn btn-secondary" href="/Turnos/Index">Volver</a>
+
+</form>

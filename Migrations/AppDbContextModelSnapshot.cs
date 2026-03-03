@@ -22,21 +22,6 @@ namespace TPI_GESTION_HOGAR.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("PersonalTurno", b =>
-                {
-                    b.Property<int>("PersonalId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TurnosID")
-                        .HasColumnType("int");
-
-                    b.HasKey("PersonalId", "TurnosID");
-
-                    b.HasIndex("TurnosID");
-
-                    b.ToTable("PersonalTurno");
-                });
-
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
                 {
                     b.Property<int>("ID")
@@ -719,9 +704,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("date");
 
-                    b.Property<int>("Horas")
-                        .HasColumnType("int");
-
                     b.Property<int>("PersonalId")
                         .HasColumnType("int");
 
@@ -729,6 +711,8 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("PersonalId");
 
                     b.HasIndex("TipoTurnoId");
 
@@ -786,21 +770,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                             PersonalId = 1,
                             RolId = 2
                         });
-                });
-
-            modelBuilder.Entity("PersonalTurno", b =>
-                {
-                    b.HasOne("TPI_GESTION_HOGAR.Models.Personal", null)
-                        .WithMany()
-                        .HasForeignKey("PersonalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TPI_GESTION_HOGAR.Models.Turno", null)
-                        .WithMany()
-                        .HasForeignKey("TurnosID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
@@ -915,11 +884,19 @@ namespace TPI_GESTION_HOGAR.Migrations
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Turno", b =>
                 {
+                    b.HasOne("TPI_GESTION_HOGAR.Models.Personal", "Personal")
+                        .WithMany("Turnos")
+                        .HasForeignKey("PersonalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TPI_GESTION_HOGAR.Models.TipoTurno", "TipoTurno")
                         .WithMany("Turnos")
                         .HasForeignKey("TipoTurnoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Personal");
 
                     b.Navigation("TipoTurno");
                 });
@@ -967,6 +944,8 @@ namespace TPI_GESTION_HOGAR.Migrations
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Personal", b =>
                 {
+                    b.Navigation("Turnos");
+
                     b.Navigation("Usuario")
                         .IsRequired();
                 });

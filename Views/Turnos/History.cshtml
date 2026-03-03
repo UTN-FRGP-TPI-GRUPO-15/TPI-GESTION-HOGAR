@@ -1,0 +1,57 @@
+﻿@using TPI_GESTION_HOGAR.Models
+@using static System.Runtime.InteropServices.JavaScript.JSType
+@model IEnumerable<Turno>
+
+<h2>Historial de Turnos</h2>
+
+<form asp-controller="Turnos" asp-action="History" method="get">
+	<p>
+		Nombre: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+		<input type="submit" value="Búsqueda" />
+		<a class="btn " href="/Turnos/History">Limpiar Filtros</a>
+	</p>
+</form>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				<label>ID</label>
+			</th>
+			<th>
+				<a class="text-dark" asp-action="History" asp-route-sortOrder="@ViewData["DateSortParm"]"><label>Fecha</label></a>
+			</th>
+			<th>
+				<label>Horario</label>
+			</th>
+			<th>
+				<a class="text-dark" asp-action="History" asp-route-sortOrder="@ViewData["NameSortParm"]"><label>Nombre</label></a>
+			</th>			
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var turno in Model)
+		{
+			if (turno.Fecha.ToDateTime(TimeOnly.MaxValue) <= DateTime.Now)
+			{
+				<tr>
+					<td>
+						<label>@turno.ID</label>
+					</td>
+					<td>
+						<label>@turno.Fecha</label>
+					</td>
+					<td>
+						<label>@turno.TipoTurno.Descripcion</label>
+					</td>
+					<td>
+						<label>@turno.Personal.Apellido, @turno.Personal.Nombre</label>
+					</td>					
+				</tr>
+			}
+		}
+	</tbody>
+</table>
+<div>
+	<a class="btn btn-primary" href="/Turnos/Index">Volver</a>
+</div>
