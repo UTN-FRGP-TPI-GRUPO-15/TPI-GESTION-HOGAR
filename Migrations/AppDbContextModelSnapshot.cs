@@ -34,7 +34,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("TurnosID");
 
-                    b.ToTable("PersonalTurno", (string)null);
+                    b.ToTable("PersonalTurno");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
@@ -88,7 +88,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("RegistroId");
 
-                    b.ToTable("Agresores", (string)null);
+                    b.ToTable("Agresores");
 
                     b.HasData(
                         new
@@ -134,7 +134,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("TipoCondicionId");
 
-                    b.ToTable("Condiciones", (string)null);
+                    b.ToTable("Condiciones");
 
                     b.HasData(
                         new
@@ -170,7 +170,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("RegistroId");
 
-                    b.ToTable("Denuncias", (string)null);
+                    b.ToTable("Denuncias");
 
                     b.HasData(
                         new
@@ -220,7 +220,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("RegistroId")
                         .IsUnique();
 
-                    b.ToTable("Egresos", (string)null);
+                    b.ToTable("Egresos");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Habitacion", b =>
@@ -242,7 +242,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Habitaciones", (string)null);
+                    b.ToTable("Habitaciones");
 
                     b.HasData(
                         new
@@ -304,7 +304,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("MujerId");
 
-                    b.ToTable("Hijos", (string)null);
+                    b.ToTable("Hijos");
 
                     b.HasData(
                         new
@@ -337,7 +337,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("DenunciaId");
 
-                    b.ToTable("Medidas", (string)null);
+                    b.ToTable("Medidas");
 
                     b.HasData(
                         new
@@ -403,7 +403,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Mujeres", (string)null);
+                    b.ToTable("Mujeres");
 
                     b.HasData(
                         new
@@ -446,7 +446,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("RegistroId");
 
-                    b.ToTable("Observaciones", (string)null);
+                    b.ToTable("Observaciones");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.ObservacionCondicion", b =>
@@ -463,7 +463,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ObservacionCondiciones", (string)null);
+                    b.ToTable("ObservacionCondiciones");
 
                     b.HasData(
                         new
@@ -533,7 +533,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("Legajo")
                         .IsUnique();
 
-                    b.ToTable("Personal", (string)null);
+                    b.ToTable("Personal");
 
                     b.HasData(
                         new
@@ -578,7 +578,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("MujerID");
 
-                    b.ToTable("Registros", (string)null);
+                    b.ToTable("Registros");
 
                     b.HasData(
                         new
@@ -605,7 +605,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -639,7 +639,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TipoCondiciones", (string)null);
+                    b.ToTable("TipoCondiciones");
 
                     b.HasData(
                         new
@@ -683,7 +683,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TipoTurnos", (string)null);
+                    b.ToTable("TipoTurnos");
 
                     b.HasData(
                         new
@@ -727,7 +727,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("TipoTurnoId");
 
-                    b.ToTable("Turnos", (string)null);
+                    b.ToTable("Turnos");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Usuario", b =>
@@ -769,7 +769,7 @@ namespace TPI_GESTION_HOGAR.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Usuarios", (string)null);
+                    b.ToTable("Usuarios");
 
                     b.HasData(
                         new
