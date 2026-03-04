@@ -103,7 +103,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
 
-            ViewBag.Personal = new SelectList(listaAlfabetica, "ID", "Name");
+            ViewBag.Personal = new SelectList(listaAlfabetica, "Id", "Name");
 
             return View();
         }
@@ -133,51 +133,55 @@ namespace TPI_GESTION_HOGAR.Controllers
 
                     var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
 
-                    ViewBag.Personal = new SelectList(listaAlfabetica, "ID", "Name");
+                    ViewBag.Personal = new SelectList(listaAlfabetica, "Id", "Name");
                 }
                 else
                 {
-                    bool horario1 = turno.TipoTurnoId == 1;
-                    bool turnoAnteriorHorario3 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 3 && t.Fecha == turno.Fecha.AddDays(-1));
-                    bool turnoSiguienteHorario2 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 2 && t.Fecha == turno.Fecha);
-                    
-                    bool horario1valido = horario1 && !turnoAnteriorHorario3 && !turnoSiguienteHorario2;
+                    //bool horario1 = turno.TipoTurnoId == 1;
+                    //bool turnoAnteriorHorario3 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 3 && t.Fecha == turno.Fecha.AddDays(-1));
+                    //bool turnoSiguienteHorario2 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 2 && t.Fecha == turno.Fecha);
 
-                    bool horario2 = turno.TipoTurnoId == 2;
-                    bool turnoAnteriorHorario1 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 1 && t.Fecha == turno.Fecha);
-                    bool turnoSiguienteHorario3 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 3 && t.Fecha == turno.Fecha);
-                    
-                    bool horario2valido = horario2 && !turnoAnteriorHorario1 && !turnoSiguienteHorario3;
+                    //bool horario1valido = horario1 && !turnoAnteriorHorario3 && !turnoSiguienteHorario2;
 
-                    bool horario3 = turno.TipoTurnoId == 3;                    
-                    bool turnoAnteriorHorario2 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 2 && t.Fecha == turno.Fecha);
-                    bool turnoSiguienteHorario1 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 1 && t.Fecha == turno.Fecha.AddDays(1));
-                    
-                    bool horario3valido = horario3 && !turnoAnteriorHorario2 && !turnoSiguienteHorario1;
+                    //bool horario2 = turno.TipoTurnoId == 2;
+                    //bool turnoAnteriorHorario1 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 1 && t.Fecha == turno.Fecha);
+                    //bool turnoSiguienteHorario3 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 3 && t.Fecha == turno.Fecha);
 
-                    if (horario1 && horario1valido || horario2 && horario2valido || horario3 && horario3valido)
-                    {
-                        _context.Add(turno);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
-                    }
-                    else 
-                    {
-                        ModelState.AddModelError("", "El turno no es válido debido a las restricciones de horarios para el personal. Por favor, elija un horario diferente o revise los turnos adyacentes.");
+                    //bool horario2valido = horario2 && !turnoAnteriorHorario1 && !turnoSiguienteHorario3;
 
-                        var tipoTurnos = _context.TipoTurnos.ToList();
-                        ViewBag.TipoTurnos = new SelectList(tipoTurnos, "Id", "Descripcion");
+                    //bool horario3 = turno.TipoTurnoId == 3;                    
+                    //bool turnoAnteriorHorario2 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 2 && t.Fecha == turno.Fecha);
+                    //bool turnoSiguienteHorario1 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 1 && t.Fecha == turno.Fecha.AddDays(1));
 
-                        var personal = _context.Personal.Select(e => new
-                        {
-                            Id = e.Id,
-                            Name = e.Apellido + ", " + e.Nombre
-                        });
+                    //bool horario3valido = horario3 && !turnoAnteriorHorario2 && !turnoSiguienteHorario1;
 
-                        var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
+                    //if (horario1 && horario1valido || horario2 && horario2valido || horario3 && horario3valido)
+                    //{
+                    //    _context.Add(turno);
+                    //    await _context.SaveChangesAsync();
+                    //    return RedirectToAction(nameof(Index));
+                    //}
+                    //else 
+                    //{
+                    //    ModelState.AddModelError("", "El turno no es válido debido a las restricciones de horarios para el personal. Por favor, elija un horario diferente o revise los turnos adyacentes.");
 
-                        ViewBag.Personal = new SelectList(listaAlfabetica, "ID", "Name");
-                    }
+                    //    var tipoTurnos = _context.TipoTurnos.ToList();
+                    //    ViewBag.TipoTurnos = new SelectList(tipoTurnos, "Id", "Descripcion");
+
+                    //    var personal = _context.Personal.Select(e => new
+                    //    {
+                    //        Id = e.Id,
+                    //        Name = e.Apellido + ", " + e.Nombre
+                    //    });
+
+                    //    var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
+
+                    //    ViewBag.Personal = new SelectList(listaAlfabetica, "Id", "Name");
+                    //}
+
+                    _context.Add(turno);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
@@ -214,7 +218,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
 
-            ViewBag.Personal = new SelectList(listaAlfabetica, "ID", "Name");
+            ViewBag.Personal = new SelectList(listaAlfabetica, "Id", "Name");
 
             return View(turno);
         }
