@@ -10,29 +10,6 @@ namespace TPI_GESTION_HOGAR.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_PersonalTurno_Personal_PersonalID",
-                table: "PersonalTurno");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_PersonalTurno_Turnos_TurnoID",
-                table: "PersonalTurno");
-
-            migrationBuilder.RenameColumn(
-                name: "PersonalID",
-                table: "PersonalTurno",
-                newName: "PersonalId");
-
-            migrationBuilder.RenameColumn(
-                name: "TurnoID",
-                table: "PersonalTurno",
-                newName: "TurnosID");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_PersonalTurno_TurnoID",
-                table: "PersonalTurno",
-                newName: "IX_PersonalTurno_TurnosID");
-
             migrationBuilder.RenameColumn(
                 name: "ID",
                 table: "Personal",
@@ -71,53 +48,14 @@ namespace TPI_GESTION_HOGAR.Migrations
                 keyValue: 1,
                 column: "Email",
                 value: "lgarcia@test.com");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PersonalTurno_Personal_PersonalId",
-                table: "PersonalTurno",
-                column: "PersonalId",
-                principalTable: "Personal",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PersonalTurno_Turnos_TurnosID",
-                table: "PersonalTurno",
-                column: "TurnosID",
-                principalTable: "Turnos",
-                principalColumn: "ID",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_PersonalTurno_Personal_PersonalId",
-                table: "PersonalTurno");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_PersonalTurno_Turnos_TurnosID",
-                table: "PersonalTurno");
-
             migrationBuilder.DropColumn(
                 name: "Email",
                 table: "Usuarios");
-
-            migrationBuilder.RenameColumn(
-                name: "PersonalId",
-                table: "PersonalTurno",
-                newName: "PersonalID");
-
-            migrationBuilder.RenameColumn(
-                name: "TurnosID",
-                table: "PersonalTurno",
-                newName: "TurnoID");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_PersonalTurno_TurnosID",
-                table: "PersonalTurno",
-                newName: "IX_PersonalTurno_TurnoID");
 
             migrationBuilder.RenameColumn(
                 name: "Id",
@@ -143,22 +81,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                 keyValue: 1,
                 column: "DNI",
                 value: 25123456);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PersonalTurno_Personal_PersonalID",
-                table: "PersonalTurno",
-                column: "PersonalID",
-                principalTable: "Personal",
-                principalColumn: "ID",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_PersonalTurno_Turnos_TurnoID",
-                table: "PersonalTurno",
-                column: "TurnoID",
-                principalTable: "Turnos",
-                principalColumn: "ID",
-                onDelete: ReferentialAction.Cascade);
         }
     }
 }
