@@ -2,51 +2,72 @@
 @using static System.Runtime.InteropServices.JavaScript.JSType
 @model IEnumerable<Personal>
 
-<h2>Personal</h2>
+<h2 class="mb-4 text-primary"><i class="bi bi-people-fill"></i>Gestión de Personal</h2>
 
-<a class="btn btn-primary mb-3" href="/Personal/Alta">Ingresar Personal</a>
+<div class="row mb-4 align-items-center">
+	<div class="col-md-4">
+		<a class="btn btn-primary shadow-sm" href="/Personal/Alta">
+			<i class="bi bi-plus-circle"></i>Nuevo Personal
+		</a>
+	</div>
+	<div class="col-md-8">
+		<form asp-action="Index" method="get" class="d-flex justify-content-end">
+			<input type="text" name="searchString" class="form-control w-75 me-2 shadow-sm"
+				placeholder="Buscar por Legajo, Nombre o Apellido..."
+				value="@ViewData["CurrentFilter"]">
+			
+			<button type="submit" class="btn btn-success shadow-sm">Buscar</button>
+			<a asp-action="Index" class="btn btn-outline-secondary ms-2 shadow-sm">Limpiar</a>
+		</form>
+	</div>
+</div>
 
-<form asp-controller="Personal" asp-action="Index" method="get">
-	<p>
-		Nombre: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
-		<input type="submit" value="Búsqueda" />
-		<a class="btn " href="/Personal/Index">Limpiar Filtros</a>
-	</p>
-</form>
-
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th>
-				<label>Legajo</label>
-			</th>
-			<th>
-				<a class="text-dark" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"><label>Nombre</label></a>
-			</th>			
-			<th>
-				<a class="text-dark" asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSortParm"]"><label>Apellido</label></a>
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var personal in Model)
-		{			
-			<tr>
-				<td>
-					<label>@personal.Legajo</label>
-				</td>
-				<td>
-					<label>@personal.Nombre</label>
-				</td>
-				<td>
-					<label>@personal.Apellido</label>
-				</td>				
-				<td>
-					<a class="btn btn-sm btn-warning" href="/Personal/Edit/@personal.Id">Editar</a>
-					<a class="btn btn-sm btn-danger" href="/Personal/Delete/@personal.Id">Eliminar</a>
-				</td>
-			</tr>			
-		}
-	</tbody>
-</table>
+<div class="card shadow-sm border-0">
+	<div class="card-body p-0">
+		<div class="table-responsive">
+			<table class="table table-hover table-striped mb-0">
+				<thead class="table-dark">
+					<tr>
+						<th>Legajo</th>
+						<th><a class="text-light" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"><label>Nombre</label></a></th>
+						<th><a class="text-light" asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSortParm"]"><label>Apellido</label></a></th>
+						<th class="text-center">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Model != null && Model.Any())
+					{
+						foreach (var personal in Model)
+						{
+							<tr>
+								<td class="fw-bold">@personal.Legajo</td>
+								<td>@personal.Nombre</td>
+								<td>@personal.Apellido</td>								
+								<td class="text-center">
+									<a asp-action="Edit" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-primary" title="Editar">
+										<i class="bi bi-pencil-square">Editar</i>
+									</a>
+									<a asp-action="Delete" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-danger" title="Dar de Baja">
+										<i class="bi bi-eye">Dar de Baja</i>
+									</a>
+									<a asp-action="Detalles" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-info" title="Ver Ficha">
+										<i class="bi bi-eye">Ver Ficha</i>
+									</a>
+								</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="5" class="text-center p-5 text-muted">
+								<h5><i class="bi bi-inbox fs-1"></i></h5>
+								<p class="mb-0">No se encontró personal registrado con ese criterio de búsqueda.</p>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
