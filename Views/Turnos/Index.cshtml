@@ -8,6 +8,8 @@
 
 <a class="btn btn-secondary mb-3" href="/Turnos/History">Historial de Turnos</a>
 
+<a class="btn btn-success mb-3" asp-action="Planificacion">Planificación Semanal</a>
+
 <form asp-controller="Turnos" asp-action="Index" method="get">
 	<p>
 		Nombre: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
