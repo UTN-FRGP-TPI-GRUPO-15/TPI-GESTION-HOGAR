@@ -25,6 +25,8 @@
         int contador = 0;
     }
 
+    <input type="hidden" name="fecha" value="@inicioSemana.ToString("yyyy-MM-dd")" />
+
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -54,7 +56,7 @@
                             t.Fecha == fecha &&
                             t.TipoTurnoId == tipo.Id);
 
-                        <td>
+                        <td class="@(turno?.PersonalId == null ? "table-warning": "")">
 
                             <input type="hidden" name="turnos[@contador].Fecha" value="@fecha" />
                             <input type="hidden" name="turnos[@contador].TipoTurnoId" value="@tipo.Id" />

@@ -304,7 +304,7 @@ namespace TPI_GESTION_HOGAR.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GuardarPlanificacion(List<NuevoTurnoDTO> turnos)
+        public async Task<IActionResult> GuardarPlanificacion(List<NuevoTurnoDTO> turnos, DateOnly fecha)
         {
             var fechas = turnos.Select(t => t.Fecha).Distinct();
 
@@ -341,7 +341,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             TempData["MensajeExito"] = "Planificación guardada correctamente";
 
-            return RedirectToAction("Planificacion");
+            return RedirectToAction("Planificacion", new { fecha });
         }
 
         private async Task<List<Turno>> ObtenerTurnos(DateOnly fechaInicio, DateOnly fechaFin)
