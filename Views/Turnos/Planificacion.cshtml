@@ -20,61 +20,78 @@
 <a asp-action="Planificacion" asp-route-fecha="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")">Semana actual</a>
 <a asp-action="Planificacion" asp-route-fecha="@inicioSemana.AddDays(7).ToString("yyyy-MM-dd")">Semana siguiente</a>
 
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>Día</th>
+<form asp-action="GuardarPlanificacion" method="post">
+    @{
+        int contador = 0;
+    }
 
-            @foreach (var tipo in tipoTurnos)
-            {
-                <th>@tipo.Descripcion</th>
-            }
-        </tr>
-    </thead>
-
-    <tbody>
-
-        @for (int i = 0; i < 7; i++)
-        {
-            var fecha = inicioSemana.AddDays(i);
-
+    <table class="table table-striped table-bordered">
+        <thead>
             <tr>
-                <td>
-                    @fecha.ToString("dddd dd/MM")
-                </td>
+                <th>Día</th>
 
                 @foreach (var tipo in tipoTurnos)
                 {
-                    var turno = turnos.FirstOrDefault(t =>
-                        t.Fecha == fecha &&
-                        t.TipoTurnoId == tipo.Id);
-
-                    <td>
-                        <select class="form-select">
-
-                            <option value="">-- Seleccionar --</option>
-
-                            @foreach (var p in personal)
-                            {
-                                if (turno?.PersonalId == p.Id)
-                                {
-                                    <option value="@p.Id" selected>
-                                        @p.Nombre @p.Apellido
-                                    </option>
-                                }
-                                else
-                                {
-                                    <option value="@p.Id">
-                                        @p.Nombre @p.Apellido
-                                    </option>
-                                }
-                            }
-
-                        </select>
-                    </td>
+                    <th>@tipo.Descripcion</th>
                 }
             </tr>
-        }
+        </thead>
 
-    </tbody>
-</table>
+        <tbody>
+
+            @for (int i = 0; i < 7; i++)
+            {
+                var fecha = inicioSemana.AddDays(i);
+
+                <tr>
+                    <td>
+                        @fecha.ToString("dddd dd/MM")
+                    </td>
+
+                    @foreach (var tipo in tipoTurnos)
+                    {
+                        var turno = turnos.FirstOrDefault(t =>
+                            t.Fecha == fecha &&
+                            t.TipoTurnoId == tipo.Id);
+
+                        <td>
+
+                            <input type="hidden" name="turnos[@contador].Fecha" value="@fecha" />
+                            <input type="hidden" name="turnos[@contador].TipoTurnoId" value="@tipo.Id" />
+
+                            <select name="turnos[@contador].PersonalId" class="form-select">
+
+                                <option value="">-- Seleccionar --</option>
+
+                                @foreach (var p in personal)
+                                {
+                                    if (turno?.PersonalId == p.Id)
+                                    {
+                                        <option value="@p.Id" selected>
+                                            @p.Nombre @p.Apellido
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@p.Id">
+                                            @p.Nombre @p.Apellido
+                                        </option>
+                                    }
+                                }
+
+                            </select>
+                        </td>
+
+                        contador++;
+                    }
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">
+        Guardar Planificación
+    </button>
+
+</form>

@@ -304,11 +304,42 @@ namespace TPI_GESTION_HOGAR.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Planificacion(List<NuevoTurnoDTO> turnos)
+        public async Task<IActionResult> GuardarPlanificacion(List<NuevoTurnoDTO> turnos)
         {
-            //TODO: DESARROLLAR METODO
+            var fechas = turnos.Select(t => t.Fecha).Distinct();
 
-            return View();
+            var turnosExistentes = await _context.Turnos
+                                    .Where(t => fechas.Contains(t.Fecha))
+                                    .ToListAsync();
+
+            foreach (var dto in turnos)
+            {
+                var turnoExistente = turnosExistentes.FirstOrDefault(t => t.Fecha == dto.Fecha && t.TipoTurnoId == dto.TipoTurnoId);
+
+                if (turnoExistente != null)
+                {
+                    if (dto.PersonalId != null)
+                        turnoExistente.PersonalId = dto.PersonalId.Value;
+
+                    else
+                        _context.Turnos.Remove(turnoExistente);
+                }
+                else if (dto.PersonalId != null)
+                {
+                    var nuevoTurno = new Turno
+                    {
+                        Fecha = dto.Fecha,
+                        TipoTurnoId = dto.TipoTurnoId,
+                        PersonalId = dto.PersonalId.Value
+                    };
+
+                    _context.Turnos.Add(nuevoTurno);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Planificacion");
         }
 
         private async Task<List<Turno>> ObtenerTurnos(DateOnly fechaInicio, DateOnly fechaFin)
