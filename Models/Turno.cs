@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace TPI_GESTION_HOGAR.Models
 {
+    [Index(nameof(Fecha), nameof(TipoTurnoId), IsUnique = true)]
     public class Turno
     {
         public int ID { get; set; }
