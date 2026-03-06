@@ -339,6 +339,8 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             await _context.SaveChangesAsync();
 
+            TempData["MensajeExito"] = "Planificación guardada correctamente";
+
             return RedirectToAction("Planificacion");
         }
 
