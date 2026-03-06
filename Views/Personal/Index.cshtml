@@ -31,6 +31,7 @@
 						<th>Legajo</th>
 						<th><a class="text-light" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"><label>Nombre</label></a></th>
 						<th><a class="text-light" asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSortParm"]"><label>Apellido</label></a></th>
+						<th>Estado</th>
 						<th class="text-center">Acciones</th>
 					</tr>
 				</thead>
@@ -42,14 +43,31 @@
 							<tr>
 								<td class="fw-bold">@personal.Legajo</td>
 								<td>@personal.Nombre</td>
-								<td>@personal.Apellido</td>								
+								<td>@personal.Apellido</td>	
+								@if (personal.Activo)
+								{
+									<td class="fw-bold">Activo</td>
+								}
+								else
+								{
+									<td class="fw-bold">Inactivo</td>
+								}
 								<td class="text-center">
 									<a asp-action="Edit" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-primary" title="Editar">
 										<i class="bi bi-pencil-square">Editar</i>
 									</a>
-									<a asp-action="Delete" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-danger" title="Dar de Baja">
-										<i class="bi bi-eye">Dar de Baja</i>
-									</a>
+									@if (personal.Activo)
+									{
+										<a asp-action="AltaBaja" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-danger" title="Dar de Baja">
+											<i class="bi bi-eye">Dar de Baja</i>
+										</a>					
+									}
+									else
+									{
+										<a asp-action="AltaBaja" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-success" title="Dar de Alta">
+											<i class="bi bi-eye">Dar de Alta</i>
+										</a>
+									}
 									<a asp-action="Detalles" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-info" title="Ver Ficha">
 										<i class="bi bi-eye">Ver Ficha</i>
 									</a>

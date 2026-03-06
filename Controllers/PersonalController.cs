@@ -165,5 +165,37 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             ViewBag.Roles = new SelectList(roles, "Id", "Descripcion");
         }
+
+        public async Task<IActionResult> AltaBaja(int? Id)
+        {
+            if (Id == null)
+            {
+                return NotFound();
+            }
+
+            var personal = await _context.Personal.FirstOrDefaultAsync(p => p.Id == Id);
+
+            if (personal == null)
+            {
+                return NotFound();
+            }
+
+            if(personal.Activo)
+            {
+                personal.Activo = false;
+            }
+            else
+            {
+                personal.Activo = true;
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(personal);
+                await _context.SaveChangesAsync();                
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
