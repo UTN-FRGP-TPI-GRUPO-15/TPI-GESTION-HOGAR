@@ -20,6 +20,38 @@ namespace TPI_GESTION_HOGAR.Controllers
             _context = context;   
         }
 
+        //GET: Turnos
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
+        {
+            ViewData["CurrentFilter"] = searchString;
+            ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+            ViewData["LastNameSortParm"] = sortOrder == "LastName" ? "lastname_desc" : "LastName";
+
+            var personal = await _context.Personal.ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                personal = personal.Where(p => p.Apellido.Contains(searchString) || p.Nombre.Contains(searchString) || p.Legajo.ToString().Contains(searchString)).ToList();
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    personal = personal.OrderByDescending(p => p.Nombre).ToList();
+                    break;
+                case "Name":
+                    personal = personal.OrderBy(p => p.Nombre).ToList();
+                    break;
+                case "lastname_desc":
+                    personal = personal.OrderByDescending(p => p.Apellido).ToList();
+                    break;
+                default:
+                    personal = personal.OrderBy(p => p.Apellido).ToList();
+                    break;
+            }
+
+            return View(personal);            
+        }
         public async Task<IActionResult> Alta()
         {
             await CargarRoles();

@@ -53,22 +53,33 @@
                                 <span asp-validation-for="FechaNac" class="text-danger"></span>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Telefono" class="form-label">Teléfono</label>
-                            <input asp-for="Telefono" type="text" placeholder="+5411283847" class="form-control" />
-                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="Provincia" class="form-label">Provincia</label>
+                                <select class="form-select" id="Provincia" name="Provincia" required>
+                                    <option value="">Seleccione una provincia...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Localidad" class="form-label">Localidad</label>
+                                <select asp-for= "Localidad" class="form-select" id="Localidad" name="Localidad" required disabled>
+                                    <option value="">Seleccione una provincia primero...</option>
+                                </select>
+                                <span asp-validation-for="Localidad" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label asp-for="Domicilio" class="form-label"></label>
-                            <input asp-for="Domicilio" type="text" placeholder="Belgrano 291" class="form-control" />
-                            <span asp-validation-for="Domicilio" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Localidad" class="form-label"></label>
-                            <input asp-for="Localidad" type="text" placeholder="General Pacheco" class="form-control" />
-                            <span asp-validation-for="Localidad" class="text-danger"></span>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Domicilio" class="form-label"></label>
+                                <input asp-for="Domicilio" type="text" placeholder="Belgrano 291" class="form-control" />
+                                <span asp-validation-for="Domicilio" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Telefono" class="form-label">Teléfono</label>
+                                <input asp-for="Telefono" type="text" placeholder="+5411283847" class="form-control" />
+                                <span asp-validation-for="Telefono" class="text-danger"></span>
+                            </div>
+                        </div>                                                
                     </div>
                 </div>
 
@@ -119,3 +130,62 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectProvincia = document.getElementById("Provincia");
+            const selectLocalidad = document.getElementById("Localidad");
+
+            // 1. Apenas carga la página, buscamos las provincias
+            fetch("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre&orden=nombre")
+                .then(response => response.json())
+                .then(data => {
+                    data.provincias.forEach(prov => {
+                        let option = document.createElement("option");
+                        // Guardamos el nombre como "value" para que viaje a tu base de datos
+                        option.value = prov.nombre;
+                        option.textContent = prov.nombre;
+                        // Guardamos el ID oculto para usarlo en la búsqueda de localidades
+                        option.dataset.id = prov.id;
+                        selectProvincia.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error al cargar provincias:", error));
+
+            // 2. Cuando el usuario cambia la provincia, buscamos sus localidades
+            selectProvincia.addEventListener("change", function () {
+                // Limpiamos el combo de localidades y ponemos mensaje de carga
+                selectLocalidad.innerHTML = '<option value="">Cargando localidades...</option>';
+                selectLocalidad.disabled = true;
+
+                // Obtenemos el ID de la provincia seleccionada
+                const selectedOption = this.options[this.selectedIndex];
+                const provId = selectedOption.dataset.id;
+
+                if (!provId) {
+                    selectLocalidad.innerHTML = '<option value="">Seleccione una provincia primero...</option>';
+                    return;
+                }
+
+                // Llamamos a la API pidiendo las localidades de esa provincia (max=1000 para que traiga todas)
+                fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provId}&campos=id,nombre&max=1000&orden=nombre`)
+                    .then(response => response.json())
+                    .then(data => {
+                        selectLocalidad.innerHTML = '<option value="">Seleccione una localidad...</option>';
+                        data.localidades.forEach(loc => {
+                            let option = document.createElement("option");
+                            option.value = loc.nombre;
+                            option.textContent = loc.nombre;
+                            selectLocalidad.appendChild(option);
+                        });
+                        // Habilitamos el combo para que la usuaria pueda elegir
+                        selectLocalidad.disabled = false;
+                    })
+                    .catch(error => {
+                        console.error("Error al cargar localidades:", error);
+                        selectLocalidad.innerHTML = '<option value="">Error al cargar localidades</option>';
+                    });
+            });
+        });
+    </script>
+}

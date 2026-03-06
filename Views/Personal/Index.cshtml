@@ -1,0 +1,52 @@
+﻿@using TPI_GESTION_HOGAR.Models
+@using static System.Runtime.InteropServices.JavaScript.JSType
+@model IEnumerable<Personal>
+
+<h2>Personal</h2>
+
+<a class="btn btn-primary mb-3" href="/Personal/Alta">Ingresar Personal</a>
+
+<form asp-controller="Personal" asp-action="Index" method="get">
+	<p>
+		Nombre: <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" />
+		<input type="submit" value="Búsqueda" />
+		<a class="btn " href="/Personal/Index">Limpiar Filtros</a>
+	</p>
+</form>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				<label>Legajo</label>
+			</th>
+			<th>
+				<a class="text-dark" asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]"><label>Nombre</label></a>
+			</th>			
+			<th>
+				<a class="text-dark" asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSortParm"]"><label>Apellido</label></a>
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var personal in Model)
+		{			
+			<tr>
+				<td>
+					<label>@personal.Legajo</label>
+				</td>
+				<td>
+					<label>@personal.Nombre</label>
+				</td>
+				<td>
+					<label>@personal.Apellido</label>
+				</td>				
+				<td>
+					<a class="btn btn-sm btn-warning" href="/Personal/Edit/@personal.Id">Editar</a>
+					<a class="btn btn-sm btn-danger" href="/Personal/Delete/@personal.Id">Eliminar</a>
+				</td>
+			</tr>			
+		}
+	</tbody>
+</table>
