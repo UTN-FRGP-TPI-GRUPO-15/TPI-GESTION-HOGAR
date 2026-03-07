@@ -9,7 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Cofiguramos cadena de concexión a la base de datos
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION") ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+    //MYSQL
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
+    );
+
+    //SQLSERVER
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
