@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>TPI_GESTION_HOGAR</RootNamespace>
+    <UserSecretsId>93ed1183-c0a5-468c-b86b-eea4d63a9db8</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
