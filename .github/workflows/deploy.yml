@@ -2,7 +2,7 @@ name: Deploy TPI-GESTION-HOGAR to VPS
 
 on:
   push:
-    branches: [ "main", "deploy/ci-cd" ]
+    branches: [ "main" ]
 
 jobs:
   build-and-deploy:
