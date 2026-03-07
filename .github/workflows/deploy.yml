@@ -18,11 +18,11 @@ jobs:
 
     - name: Build image
       run: |
-        docker build -t ghcr.io/${{ github.repository }}:latest .
+        docker build -t ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest .
 
     - name: Push image to GHCR
       run: |
-        docker push ghcr.io/${{ github.repository }}:latest
+        docker push ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest
 
     - name: Deploy to VPS
       uses: appleboy/ssh-action@v1
@@ -31,11 +31,11 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          docker pull ghcr.io/${{ github.repository }}:latest
+          docker pull ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest
           docker stop tpi-hogar || true
           docker rm tpi-hogar || true
           docker run -d \
             --name tpi-hogar \
             -p 8082:8080 \
             -e DB_CONNECTION="${{ secrets.DB_CONNECTION }}" \
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest
