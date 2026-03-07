@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.Models;
+using TPI_GESTION_HOGAR.Services;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
@@ -14,10 +15,12 @@ namespace TPI_GESTION_HOGAR.Controllers
     {
         private readonly AppDbContext _context;
         private readonly PasswordHasher<Usuario> _hasher = new();
+        private readonly IEmailService _emailService;
 
-        public AuthController(AppDbContext context)
+        public AuthController(AppDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         public IActionResult Login()
@@ -58,6 +61,40 @@ namespace TPI_GESTION_HOGAR.Controllers
                 ViewBag.IsError = true;
                 return View();
             }
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var user = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user != null)
+            {
+                user.ResetToken = Guid.NewGuid().ToString();
+                user.ResetTokenExpiry = DateTime.Now.AddHours(1);
+                await _context.SaveChangesAsync();
+
+                var resetLink = Url.Action("ResetPassword", "Auth", new { token = user.ResetToken }, Request.Scheme);
+
+                await _emailService.SendPasswordResetAsync(email, resetLink ?? "null_token");
+            }
+            else
+            {
+                await Task.Delay(2000);
+            }
+
+            ViewBag.EmailEnviado = true;
+            return View();
+        }
+
+        public IActionResult ResetPassword(string token)
+        {
+            return View();
         }
 
         [HttpPost]
