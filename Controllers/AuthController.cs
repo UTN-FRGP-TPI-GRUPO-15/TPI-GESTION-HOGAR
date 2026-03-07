@@ -71,12 +71,24 @@ namespace TPI_GESTION_HOGAR.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(string email)
         {
-            var resetLink = Url.Action("ResetPassword", "Auth", new { token = "token_placeholder" }, Request.Scheme);
+            var user = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
 
-            await _emailService.SendPasswordResetAsync(email, resetLink ?? "token_placeholder_null");
+            if (user != null)
+            {
+                user.ResetToken = Guid.NewGuid().ToString();
+                user.ResetTokenExpiry = DateTime.Now.AddHours(1);
+                await _context.SaveChangesAsync();
+
+                var resetLink = Url.Action("ResetPassword", "Auth", new { token = user.ResetToken }, Request.Scheme);
+
+                await _emailService.SendPasswordResetAsync(email, resetLink ?? "null_token");
+            }
+            else
+            {
+                await Task.Delay(2000);
+            }
 
             ViewBag.EmailEnviado = true;
-
             return View();
         }
 

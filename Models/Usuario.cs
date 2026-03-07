@@ -11,6 +11,8 @@ namespace TPI_GESTION_HOGAR.Models
         public required string NombreUsuario { get; set; }
         public required string Email { get; set; }
         public required string Clave { get; set; }
+        public string? ResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
 
         //FK
         public int PersonalId { get; set; }
