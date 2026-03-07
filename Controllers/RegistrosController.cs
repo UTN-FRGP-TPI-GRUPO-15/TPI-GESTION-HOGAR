@@ -25,7 +25,10 @@ namespace TPI_GESTION_HOGAR.Controllers
                     .ThenInclude(m => m.Hijos)     
                 .Include(r => r.Habitacion)        
                 .Include(r => r.Agresores)         
-                .Include(r => r.Denuncias)         
+                .Include(r => r.Denuncias)
+                .ThenInclude(d => d.Medida)
+                .ThenInclude(m => m.TipoMedida)
+
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (registro == null) return NotFound();

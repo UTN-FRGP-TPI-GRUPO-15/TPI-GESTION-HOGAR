@@ -15,6 +15,7 @@ namespace TPI_GESTION_HOGAR.Datos
         public DbSet<Habitacion> Habitaciones { get; set; }
         public DbSet<Hijo> Hijos { get; set; }
         public DbSet<Medida> Medidas { get; set; }
+        public DbSet<TipoMedida> TiposMedidas { get; set; }
         public DbSet<Mujer> Mujeres { get; set; }
         public DbSet<Observacion> Observaciones { get; set; }
         public DbSet<Registro> Registros { get; set; }
@@ -194,11 +195,17 @@ namespace TPI_GESTION_HOGAR.Datos
                     RegistroId = 1
                 }
             );
+            modelBuilder.Entity<TipoMedida>().HasData(
+        new TipoMedida { Id = 1, Descripcion = "Prohibición de acercamiento (Perimetral)" },
+        new TipoMedida { Id = 2, Descripcion = "Exclusión del hogar del agresor" },
+        new TipoMedida { Id = 3, Descripcion = "Entrega de Botón Antipánico / Aplicación Móvil" },
+        new TipoMedida { Id = 4, Descripcion = "Cese de actos de perturbación / hostigamiento" },
+        new TipoMedida { Id = 5, Descripcion = "Restitución de efectos personales" },
+        new TipoMedida { Id = 6, Descripcion = "Ronda policial periódica en el domicilio" }
+        
+    );
 
-            modelBuilder.Entity<Medida>().HasData(
-                new Medida { Id = 1, Descripcion = "Perimetral 300 metros", DenunciaId = 1 },
-                new Medida { Id = 2, Descripcion = "Entrega de botón antipánico", DenunciaId = 1 }
-            );
+
         }
     }
 }

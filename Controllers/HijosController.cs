@@ -40,7 +40,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 TempData["MensajeExito"] = "Registro estadístico guardado correctamente.";
 
                 
-                return RedirectToAction("Detalles", "Mujeres", new { id = nuevoHijo.MujerId });
+                return View(nuevoHijo);
             }
 
             var mujer = await _context.Mujeres.FindAsync(nuevoHijo.MujerId);
