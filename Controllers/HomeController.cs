@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
@@ -5,6 +6,7 @@ using TPI_GESTION_HOGAR.Models;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
