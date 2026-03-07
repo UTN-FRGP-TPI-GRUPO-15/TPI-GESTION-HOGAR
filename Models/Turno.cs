@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace TPI_GESTION_HOGAR.Models
 {
+    [Index(nameof(Fecha), nameof(TipoTurnoId), IsUnique = true)]
     public class Turno
     {
-        public required int ID { get; set; }
+        public int ID { get; set; }
 
         [Required(ErrorMessage = "Debe ingresar la fecha")]
         public required DateOnly Fecha { get; set; }

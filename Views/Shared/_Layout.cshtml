@@ -78,10 +78,12 @@
         <main role="main" class="pb-3">
             @if (TempData["MensajeExito"] != null)
             {
-                <div class="container mt-3">
-                    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                        <i class="bi bi-check-circle-fill me-2"></i> @TempData["MensajeExito"]
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:1055;">
+                    <div class="alert alert-success alert-dismissible fade show shadow position-relative" role="alert">
+                        @TempData["MensajeExito"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+                        <div class="toast-progress"></div>
                     </div>
                 </div>
             }
@@ -99,4 +101,15 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
+
+<script>
+    setTimeout(function () {
+        let alert = document.querySelector('.alert');
+        if (alert) {
+            let bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }
+    }, 4000);
+</script>

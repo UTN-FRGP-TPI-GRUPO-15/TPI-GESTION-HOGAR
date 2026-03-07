@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
+using TPI_GESTION_HOGAR.DTOs;
 using TPI_GESTION_HOGAR.Models;
 
 namespace TPI_GESTION_HOGAR.Controllers
@@ -281,6 +282,89 @@ namespace TPI_GESTION_HOGAR.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Planificacion(DateOnly? fecha)
+        {
+            DateOnly hoy = DateOnly.FromDateTime(DateTime.Today);
+
+            DateOnly fechaBuscada = fecha ?? hoy;
+
+            int diferencia = fechaBuscada.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)fechaBuscada.DayOfWeek - 1;
+
+            DateOnly inicioSemana = fechaBuscada.AddDays(-diferencia);
+            DateOnly finSemana = inicioSemana.AddDays(6);
+
+            ViewBag.Turnos = await ObtenerTurnos(inicioSemana, finSemana);
+            ViewBag.Personal = await ObtenerPersonal();
+            ViewBag.TipoTurnos = await ObtenerTipoTurnos();
+            ViewBag.InicioSemana = inicioSemana;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GuardarPlanificacion(List<NuevoTurnoDTO> turnos, DateOnly fecha)
+        {
+            var fechas = turnos.Select(t => t.Fecha).Distinct();
+
+            var turnosExistentes = await _context.Turnos
+                                    .Where(t => fechas.Contains(t.Fecha))
+                                    .ToListAsync();
+
+            foreach (var dto in turnos)
+            {
+                var turnoExistente = turnosExistentes.FirstOrDefault(t => t.Fecha == dto.Fecha && t.TipoTurnoId == dto.TipoTurnoId);
+
+                if (turnoExistente != null)
+                {
+                    if (dto.PersonalId != null)
+                        turnoExistente.PersonalId = dto.PersonalId.Value;
+
+                    else
+                        _context.Turnos.Remove(turnoExistente);
+                }
+                else if (dto.PersonalId != null)
+                {
+                    var nuevoTurno = new Turno
+                    {
+                        Fecha = dto.Fecha,
+                        TipoTurnoId = dto.TipoTurnoId,
+                        PersonalId = dto.PersonalId.Value
+                    };
+
+                    _context.Turnos.Add(nuevoTurno);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["MensajeExito"] = "Planificación guardada correctamente";
+
+            return RedirectToAction("Planificacion", new { fecha });
+        }
+
+        private async Task<List<Turno>> ObtenerTurnos(DateOnly fechaInicio, DateOnly fechaFin)
+        {
+            List<Turno> turnos = await _context.Turnos
+                                    .Where(t => t.Fecha >= fechaInicio && t.Fecha <= fechaFin.AddDays(6))
+                                    .ToListAsync();
+
+            return turnos;
+        }
+
+        private async Task<List<Personal>> ObtenerPersonal()
+        {
+            List<Personal> personal = await _context.Personal.ToListAsync();
+
+            return personal;
+        }
+
+        private async Task<List<TipoTurno>> ObtenerTipoTurnos()
+        {
+            List<TipoTurno> tipoTurnos = await _context.TipoTurnos.ToListAsync();
+
+            return tipoTurnos;
         }
     }
 }
