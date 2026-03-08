@@ -140,20 +140,65 @@
 
         <div class="card shadow-sm border-0 border-top border-warning border-4 mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom-0 pt-3 pb-0">
-                <h5 class="card-title text-warning fw-bold mb-0 text-dark"><i class="bi bi-file-earmark-text-fill"></i> Denuncias y Medidas Judiciales</h5>
-                <button class="btn btn-sm btn-warning text-dark fw-bold shadow-sm">
+                <h5 class="card-title text-warning fw-bold mb-0 text-dark"><i class="bi bi-file-earmark-text-fill"></i> Denuncias y Medidas</h5>
+                <a asp-controller="Denuncias" asp-action="Alta" asp-route-registroId="@Model.Id" class="btn btn-sm btn-warning text-dark fw-bold shadow-sm">
                     <i class="bi bi-plus-circle"></i> Nueva Denuncia
-                </button>
+                </a>
             </div>
             <div class="card-body">
                 <hr class="mt-2" />
 
-                <div class="text-center p-5 text-muted border rounded bg-light border-warning border-opacity-25">
-                    <i class="bi bi-cone-striped fs-1 d-block mb-3 text-warning"></i>
-                    <h6 class="fw-bold text-dark">Módulo en Construcción</h6>
-                    <p class="mb-0 small">Aquí se listarán las comisarías, juzgados, fechas de restricción perimetral y botones antipánico asignados.</p>
-                </div>
+                @if (Model.Denuncias != null && Model.Denuncias.Any())
+                {
+                    <div class="accordion" id="acordeonDenuncias">
+                        @foreach (var denuncia in Model.Denuncias)
+                        {
+                            <div class="accordion-item mb-2 border rounded">
+                                <h2 class="accordion-header" id="heading-@denuncia.ID">
+                                    <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@denuncia.ID">
+                                        <strong>Denuncia del @denuncia.Fecha.ToString("dd/MM/yyyy")</strong>
+                                        @if (denuncia.NroIPP != null)
+                                        {
+                                            <span class="badge bg-secondary ms-2">IPP: @denuncia.NroIPP</span>
+                                        }
+                                    </button>
+                                </h2>
+                                <div id="collapse-@denuncia.ID" class="accordion-collapse collapse" data-bs-parent="#acordeonDenuncias">
+                                    <div class="accordion-body">
+                                        <h6 class="fw-bold text-danger border-bottom pb-1 mb-2">Medidas de Protección:</h6>
 
+                                        @if (denuncia.Medida != null && denuncia.Medida.Any())
+                                        {
+                                            <ul class="list-group list-group-flush mb-3">
+                                                @foreach (var medida in denuncia.Medida)
+                                                {
+                                                    <li class="list-group-item px-0 py-1">
+                                                        <i class="bi bi-check2-circle text-success me-2"></i>
+                                                        <span class="fw-bold">@(medida.TipoMedida?.Descripcion ?? "Medida no especificada")</span>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+
+                                        <div class="text-end">
+                                            <a asp-controller="Medidas" asp-action="Alta" asp-route-denunciaId="@denuncia.ID" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-shield-plus"></i> Agregar Medida
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center p-4 text-muted border rounded bg-light border-warning border-opacity-25">
+                        <i class="bi bi-cone-striped fs-1 d-block mb-3 text-warning"></i>
+                        <h6 class="fw-bold text-dark">Sin Registros</h6>
+                        <p class="mb-0 small">Aún no se han cargado denuncias para este expediente.</p>
+                    </div>
+                }
             </div>
         </div>
 

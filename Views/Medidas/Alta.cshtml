@@ -1,0 +1,72 @@
+﻿@model TPI_GESTION_HOGAR.Models.Medida
+
+@{
+    ViewData["Title"] = "Agregar Medida";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-danger fw-bold"><i class="bi bi-shield-lock-fill"></i> Dictar Medida de Protección</h2>
+    <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@ViewBag.RegistroId" class="btn btn-outline-secondary shadow-sm">
+        <i class="bi bi-arrow-left"></i> Cancelar
+    </a>
+</div>
+
+<div class="card shadow-sm border-0 border-top border-danger border-4 col-md-6 mx-auto">
+    <div class="card-body p-4">
+        <form asp-action="Alta" method="post">
+            <input type="hidden" name="DenunciaId" value="@ViewBag.DenunciaId" />
+
+            <div class="mb-3">
+                <label asp-for="TipoMedidaId" class="form-label fw-bold">Tipo de Medida de Protección</label>
+                <select asp-for="TipoMedidaId" id="selectMedida" class="form-select border-danger shadow-sm" required onchange="mostrarInputNuevaMedida()">
+                    <option value="">-- Seleccione una medida precargada --</option>
+
+                    @foreach (var tipo in ViewBag.TiposMedida)
+                    {
+                        <option value="@tipo.Id">@tipo.Descripcion</option>
+                    }
+
+                    <option value="0" class="fw-bold text-danger">➕ OTRA (Agregar nueva medida a la lista)</option>
+                </select>
+                <span asp-validation-for="TipoMedidaId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3 d-none bg-light p-3 border rounded border-danger border-opacity-25" id="divNuevaMedida">
+                <label class="form-label fw-bold text-danger"><i class="bi bi-plus-circle"></i> Especifique la nueva medida</label>
+                <input type="text" name="nuevaMedidaTexto" id="inputNuevaMedida" class="form-control border-danger" placeholder="Ej: Restricción de 500 metros..." />
+                <div class="form-text">Esta medida se guardará en la base de datos y aparecerá en el menú desplegable para futuras residentes.</div>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4 border-top pt-3">
+                <button type="submit" class="btn btn-danger shadow-sm fw-bold px-4">
+                    <i class="bi bi-save"></i> Guardar Medida
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function mostrarInputNuevaMedida() {
+            var select = document.getElementById("selectMedida");
+            var divNueva = document.getElementById("divNuevaMedida");
+            var inputNueva = document.getElementById("inputNuevaMedida");
+
+            if (select.value === "0") {
+                // Si elige "OTRA", mostramos el div y hacemos obligatorio el input
+                divNueva.classList.remove("d-none");
+                inputNueva.setAttribute("required", "required");
+            } else {
+                // Si elige una normal, volvemos a ocultar y limpiar
+                divNueva.classList.add("d-none");
+                inputNueva.removeAttribute("required");
+                inputNueva.value = "";
+            }
+        }
+    </script>
+}
