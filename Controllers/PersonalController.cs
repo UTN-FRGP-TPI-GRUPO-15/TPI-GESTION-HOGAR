@@ -20,7 +20,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             _context = context;   
         }
 
-        //GET: Turnos
+        //GET: Personal
         public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
             ViewData["CurrentFilter"] = searchString;
@@ -164,6 +164,66 @@ namespace TPI_GESTION_HOGAR.Controllers
             var roles = await _context.Roles.ToListAsync();
 
             ViewBag.Roles = new SelectList(roles, "Id", "Descripcion");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var personal = await _context.Personal
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (personal == null)
+            {
+                return NotFound();
+            }
+            
+            // Podés cargar acá los ViewBag de Provincias o Condiciones si los usás en la vista
+            return View(personal);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Personal personalMod)
+        {
+            if (id != personalMod.Id)
+            {
+                return NotFound();
+            }
+            
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.PersonalId == id);
+            personalMod.Usuario = usuario!; // Asignamos el usuario existente al personal modificado
+
+            if (ModelState.IsValid)
+            {                
+                try
+                {
+                    _context.Personal.Update(personalMod);
+                    await _context.SaveChangesAsync();                                                       
+
+                    TempData["MensajeExito"] = "Los datos del personal se actualizaron correctamente.";
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Personal.Any(p => p.Id == id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            return View(personalMod);
         }
 
         public async Task<IActionResult> AltaBaja(int? Id)
