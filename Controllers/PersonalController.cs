@@ -54,8 +54,8 @@ namespace TPI_GESTION_HOGAR.Controllers
         }
         public async Task<IActionResult> Alta()
         {
-            await CargarRoles();
-
+            await CargarRoles();                             
+                                       
             return View();
         }
 
@@ -124,8 +124,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                     Nacionalidad = dto.Nacionalidad,
                     FechaNac = dto.FechaNac!.Value,
                     Telefono = dto.Telefono,
-                    Domicilio = dto.Domicilio,
-                    Provincia = dto.Provincia,
+                    Domicilio = dto.Domicilio,                    
                     Localidad = dto.Localidad,
                     Activo = true
                 };
@@ -193,8 +192,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 Nacionalidad = personal.Nacionalidad,
                 FechaNac = personal.FechaNac,
                 Telefono = personal.Telefono,
-                Domicilio = personal.Domicilio,
-                Provincia = personal.Provincia,
+                Domicilio = personal.Domicilio,                
                 Localidad = personal.Localidad,
             };
 
@@ -223,8 +221,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                     Nacionalidad = personalMod.Nacionalidad,
                     FechaNac = personalMod.FechaNac!.Value,
                     Telefono = personalMod.Telefono,
-                    Domicilio = personalMod.Domicilio,
-                    Provincia = personalMod.Provincia,
+                    Domicilio = personalMod.Domicilio,                    
                     Localidad = personalMod.Localidad,
                     Activo = true                    
                 };

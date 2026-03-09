@@ -24,7 +24,6 @@ namespace TPI_GESTION_HOGAR.DTOs
         [Phone(ErrorMessage = "Número de teléfono inválido")]
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
-        public string? Provincia { get; set; }
         public string? Localidad { get; set; }   
     }
 }

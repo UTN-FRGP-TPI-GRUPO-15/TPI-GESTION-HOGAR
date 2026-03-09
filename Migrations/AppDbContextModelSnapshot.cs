@@ -512,9 +512,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Provincia")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Telefono")
                         .HasColumnType("nvarchar(max)");
 
