@@ -1,0 +1,25 @@
+﻿﻿@using TPI_GESTION_HOGAR.Models
+@model Turno
+
+<h2>Crear Turno para @ViewBag.PersonalNombre</h2>
+
+<form asp-action="AgregarTurno" method="POST">
+	<input type="hidden" asp-for="PersonalId" value="@ViewBag.PersonalId" />	
+	
+	<div class="mb-3">
+		<label>Fecha</label>
+		<input asp-for="Fecha" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" required>
+	</div>
+
+	<div class="mb-3">
+		<label>Horario</label>
+		<select asp-for="TipoTurnoId" class="form-control" asp-items="@ViewBag.TipoTurnos" Required>
+			<option value="">Seleccione el Horario</option>
+		</select>
+	</div>	
+
+	<button type="submit" class="btn btn-primary">Guardar</button>
+	
+	@Html.ValidationSummary(false, "")
+
+</form>

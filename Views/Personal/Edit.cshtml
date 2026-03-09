@@ -1,15 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Nuevo Personal";
-}
+﻿@model TPI_GESTION_HOGAR.DTOs.EditarPersonalDTO
 
-@model TPI_GESTION_HOGAR.DTOs.NuevoPersonalDTO
-
-<h1 class="mb-4 text-center">Nuevo Personal</h1>
+<h1 class="mb-4 text-center">Editar Personal</h1>
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form method="post">
+            <form asp-action="Edit" method="POST">
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold alert alert-warning"></div>                               
+
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5>Datos de Personal</h5>
@@ -18,7 +16,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Legajo" class="form-label"></label>
-                                <input asp-for="Legajo" type="number" placeholder="1264" class="form-control" required/>
+                                <input asp-for="Legajo" type="number" placeholder="1264" class="form-control" readonly disabled/>
                                 <span asp-validation-for="Legajo" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -56,7 +54,7 @@
                         <div class="row">                            
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Localidad" class="form-label">Localidad</label>
-                                <select asp-for= "Localidad" class="form-select" id="Localidad" name="Localidad" required>
+                                <select asp-for="Localidad" class="form-control" id="Localidad" name="Localidad" required>
                                     <option value="">Seleccione una localidad...</option>
                                     <option value="San Clemente del Tuyú">San Clemente del Tuyú</option>
                                     <option value="Las Toninas">Las Toninas</option>
@@ -86,46 +84,11 @@
                                 <input asp-for="Telefono" type="text" placeholder="+5411283847" class="form-control" />
                                 <span asp-validation-for="Telefono" class="text-danger"></span>
                             </div>
-                        </div>                                                
-                    </div>
-                </div>
-
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>Datos de Usuario</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label asp-for="NombreUsuario" class="form-label">Nombre de usuario</label>
-                            <input asp-for="NombreUsuario" type="text" placeholder="mperez" class="form-control" required />
-                            <span asp-validation-for="NombreUsuario" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" type="email" placeholder="mariaperez@gmail.com" class="form-control" required />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="ClavePlana" class="form-label">Contraseña</label>
-                            <input asp-for="ClavePlana" type="password" placeholder="********" class="form-control" required />
-                            <span asp-validation-for="ClavePlana" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="RepetirClavePlana" class="form-label">Repetir contraseña</label>
-                            <input asp-for="RepetirClavePlana" type="password" placeholder="********" class="form-control" required />
-                            <span asp-validation-for="RepetirClavePlana" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3">
-                            <label asp-for="RolId" class="form-label">Rol</label>
-                            <select asp-for="RolId" asp-items="ViewBag.Roles" class="form-select" required>
-                                <option value="">--Seleccione un Rol--</option>
-                            </select>
-                            <span asp-validation-for="RolId" class="text-danger"></span>
                         </div>
                     </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Agregar Personal</button>
+                </div>                              
+                
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
 
                 @if (ViewBag.Message != null)
                 {
