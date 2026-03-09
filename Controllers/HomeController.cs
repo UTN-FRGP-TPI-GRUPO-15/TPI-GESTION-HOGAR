@@ -27,6 +27,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                     .ThenInclude(m => m.Hijos)
                 .Include(r => r.Habitacion)
                 .Where(r => r.Estado == true)
+                .Where(r => !_context.Egresos.Any(e => e.RegistroId == r.Id))
                 .OrderByDescending(r => r.Fecha)
                 .ToListAsync();
 

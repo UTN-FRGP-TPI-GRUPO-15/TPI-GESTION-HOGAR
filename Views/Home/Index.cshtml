@@ -231,7 +231,15 @@
                                     }
                                 </td>
                                 <td>
-                                    <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Ficha</a>
+                                    <div class="btn-group shadow-sm" role="group">
+                                        <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary fw-bold" title="Ver Ficha Completa">
+                                            <i class="bi bi-file-earmark-person"></i> Ficha
+                                        </a>
+
+                                        <a asp-controller="Egresos" asp-action="Crear" asp-route-registroId="@item.Id" class="btn btn-sm btn-danger fw-bold" title="Registrar Salida / Egreso">
+                                            <i class="bi bi-box-arrow-right"></i> Egreso
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         }

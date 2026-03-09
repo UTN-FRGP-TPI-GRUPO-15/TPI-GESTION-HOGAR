@@ -17,7 +17,12 @@
                 <form asp-action="VerificarDni" method="post">
                     <div class="mb-4 text-start">
                         <label for="dniBuscado" class="form-label fw-bold text-secondary">Número de Documento</label>
-                        <input type="number" id="dniBuscado" name="dniBuscado" class="form-control form-control-lg text-center fw-bold fs-4 text-primary" required placeholder="Ej: 30123456" min="1000000" max="99999999" autofocus />
+                        <input type="number" id="dniBuscado" name="dniBuscado"
+                               class="form-control form-control-lg text-center fw-bold fs-4 text-primary"
+                               required placeholder="Ej: 30123456"
+                               min="1000000" max="99999999" autofocus
+                               oninvalid="this.setCustomValidity('Ingrese un DNI válido.')"
+                               oninput="this.setCustomValidity('')" />
 
                         @Html.ValidationMessage("dniBuscado", new { @class = "text-danger mt-2 d-block fw-bold small text-center" })
                     </div>

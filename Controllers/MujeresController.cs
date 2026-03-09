@@ -50,7 +50,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             if (dniBuscado < 1000000 || dniBuscado > 99999999)
             {
               
-                ModelState.AddModelError("dniBuscado", "Por favor, ingrese un número de DNI válido (entre 7 y 8 dígitos, sin puntos).");
+                ModelState.AddModelError("dniBuscado", "Ingrese un dni valido");
                 return View();
             }
 
