@@ -54,50 +54,145 @@
         <div class="card shadow-sm border-0 border-start border-warning border-4 h-100 bg-light">
             <div class="card-body">
                 <h6 class="text-muted fw-bold text-uppercase mb-2">Guardia Activa</h6>
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-person-badge fs-3 text-warning me-2"></i>
-                    <div>
-                        <span class="badge bg-warning text-dark">Turno Actual</span>
-                        <div class="fw-bold">Próximamente...</div>
+
+                @if (Model.OperadorasTurnoActual != null && Model.OperadorasTurnoActual.Any())
+                {
+                    foreach (var turno in Model.OperadorasTurnoActual)
+                    {
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-person-badge fs-3 text-warning me-2"></i>
+                            <div>
+                                <span class="badge bg-warning text-dark">Turno @(turno.TipoTurno?.Descripcion)</span>
+                                <div class="fw-bold">@(turno.Personal?.Apellido), @(turno.Personal?.Nombre)</div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-exclamation-triangle fs-3 text-danger me-2"></i>
+                        <div>
+                            <span class="badge bg-danger">Sin Cobertura</span>
+                            <div class="fw-bold text-danger">Guardia descubierta</div>
+                        </div>
                     </div>
-                </div>
-                <div class="text-muted small">
-                    <i class="bi bi-arrow-right-short"></i> Relevo: --
-                </div>
+                }
+
+                @if (Model.OperadorasTurnoSiguiente != null && Model.OperadorasTurnoSiguiente.Any())
+                {
+                    <div class="text-muted small mt-2 border-top pt-2">
+                        <i class="bi bi-arrow-right-short"></i> Próximo Relevo: <strong>@(Model.OperadorasTurnoSiguiente.First().Personal?.Apellido)</strong> (@(Model.OperadorasTurnoSiguiente.First().TipoTurno?.Descripcion))
+                    </div>
+                }
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-6">
-        <div class="card shadow-sm border-0 h-100 border-danger bg-light">
-            <div class="card-header bg-danger text-white fw-bold">
-                <i class="bi bi-bell-fill"></i> Alertas y Recordatorios
+
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 h-100 border-danger">
+                <div class="card-header bg-danger text-white fw-bold d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-bell-fill"></i> Alertas y Tareas Pendientes</span>
+                    <button type="button" class="btn btn-sm btn-light text-danger fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalNuevoRecordatorio">
+                        <i class="bi bi-plus-lg"></i> Agregar Tarea
+                    </button>
+                </div>
+                <div class="card-body p-0" style="max-height: 300px; overflow-y: auto;">
+                    @if (Model.RecordatoriosActivos != null && Model.RecordatoriosActivos.Any())
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var rec in Model.RecordatoriosActivos)
+                            {
+                                <div class="list-group-item d-flex justify-content-between align-items-center @(rec.Importante ? "bg-danger bg-opacity-10 border-start border-danger border-4" : "")">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold @(rec.Importante ? "text-danger" : "text-dark")">
+                                            @rec.Descripcion
+                                        </h6>
+                                        <small class="text-muted">
+                                            <i class="bi bi-clock"></i> Vence: @rec.FechaLimite.ToString("dd/MM HH:mm") | <i class="bi bi-person"></i> @(rec.Personal?.Apellido)
+                                        </small>
+                                    </div>
+                                <form asp-controller="Recordatorios" asp-action="MarcarResuelto" method="post" class="m-0">
+                                    <input type="hidden" name="id" value="@rec.Id" />
+                                    <button type="submit" class="btn btn-outline-success btn-sm rounded-circle shadow-sm" title="Marcar como Completado">
+                                        <i class="bi bi-check-lg fw-bold"></i>
+                                    </button>
+                                </form>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center p-4 text-muted">
+                            <i class="bi bi-check2-circle fs-1 d-block mb-2 text-success"></i>
+                            <p class="mb-0 fw-bold">No hay alertas ni tareas pendientes.</p>
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="card-body text-center text-muted p-4">
-                <i class="bi bi-tools fs-1 mb-2"></i>
-                <p class="mb-0">Módulo de Alertas en construcción.</p>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 border-info bg-info bg-opacity-10">
+                <div class="card-body text-center d-flex flex-column justify-content-center p-4">
+                    <i class="bi bi-journal-bookmark-fill display-4 text-info mb-3"></i>
+                    <h5 class="fw-bold text-dark mb-3">Libro de Novedades</h5>
+                    <p class="text-muted small mb-4">Acceda al registro completo de pases de guardia y reportes de operadoras.</p>
+                    <a asp-controller="Novedades" asp-action="Index" class="btn btn-info text-white fw-bold shadow-sm btn-lg w-100">
+                        <i class="bi bi-book"></i> Abrir Libro
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="card shadow-sm border-0 h-100 border-info bg-light">
-            <div class="card-header bg-info text-white fw-bold">
-                <i class="bi bi-journal-text"></i> Pase de Guardia (Últimas Novedades)
-            </div>
-            <div class="card-body text-center text-muted p-4">
-                <i class="bi bi-tools fs-1 mb-2"></i>
-                <p class="mb-0">Módulo de Novedades en construcción.</p>
+
+    <div class="modal fade" id="modalNuevoRecordatorio" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-bell-plus"></i> Nueva Alerta</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            <form asp-controller="Recordatorios" asp-action="CrearDesdeDashboard" method="post">
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Descripción de la Tarea</label>
+                            <input type="text" name="Descripcion" class="form-control border-danger" placeholder="Ej: Acompañar a UFI N°2, Dar medicación..." required />
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <label class="form-label fw-bold">Fecha Límite</label>
+                                <input type="datetime-local" name="FechaLimite" class="form-control" required />
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold">¿Asignada por?</label>
+                                <select name="PersonalId" class="form-select" asp-items="@ViewBag.PersonalActivo" required>
+                                    <option value="">-- Operadora --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-check form-switch mt-3 fs-6">
+                            <input class="form-check-input" type="checkbox" name="Importante" value="true">
+                            <label class="form-check-label text-danger fw-bold">Marcar como Urgente / Importante</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger fw-bold px-4"><i class="bi bi-save"></i> Guardar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
 <div class="card shadow-sm border-0">
     <div class="card-header bg-dark text-white fw-bold d-flex justify-content-between align-items-center">
         <span><i class="bi bi-list-ul"></i> Residentes Actuales</span>
-
         <a asp-controller="Mujeres" asp-action="VerificarDni" class="btn btn-sm btn-primary border-0 shadow-sm">
             <i class="bi bi-plus-circle"></i> Nuevo Ingreso
         </a>
@@ -115,7 +210,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.IngresosActivos.Any())
+                    @if (Model.IngresosActivos != null && Model.IngresosActivos.Any())
                     {
                         foreach (var item in Model.IngresosActivos)
                         {
@@ -147,6 +242,41 @@
                     }
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalNuevaNovedad" tabindex="-1" aria-labelledby="modalNovedadLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title fw-bold" id="modalNovedadLabel"><i class="bi bi-pencil-square"></i> Escribir en el Libro</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Novedades" asp-action="CrearDesdeDashboard" method="post">
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">¿Quién firma la novedad?</label>
+                        <select name="PersonalId" class="form-select border-info" asp-items="@ViewBag.PersonalActivo" required>
+                            <option value="">-- Seleccione su nombre --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Novedad / Mensaje</label>
+                        <textarea name="Descripcion" class="form-control border-info" rows="4" placeholder="Escriba aquí los detalles del turno..." required></textarea>
+                    </div>
+                    <div class="form-check form-switch mt-4 fs-6 bg-light p-3 rounded border border-info border-opacity-25">
+                        <input class="form-check-input ms-1 me-2" type="checkbox" name="EsPaseDeGuardia" value="true" id="checkPaseGuardia">
+                        <label class="form-check-label text-info fw-bold" for="checkPaseGuardia">
+                            Marcar como "Pase de Guardia" (Cierre de turno)
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-info text-white fw-bold px-4"><i class="bi bi-send"></i> Publicar Novedad</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPI_GESTION_HOGAR.Datos;
 
@@ -11,9 +12,11 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260308023439_AddNovedades")]
+    partial class AddNovedades
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -557,37 +560,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Recordatorio", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaLimite")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Importante")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PersonalId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Resuelto")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonalId");
-
-                    b.ToTable("Recordatorios");
-                });
-
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>
                 {
                     b.Property<int>("Id")
@@ -986,17 +958,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired();
 
                     b.Navigation("Registro");
-                });
-
-            modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Recordatorio", b =>
-                {
-                    b.HasOne("TPI_GESTION_HOGAR.Models.Personal", "Personal")
-                        .WithMany()
-                        .HasForeignKey("PersonalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Personal");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>

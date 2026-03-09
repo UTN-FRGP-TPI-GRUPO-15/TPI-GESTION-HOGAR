@@ -19,11 +19,13 @@ namespace TPI_GESTION_HOGAR.Datos
         public DbSet<Mujer> Mujeres { get; set; }
         public DbSet<Observacion> Observaciones { get; set; }
         public DbSet<Registro> Registros { get; set; }
+        public DbSet<Recordatorio> Recordatorios{ get; set; }
         public DbSet<Condicion> Condiciones { get; set; }
         public DbSet<TipoCondicion> TipoCondiciones { get; set; }
         public DbSet<ObservacionCondicion> ObservacionCondiciones { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Rol> Roles { get; set; }
+        public DbSet<Novedad> Novedades { get; set; }
         public DbSet<Personal> Personal { get; set; }
         public DbSet<Turno> Turnos { get; set; }
         public DbSet<TipoTurno> TipoTurnos { get; set; }
