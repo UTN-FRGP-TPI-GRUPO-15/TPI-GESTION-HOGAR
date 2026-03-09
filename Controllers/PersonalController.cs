@@ -426,5 +426,43 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             return View(personal);
         }
+
+        //GET: Personal/Delete
+
+        public async Task<IActionResult> Delete(int? Id)
+        {
+            if (Id == null)
+            {
+                return NotFound();
+            }
+
+            var personal = await _context.Personal
+                .Include(p => p.Usuario)
+                .FirstOrDefaultAsync(p => p.Id == Id);
+
+            if (personal == null)
+            {
+                return NotFound();
+            }
+
+            return View(personal);
+        }
+
+        //POST: Personal/Delete
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int Id)
+        {
+            var personal = await _context.Personal.FindAsync(Id);
+
+            if (personal != null)
+            {
+                _context.Personal.Remove(personal);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
