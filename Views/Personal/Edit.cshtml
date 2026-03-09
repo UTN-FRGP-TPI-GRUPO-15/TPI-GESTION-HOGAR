@@ -1,4 +1,4 @@
-﻿@model TPI_GESTION_HOGAR.Models.Personal
+﻿@model TPI_GESTION_HOGAR.DTOs.EditarPersonalDTO
 
 <h1 class="mb-4 text-center">Editar Personal</h1>
 
@@ -6,11 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <form asp-action="Edit" method="POST">
-                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold alert alert-warning"></div>
-
-                <input type="hidden" asp-for="Id" />
-                <input type="hidden" asp-for="Activo" />
-                <input type="hidden" asp-for="Usuario" />
+                <div asp-validation-summary="All" class="text-danger mb-3 fw-bold alert alert-warning"></div>                               
 
                 <div class="card mb-4">
                     <div class="card-header">
@@ -57,15 +53,15 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="Provincia" class="form-label">Provincia</label>
-                                <select class="form-select" id="Provincia" name="Provincia" required>
-                                    <option value="">Seleccione una provincia...</option>
+                                <label asp-for="Provincia" class="form-label">Provincia</label>
+                                <select asp-for="Provincia" class="form-select" id="Provincia" name="Provincia" required>
+                                    
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Localidad" class="form-label">Localidad</label>
                                 <select asp-for="Localidad" class="form-control" id="Localidad" name="Localidad" required disabled>
-                                    <option value="">Seleccione una provincia primero...</option>
+                                    
                                 </select>
                                 <span asp-validation-for="Localidad" class="text-danger"></span>
                             </div>

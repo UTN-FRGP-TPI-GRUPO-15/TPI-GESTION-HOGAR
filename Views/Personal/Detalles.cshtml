@@ -1,0 +1,109 @@
+﻿@model TPI_GESTION_HOGAR.Models.Personal
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-info"><i class="bi bi-person-badge-fill"></i> Datos del Personal</h2>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning shadow-sm me-2">
+            <i class="bi bi-pencil-square"></i> Editar Datos
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left"></i> Volver al Listado
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-info text-white fw-bold">
+                <i class="bi bi-person-lines-fill"></i> Información Personal
+            </div>
+            <div class="card-body">
+                <div class="mb-3 border-bottom pb-2">
+                    <small class="text-muted d-block fw-bold">Nombre Completo</small>
+                    <span class="fs-5">@Model.Nombre @Model.Apellido</span>
+                </div>
+
+                <div class="mb-3 border-bottom pb-2">
+                    <small class="text-muted d-block fw-bold">Documento (DNI)</small>
+                    <span class="fs-5">@Model.DNI</span>
+                </div>
+
+                <div class="mb-0">
+                    <small class="text-muted d-block fw-bold">Lugar de Procedencia</small>
+                    <span class="fs-5"><i class="bi bi-geo-alt-fill text-danger"></i> @Model.Localidad, @Model.Provincia</span>
+                </div>
+            </div>
+        </div>        
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white fw-bold">
+                <i class="bi bi-info-circle"></i> Estado en el Sistema
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    @if (Model.Activo)
+                    {
+                        <span class="badge bg-success fs-6 p-2 w-100"><i class="bi bi-check-circle"></i> Personal Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary fs-6 p-2 w-100"><i class="bi bi-x-circle"></i> Personal Inactivo</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if(Model.Activo)
+    {
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-secondary text-white fw-bold d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-people-fill"></i> Turnos </span>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.Turnos != null && Model.Turnos.Any(t => t.Fecha.ToDateTime(TimeOnly.MaxValue) >= DateTime.Now))
+                    {
+                        <table class="table table-sm table-striped mb-0 text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Horario</th>                                
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var turno in Model.Turnos)
+                                {
+                                    if (turno.Fecha.ToDateTime(TimeOnly.MaxValue) >= DateTime.Now)
+                                    {
+                                        <tr>
+                                            <td class="fw-bold text-secondary">@turno.Fecha</td>
+                                            <td>>@(turno.TipoTurno?.Descripcion)</td>
+                                            <td>
+                                                <a asp-controller="Turnos" asp-action="Edit" asp-route-id="@turno.ID" class="btn btn-sm btn-outline-secondary" title="Editar Turno">
+                                                    <i class="bi bi-pencil">Editar</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="text-center p-3 text-muted">
+                            <small>No se registran turnos para ese personal.</small>
+                        </div>
+                    }
+                    <div class="p-2 bg-light border-top text-center">
+                        <a asp-controller="Personal" asp-action="AgregarTurno" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm w-100">
+                            <i class="bi bi-person-plus"></i> Registrar Turno
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

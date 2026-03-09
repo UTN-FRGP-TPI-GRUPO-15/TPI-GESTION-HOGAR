@@ -15,6 +15,7 @@ namespace TPI_GESTION_HOGAR.Models
         public DateOnly FechaNac { get; set; }
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
+        public string? Provincia { get; set; }
         public string? Localidad { get; set; }
         public bool Activo { get; set; }
 

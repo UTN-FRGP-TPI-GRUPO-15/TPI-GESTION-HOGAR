@@ -125,6 +125,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                     FechaNac = dto.FechaNac!.Value,
                     Telefono = dto.Telefono,
                     Domicilio = dto.Domicilio,
+                    Provincia = dto.Provincia,
                     Localidad = dto.Localidad,
                     Activo = true
                 };
@@ -182,28 +183,57 @@ namespace TPI_GESTION_HOGAR.Controllers
             {
                 return NotFound();
             }
-            
+
+            var personalDTO = new EditarPersonalDTO
+            {
+                Legajo = personal.Legajo,
+                Apellido = personal.Apellido,
+                Nombre = personal.Nombre,
+                DNI = personal.DNI,
+                Nacionalidad = personal.Nacionalidad,
+                FechaNac = personal.FechaNac,
+                Telefono = personal.Telefono,
+                Domicilio = personal.Domicilio,
+                Provincia = personal.Provincia,
+                Localidad = personal.Localidad,
+            };
+
             // Podés cargar acá los ViewBag de Provincias o Condiciones si los usás en la vista
-            return View(personal);
+            return View(personalDTO);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Personal personalMod)
+        public async Task<IActionResult> Edit(int legajo, EditarPersonalDTO personalMod)
         {
-            if (id != personalMod.Id)
+            if (legajo != personalMod.Legajo)
             {
                 return NotFound();
             }
-            
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.PersonalId == id);
-            personalMod.Usuario = usuario!; // Asignamos el usuario existente al personal modificado
 
             if (ModelState.IsValid)
             {                
+                var personal = new Personal
+                {
+                    Id = await _context.Personal.Where(p => p.Legajo == legajo).Select(p => p.Id).FirstOrDefaultAsync(),
+                    Legajo = personalMod.Legajo,
+                    Apellido = personalMod.Apellido,
+                    Nombre = personalMod.Nombre,
+                    DNI = personalMod.DNI,
+                    Nacionalidad = personalMod.Nacionalidad,
+                    FechaNac = personalMod.FechaNac!.Value,
+                    Telefono = personalMod.Telefono,
+                    Domicilio = personalMod.Domicilio,
+                    Provincia = personalMod.Provincia,
+                    Localidad = personalMod.Localidad,
+                    Activo = true                    
+                };
+
+                personal.Usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.PersonalId == personal.Id);
+
                 try
                 {
-                    _context.Personal.Update(personalMod);
+                    _context.Personal.Update(personal);
                     await _context.SaveChangesAsync();                                                       
 
                     TempData["MensajeExito"] = "Los datos del personal se actualizaron correctamente.";
@@ -212,7 +242,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.Personal.Any(p => p.Id == id))
+                    if (!_context.Personal.Any(p => p.Legajo == legajo))
                     {
                         return NotFound();
                     }
@@ -256,6 +286,148 @@ namespace TPI_GESTION_HOGAR.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> AgregarTurno(int id)
+        {            
+            var personal = await _context.Personal.FindAsync(id);
+
+            if (personal == null)
+            {
+                return NotFound();
+            }
+
+            // Cargamos la lista para el menú desplegable
+            var tipoTurnos = _context.TipoTurnos.ToList();
+            ViewBag.TipoTurnos = new SelectList(tipoTurnos, "Id", "Descripcion");
+
+            // Pasamos los datos del personal a la vista usando ViewBag
+            ViewBag.PersonalId = personal.Id;
+            ViewBag.PersonalNombre = $"{personal.Nombre} {personal.Apellido}";
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AgregarTurno(int PersonalId, int TipoTurnoId, DateTime Fecha)
+        {
+            if (TipoTurnoId == 0)
+            {
+                ModelState.AddModelError("", "Debe seleccionar un horario.");
+                ViewBag.TipoTurnos = _context.TipoTurnos.ToList();
+                ViewBag.PersonalId = PersonalId;
+                return View();
+            }
+
+            if(Fecha < @DateTime.Today)
+            {
+                ModelState.AddModelError("", "Debe seleccionar una fecha.");
+                ViewBag.TipoTurnos = _context.TipoTurnos.ToList();
+                ViewBag.PersonalId = PersonalId;
+                return View();
+            }
+
+            var turno = new Turno
+            {
+                PersonalId = PersonalId,
+                TipoTurnoId = TipoTurnoId,
+                Fecha = DateOnly.FromDateTime(Fecha)
+            };
+
+            if (ModelState.IsValid)
+            {
+                var existeTurno = _context.Turnos.FirstOrDefault(t => t.Fecha == turno.Fecha && t.TipoTurnoId == turno.TipoTurnoId && t.PersonalId == turno.PersonalId);
+
+                if (existeTurno != null)
+                {
+                    ModelState.AddModelError("", "Ya existe un turno para esa fecha, horario y personal.");
+
+                    var tipoTurnos = _context.TipoTurnos.ToList();
+                    ViewBag.TipoTurnos = new SelectList(tipoTurnos, "Id", "Descripcion");
+
+                    var personal = _context.Personal.Select(e => new
+                    {
+                        Id = e.Id,
+                        Name = e.Apellido + ", " + e.Nombre
+                    });
+
+                    var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
+
+                    ViewBag.Personal = new SelectList(listaAlfabetica, "Id", "Name");
+                }
+                else
+                {
+                    //bool horario1 = turno.TipoTurnoId == 1;
+                    //bool turnoAnteriorHorario3 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 3 && t.Fecha == turno.Fecha.AddDays(-1));
+                    //bool turnoSiguienteHorario2 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 2 && t.Fecha == turno.Fecha);
+
+                    //bool horario1valido = horario1 && !turnoAnteriorHorario3 && !turnoSiguienteHorario2;
+
+                    //bool horario2 = turno.TipoTurnoId == 2;
+                    //bool turnoAnteriorHorario1 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 1 && t.Fecha == turno.Fecha);
+                    //bool turnoSiguienteHorario3 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 3 && t.Fecha == turno.Fecha);
+
+                    //bool horario2valido = horario2 && !turnoAnteriorHorario1 && !turnoSiguienteHorario3;
+
+                    //bool horario3 = turno.TipoTurnoId == 3;                    
+                    //bool turnoAnteriorHorario2 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 2 && t.Fecha == turno.Fecha);
+                    //bool turnoSiguienteHorario1 = _context.Turnos.Any(t => t.PersonalId == turno.PersonalId && t.TipoTurnoId == 1 && t.Fecha == turno.Fecha.AddDays(1));
+
+                    //bool horario3valido = horario3 && !turnoAnteriorHorario2 && !turnoSiguienteHorario1;
+
+                    //if (horario1 && horario1valido || horario2 && horario2valido || horario3 && horario3valido)
+                    //{
+                    //    _context.Add(turno);
+                    //    await _context.SaveChangesAsync();
+                    //    return RedirectToAction(nameof(Index));
+                    //}
+                    //else 
+                    //{
+                    //    ModelState.AddModelError("", "El turno no es válido debido a las restricciones de horarios para el personal. Por favor, elija un horario diferente o revise los turnos adyacentes.");
+
+                    //    var tipoTurnos = _context.TipoTurnos.ToList();
+                    //    ViewBag.TipoTurnos = new SelectList(tipoTurnos, "Id", "Descripcion");
+
+                    //    var personal = _context.Personal.Select(e => new
+                    //    {
+                    //        Id = e.Id,
+                    //        Name = e.Apellido + ", " + e.Nombre
+                    //    });
+
+                    //    var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
+
+                    //    ViewBag.Personal = new SelectList(listaAlfabetica, "Id", "Name");
+                    //}
+
+                    _context.Add(turno);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Detalles", new { id = PersonalId });
+                }
+            }
+
+            return View(turno);
+        }
+        public async Task<IActionResult> Detalles(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            // Buscamos al personal y traemos su usuario y turnos
+            var personal = await _context.Personal
+                .Include(p => p.Usuario)
+                .Include(p => p.Turnos)
+                .ThenInclude(t => t.TipoTurno)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (personal == null)
+            {
+                return NotFound();
+            }
+
+            return View(personal);
         }
     }
 }
