@@ -1,114 +1,250 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Hogar Mara Mateu"] HOGAR DE PROTECCION INTEGRAL MARA MATEU</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Hogar Mara Matheu</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TPI_GESTION_HOGAR.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+    
+        :root {
+            --violeta-principal: #6f42c1; /* Violeta fuerte */
+            --violeta-oscuro: #59339d;
+            --lila-claro: #f1eaff;
+            --lila-hover: #855ed6;
+        }
+
+        body {
+            background-color: #f8f9fc;
+            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* DISEÑO LATERAL (SIDEBAR) */
+        #wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+            min-height: 100vh;
+        }
+
+        #sidebar {
+            min-width: 260px;
+            max-width: 260px;
+            background: linear-gradient(180deg, var(--violeta-oscuro) 0%, var(--violeta-principal) 100%);
+            color: #fff;
+            transition: all 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+            #sidebar .sidebar-header {
+                padding: 25px 20px;
+                text-align: center;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                background-color: rgba(0,0,0,0.1);
+            }
+
+                #sidebar .sidebar-header h6 {
+                    font-size: 0.85rem;
+                    letter-spacing: 1px;
+                    margin-top: 10px;
+                    font-weight: 700;
+                }
+
+            #sidebar ul.components {
+                padding: 20px 0;
+            }
+
+            #sidebar ul p {
+                color: #fff;
+                padding: 10px;
+            }
+
+            #sidebar ul li a {
+                padding: 12px 20px;
+                font-size: 1.05em;
+                display: block;
+                color: rgba(255,255,255,0.85);
+                text-decoration: none;
+                border-left: 4px solid transparent;
+                transition: 0.2s;
+            }
+
+                #sidebar ul li a:hover, #sidebar ul li a.active {
+                    color: #fff;
+                    background: var(--lila-hover);
+                    border-left: 4px solid #fff;
+                }
+
+                #sidebar ul li a i {
+                    margin-right: 10px;
+                    font-size: 1.2rem;
+                    vertical-align: middle;
+                }
+
+        /* CONTENIDO PRINCIPAL */
+        #content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            padding: 15px 25px;
+        }
+
+        /* ADAPTACIÓN PARA CELULARES */
+        @@media (max-width: 768px) {
+            #sidebar {
+                margin-left: -260px;
+                position: fixed;
+                height: 100vh;
+                z-index: 999;
+            }
+
+                #sidebar.active {
+                    margin-left: 0;
+                }
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HOGAR DE PROTECCION INTEGRAL MARA MATEU</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        
-                        @if (User.IsInRole("Administradora"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
-                                    <i class="bi bi-people"></i> Inicio
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Personal" asp-action="Index">
-                                    <i class="bi bi-people"></i> Gestión de Personal
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Mujeres" asp-action="Index">
-                                    <i class="bi bi-people"></i> Gestión de Residentes
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Turnos" asp-action="Index">
-                                    <i class="bi bi-people"></i> Gestión de Turnos
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark fw-bold" asp-area="" asp-controller="Turnos" asp-action="Index">
-                                    <i class="bi bi-people"></i> Reportes
-                                </a>
-                            </li>
 
-                        }
+    <div id="wrapper">
 
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <form asp-controller="Auth" asp-action="Logout" method="post">
-                                    <button type="submit" class="btn btn-outline-primary">
-                                        Cerrar Sesión
-                                    </button>
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="btn btn-primary" asp-area="" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
-                            </li>
-                        }
-
-                    </ul>
-                </div>
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <img src="/images/logo-muni.png" alt="Logo" class="img-fluid mb-2" style="max-height: 70px;" />
+                <h6 class="text-uppercase mb-0 mt-2">Hogar de Protección integral de mujeres en situaciones de violencia</h6>
+                <div class="fw-bold fs-5">MARA MATEU</div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @if (TempData["MensajeExito"] != null)
-            {
-                <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index:1055;">
-                    <div class="alert alert-success alert-dismissible fade show shadow position-relative" role="alert">
-                        @TempData["MensajeExito"]
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 
-                        <div class="toast-progress"></div>
-                    </div>
+            <ul class="list-unstyled components">
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <li class="px-3 mb-2 mt-2">
+                        <small class="text-uppercase text-light opacity-75 fw-bold" style="font-size: 0.75rem;">Operativa Diaria</small>
+                    </li>
+                    <li>
+                        <a asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-door"></i> Panel de Control
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Novedades" asp-action="Index">
+                            <i class="bi bi-journal-bookmark"></i> Libro de Guardia
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Mujeres" asp-action="Index">
+                            <i class="bi bi-people"></i> Residentes
+                        </a>
+                    </li>
+
+                    @if (User.IsInRole("Administradora") || User.IsInRole("Equipo Tecnico"))
+                    {
+                        <li class="px-3 mb-2 mt-4">
+                            <small class="text-uppercase text-light opacity-75 fw-bold" style="font-size: 0.75rem;">Administración</small>
+                        </li>
+                        <li>
+                            <a asp-controller="Turnos" asp-action="Index">
+                                <i class="bi bi-calendar-check"></i> Gestión de Turnos
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Personal" asp-action="Index">
+                                <i class="bi bi-person-badge"></i> Personal
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="Reportes" asp-action="Index">
+                                <i class="bi bi-bar-chart-line"></i> Reportes
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </nav>
+
+        <div id="content">
+
+            <nav class="top-navbar d-flex justify-content-between align-items-center">
+                <button type="button" id="sidebarCollapse" class="btn btn-outline-secondary d-md-none border-0">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+
+                <div class="ms-auto d-flex align-items-center">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <div class="text-muted fw-bold me-3">
+                            <i class="bi bi-person-circle fs-5 me-1 text-primary" style="vertical-align: text-bottom; color: var(--violeta-principal) !important;"></i>
+                            Hola, @User.Identity.Name
+                        </div>
+                        <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                            <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm fw-bold">
+                                <i class="bi bi-box-arrow-right"></i> Salir
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary shadow-sm" style="background-color: var(--violeta-principal); border: none;" asp-controller="Auth" asp-action="Login">Iniciar Sesión</a>
+                    }
                 </div>
-            }
-            @RenderBody()
-        </main>
+            </nav>
+
+            <main role="main" class="p-4 flex-grow-1">
+
+                @if (TempData["MensajeExito"] != null)
+                {
+                    <div class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index:1055;">
+                        <div class="alert alert-success alert-dismissible fade show shadow border-0 border-start border-success border-4" role="alert">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i> @TempData["MensajeExito"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    </div>
+                }
+
+                @RenderBody()
+
+            </main>
+
+            <footer class="text-center text-muted py-3 bg-white border-top mt-auto small">
+                &copy; @DateTime.Now.Year - Hogar de Protección Integral Mara Matheu
+            </footer>
+
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - HOGAR DE PROTECCION INTEGRAL MARA MATEU - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        $(document).ready(function () {
+            // menú lateral para celulares
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+            
+            setTimeout(function () {
+                       let alert = document.querySelector('.alert-dismissible');
+            if (alert) {
+                let bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }
+        }, 4000);
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
-
-<script>
-    setTimeout(function () {
-        let alert = document.querySelector('.alert');
-        if (alert) {
-            let bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }
-    }, 4000);
-</script>

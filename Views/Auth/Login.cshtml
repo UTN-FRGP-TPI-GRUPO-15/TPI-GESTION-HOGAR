@@ -1,28 +1,58 @@
-﻿
-@{
-    ViewData["Title"] = "Login";
+﻿@{
+    ViewData["Title"] = "Iniciar Sesión";
 }
 
-<h1>Login</h1>
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-md-6 col-lg-5 col-xl-4">
 
-<form method="post">
-    <div>
-        <input name="usuario" placeholder="Usuario"/>
+        <div class="card shadow-lg border-0 rounded-3 mt-5">
+            <div class="card-header text-center text-white py-4" style="background: linear-gradient(180deg, var(--violeta-oscuro) 0%, var(--violeta-principal) 100%); border-radius: calc(.3rem - 1px) calc(.3rem - 1px) 0 0;">
+                <img src="/images/logo-muni.png" alt="Logo" class="img-fluid mb-2" style="max-height: 70px;" />
+                <h4 class="fw-bold mb-0">Acceso al Sistema</h4>
+            </div>
+
+            <div class="card-body p-4 p-md-5 bg-white">
+                <div class="text-center mb-4">
+                    <h6 class="text-muted fw-bold">Hogar Mara Mateu</h6>
+                    <p class="small text-secondary">Ingrese sus credenciales para continuar</p>
+                </div>
+
+                @if (ViewBag.Message != null)
+                {
+                    <div class="alert @(ViewBag.IsError ? "alert-danger border-danger" : "alert-success border-success") alert-dismissible fade show shadow-sm border-start border-4" role="alert">
+                        <i class="bi @(ViewBag.IsError ? "bi-exclamation-triangle-fill text-danger" : "bi-check-circle-fill text-success") me-2"></i>
+                        <span class="fw-bold">@ViewBag.Message</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form method="post">
+
+                    <div class="form-floating mb-3">
+                        <input name="usuario" class="form-control focus-ring" style="--bs-focus-ring-color: rgba(111, 66, 193, 0.25);" id="inputUsuario" placeholder="Usuario" required autocomplete="off" />
+                        <label for="inputUsuario" class="text-muted"><i class="bi bi-person-fill me-1"></i> Usuario</label>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <input name="password" type="password" class="form-control focus-ring" style="--bs-focus-ring-color: rgba(111, 66, 193, 0.25);" id="inputPassword" placeholder="Contraseña" required autocomplete="current-password" />
+                        <label for="inputPassword" class="text-muted"><i class="bi bi-key-fill me-1"></i> Contraseña</label>
+                    </div>
+
+                    <div class="d-flex flex-column gap-3 mt-4">
+                        <button type="submit" class="btn text-white fw-bold py-2 shadow-sm fs-5" style="background-color: var(--violeta-principal);">
+                            Ingresar <i class="bi bi-box-arrow-in-right ms-1"></i>
+                        </button>
+
+                        <div class="text-center mt-2">
+                            <a class="small text-decoration-none fw-bold" style="color: var(--violeta-oscuro);" asp-action="ForgotPassword">
+                                ¿Olvidó su contraseña?
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
     </div>
-    
-    <div>
-        <input name="password" type="password" placeholder="Contraseña"/>
-    </div>
-       
-    <button type="submit">Ingresar</button>
-
-    <a asp-action="ForgotPassword">Olvidé mi contraseña</a>
-</form>
-
-@if (ViewBag.Message != null)
-{
-    <div style="color:@(ViewBag.IsError ? "red" : "green")">
-        @ViewBag.Message
-    </div>
-}
-
+</div>

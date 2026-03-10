@@ -1,0 +1,102 @@
+﻿@model TPI_GESTION_HOGAR.Models.Egreso
+
+@{
+    ViewData["Title"] = "Registrar Egreso";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 border-top border-danger border-4">
+                <div class="card-header bg-white pb-0">
+                    <h4 class="text-danger fw-bold"><i class="bi bi-box-arrow-right"></i> Formulario de Egreso</h4>
+                    <p class="text-muted">Residente: <strong class="text-dark fs-5">@ViewBag.NombreResidente</strong></p>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Crear" method="post">
+                        <input type="hidden" asp-for="RegistroId" value="@ViewBag.RegistroId" />
+
+                        <div class="p-3 bg-light rounded border mb-4">
+                            <label class="form-label fw-bold text-dark mb-1">Fecha de Salida</label>
+                            <input asp-for="Fecha" type="date" class="form-control border-danger shadow-sm w-50" required />
+                        </div>
+
+                        <div class="p-3 mb-4 rounded border border-warning" style="background-color: #fff3cd;">
+                            <div class="form-check form-switch fs-5 mb-0">
+                                <input class="form-check-input border-warning" type="checkbox" id="checkSeRetiraSola" name="seRetiraSola" value="true">
+                                <label class="form-check-label fw-bold text-dark" for="checkSeRetiraSola">
+                                    Se retira por sus propios medios (Sin Referente)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="seccionReferente" class="p-3 border rounded mb-4">
+                            <h5 class="fw-bold text-muted border-bottom pb-2 mb-3">Datos del Referente Responsable</h5>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Apellido</label>
+                                    <input asp-for="ApellidoRef" class="form-control referente-input" placeholder="Ej: Gómez" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Nombre</label>
+                                    <input asp-for="NombreRef" class="form-control referente-input" placeholder="Ej: Juan" />
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">DNI</label>
+                                    <input asp-for="DNIRef" type="number" class="form-control referente-input" placeholder="Sin puntos" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Teléfono de Contacto</label>
+                                    <input asp-for="TelefonoRef" class="form-control referente-input" placeholder="Cod. área + número" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="form-label fw-bold small">Domicilio</label>
+                                    <input asp-for="DomicilioRef" class="form-control referente-input" placeholder="Calle y número" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Localidad</label>
+                                    <input asp-for="LocalidadRef" class="form-control referente-input" placeholder="Ej: San Clemente" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="mt-4">
+                        <div class="d-flex justify-content-between mt-3">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary fw-bold">Cancelar</a>
+                            <button type="submit" class="btn btn-danger fw-bold shadow-sm px-4">
+                                <i class="bi bi-check2-circle"></i> Confirmar Egreso y Liberar Cama
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+        
+            $('#checkSeRetiraSola').change(function() {
+                if(this.checked) {
+                    
+                    $('#seccionReferente').slideUp();
+                    
+                    $('.referente-input').val('');
+                } else {
+                    
+                    $('#seccionReferente').slideDown();
+                }
+            });
+        });
+    </script>
+}
