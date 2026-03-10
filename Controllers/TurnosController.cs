@@ -96,10 +96,10 @@ namespace TPI_GESTION_HOGAR.Controllers
             var tipoTurnos = _context.TipoTurnos.ToList();
             ViewBag.TipoTurnos = new SelectList(tipoTurnos, "Id", "Descripcion");
 
-            var personal = _context.Personal.Select(e => new
+            var personal = _context.Personal.Where(p => p.Activo).Select(p => new
             {
-                Id = e.Id,
-                Name = e.Apellido + ", " + e.Nombre
+                Id = p.Id,
+                Name = p.Apellido + ", " + p.Nombre
             });
 
             var listaAlfabetica = personal.OrderBy(item => item.Name).ToList();
