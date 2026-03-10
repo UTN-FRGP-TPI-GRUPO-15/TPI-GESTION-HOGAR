@@ -58,16 +58,19 @@
 									</a>
 									@if (personal.Activo)
 									{
-										<a asp-action="AltaBaja" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-danger" title="Dar de Baja">
-											<i class="bi bi-eye">Dar de Baja</i>
+										<a asp-action="AltaBaja" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-warning" title="Dar de Baja">
+											<i class="bi bi-eye">Desactivar</i>
 										</a>					
 									}
 									else
 									{
 										<a asp-action="AltaBaja" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-success" title="Dar de Alta">
-											<i class="bi bi-eye">Dar de Alta</i>
+											<i class="bi bi-eye">Activar</i>
 										</a>
 									}
+									<a asp-action="Delete" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-danger" title="Eliminar">
+										<i class="bi bi-eye">Eliminar</i>
+									</a>
 									<a asp-action="Detalles" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-info" title="Ver Ficha">
 										<i class="bi bi-eye">Ver Ficha</i>
 									</a>
