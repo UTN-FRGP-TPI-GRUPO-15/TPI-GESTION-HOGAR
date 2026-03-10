@@ -1,0 +1,43 @@
+name: Deploy TPI-GESTION-HOGAR to VPS
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Login to GHCR
+      run: |
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build image
+      run: |
+        docker build -t ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest .
+
+    - name: Push image to GHCR
+      run: |
+        docker push ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest
+
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          docker pull ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest
+          docker stop tpi-hogar || true
+          docker rm tpi-hogar || true
+          docker run -d \
+            --name tpi-hogar \
+            -p 8082:8080 \
+            -e DB_CONNECTION="${{ secrets.DB_CONNECTION }}" \
+            -e EmailSettings__SenderEmail="${{ secrets.EMAIL_SENDER }}" \
+            -e EmailSettings__Password="${{ secrets.EMAIL_PASSWORD }}" \
+            ghcr.io/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest

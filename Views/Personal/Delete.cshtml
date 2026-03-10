@@ -1,0 +1,18 @@
+﻿@model TPI_GESTION_HOGAR.Models.Personal
+
+<h2>Eliminar Personal</h2>
+
+<form asp-action="Delete" method="POST">
+
+	<input type="hidden" asp-for="Id" />
+
+	<h3 class="text-center">Nombre: @Model.Nombre, @Model.Apellido</h3>
+
+	<h3 class="text-center">DNI: @Model.DNI</h3>
+
+	<h3 class="text-center">Legajo: @Model.Legajo</h3>
+
+	<button type="submit" class="btn btn-primary">Eliminar</button>
+	<a class="btn btn-secondary" href="/Personal/Index">Volver</a>
+
+</form>
