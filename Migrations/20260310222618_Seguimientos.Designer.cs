@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPI_GESTION_HOGAR.Datos;
 
@@ -11,9 +12,11 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260310222618_Seguimientos")]
+    partial class Seguimientos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -592,20 +595,12 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<int>("PersonalId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RegistroId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Resuelto")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ResultadoObservacion")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PersonalId");
-
-                    b.HasIndex("RegistroId");
 
                     b.ToTable("Recordatorios");
                 });
@@ -1051,13 +1046,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TPI_GESTION_HOGAR.Models.Registro", "Registro")
-                        .WithMany()
-                        .HasForeignKey("RegistroId");
-
                     b.Navigation("Personal");
-
-                    b.Navigation("Registro");
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Registro", b =>

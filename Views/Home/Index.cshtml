@@ -118,7 +118,12 @@
                                     </div>
                                 <form asp-controller="Recordatorios" asp-action="MarcarResuelto" method="post" class="m-0">
                                     <input type="hidden" name="id" value="@rec.Id" />
-                                    <button type="submit" class="btn btn-outline-success btn-sm rounded-circle shadow-sm" title="Marcar como Completado">
+                                    <button type="button" class="btn btn-outline-success btn-sm rounded-circle shadow-sm btn-resolver"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalResolverRecordatorio"
+                                            data-id="@rec.Id"
+                                            data-desc="@rec.Descripcion"
+                                            title="Resolver Tarea">
                                         <i class="bi bi-check-lg fw-bold"></i>
                                     </button>
                                 </form>
@@ -176,6 +181,13 @@
                                 </select>
                             </div>
                         </div>
+                    <div class="mb-3 p-3 bg-light rounded border">
+                        <label class="form-label fw-bold text-primary"><i class="bi bi-person-bounding-box"></i> Vincular a Residente (Opcional)</label>
+                        <select name="RegistroId" class="form-select border-primary" asp-items="@ViewBag.ResidentesActivas">
+                            <option value="">-- Alerta General del Hogar --</option>
+                        </select>
+                        <small class="text-muted">Si selecciona una residente, esta alerta y su resultado quedarán en su legajo.</small>
+                    </div>
                         <div class="form-check form-switch mt-3 fs-6">
                             <input class="form-check-input" type="checkbox" name="Importante" value="true">
                             <label class="form-check-label text-danger fw-bold">Marcar como Urgente / Importante</label>
@@ -230,14 +242,24 @@
                                         </a>
                                     }
                                 </td>
+                              
                                 <td>
                                     <div class="btn-group shadow-sm" role="group">
-                                        <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary fw-bold" title="Ver Ficha Completa">
-                                            <i class="bi bi-file-earmark-person"></i> Ficha
+                                        <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary fw-bold" title="Ver Ficha Técnica">
+                                            Ver Ficha
                                         </a>
 
-                                        <a asp-controller="Egresos" asp-action="Crear" asp-route-registroId="@item.Id" class="btn btn-sm btn-danger fw-bold" title="Registrar Salida / Egreso">
-                                            <i class="bi bi-box-arrow-right"></i> Egreso
+                                        <button type="button" class="btn btn-sm btn-warning fw-bold text-dark btn-novedad"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalNovedadRapida"
+                                                data-id="@item.Id"
+                                                data-nombre="@item.Mujer.Apellido, @item.Mujer.Nombre"
+                                                title="Cargar Novedad / Seguimiento">
+                                            <i class="bi bi-pencil-square"></i> Nota
+                                        </button>
+
+                                        <a asp-controller="Egresos" asp-action="Crear" asp-route-registroId="@item.Id" class="btn btn-sm btn-danger fw-bold" title="Registrar Egreso">
+                                            <i class="bi bi-box-arrow-right"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -288,3 +310,107 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalResolverRecordatorio" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold"><i class="bi bi-check2-circle"></i> Resolver Tarea</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Recordatorios" asp-action="MarcarResuelto" method="post">
+                <input type="hidden" name="id" id="resolverRecordatorioId" value="" />
+
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-3 small">Tarea seleccionada: <br /><strong id="resolverRecordatorioDesc" class="text-dark fs-6"></strong></p>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-success">¿Quién resolvió esta tarea?</label>
+                        <select name="personalId" class="form-select border-success" asp-items="@ViewBag.PersonalActivo" required>
+                            <option value="">-- Operadora / Profesional --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-success">Resultado / Observaciones</label>
+                        <textarea name="observacion" class="form-control border-success" rows="3" placeholder="Ej: Se la acompañó al juzgado, se presentó el escrito..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success fw-bold px-4"><i class="bi bi-check-lg"></i> Guardar y Cerrar Alerta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalNovedadRapida" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold"><i class="bi bi-journal-text"></i> Cargar Novedad Diaria</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Seguimientos" asp-action="CargaRapida" method="post">
+                <input type="hidden" name="registroId" id="novedadRegistroId" value="" />
+
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-3 small">Residente: <strong id="novedadNombreResidente" class="text-dark fs-6"></strong></p>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-bold small">Categoría</label>
+                            <select name="categoria" class="form-select border-warning" required>
+                                <option value="Convivencia">Convivencia</option>
+                                <option value="Salud">Salud / Médico</option>
+                                <option value="Legal">Legal / Juzgado</option>
+                                <option value="Psicología">Psicología</option>
+                                <option value="Trabajo Social">Trabajo Social</option>
+                                <option value="General" selected>General / Guardia</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold small">Firma Operadora</label>
+                            <select name="personalId" class="form-select border-warning" asp-items="@ViewBag.PersonalActivo" required>
+                                <option value="">-- Seleccione --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Desarrollo de la novedad</label>
+                        <textarea name="descripcion" class="form-control border-warning shadow-sm" rows="4" placeholder="Describa lo sucedido..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning fw-bold text-dark px-4"><i class="bi bi-save"></i> Guardar en Legajo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            
+            $('.btn-resolver').click(function () {
+               
+                var idAlerta = $(this).data('id');
+                var descripcion = $(this).data('desc');
+
+              
+                $('#resolverRecordatorioId').val(idAlerta);
+                $('#resolverRecordatorioDesc').text(descripcion);
+            });
+                  
+        $('.btn-novedad').click(function () {
+            $('#novedadRegistroId').val($(this).data('id'));
+            $('#novedadNombreResidente').text($(this).data('nombre'));
+        });
+
+        });
+    </script>
+}

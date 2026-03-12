@@ -18,5 +18,10 @@ namespace TPI_GESTION_HOGAR.Models
        
         public required int PersonalId { get; set; }
         public Personal? Personal { get; set; }
+        public int? RegistroId { get; set; }
+        public Registro? Registro { get; set; }
+
+        
+        public string? ResultadoObservacion { get; set; }
     }
 }

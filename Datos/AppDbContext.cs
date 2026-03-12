@@ -28,6 +28,7 @@ namespace TPI_GESTION_HOGAR.Datos
         public DbSet<Novedad> Novedades { get; set; }
         public DbSet<Personal> Personal { get; set; }
         public DbSet<Turno> Turnos { get; set; }
+        public DbSet<Seguimiento> Seguimientos { get; set; }
         public DbSet<TipoTurno> TipoTurnos { get; set; }
 
 
@@ -70,10 +71,12 @@ namespace TPI_GESTION_HOGAR.Datos
 
 
             modelBuilder.Entity<Habitacion>().HasData(
-                new Habitacion { Id = 1, NroHabitacion = 1, Capacidad = 4, Estado = true },
+                new Habitacion { Id = 1, NroHabitacion = 1, Capacidad = 5, Estado = true },
                 new Habitacion { Id = 2, NroHabitacion = 2, Capacidad = 5, Estado = true },
-                new Habitacion { Id = 3, NroHabitacion = 3, Capacidad = 6, Estado = true },
-                new Habitacion { Id = 4, NroHabitacion = 4, Capacidad = 2, Estado = true }
+                new Habitacion { Id = 3, NroHabitacion = 3, Capacidad = 5, Estado = true },
+                new Habitacion { Id = 4, NroHabitacion = 4, Capacidad = 5, Estado = true },
+                new Habitacion { Id = 5, NroHabitacion = 5, Capacidad = 5, Estado = true },
+                new Habitacion { Id = 6, NroHabitacion = 6, Capacidad = 5, Estado = true }
             );
 
             // =========================================================

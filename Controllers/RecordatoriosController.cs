@@ -34,15 +34,35 @@ namespace TPI_GESTION_HOGAR.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-       
+
+        
         [HttpPost]
-        public async Task<IActionResult> MarcarResuelto(int id)
+        public async Task<IActionResult> MarcarResuelto(int id, string observacion, int personalId)
         {
             var recordatorio = await _context.Recordatorios.FindAsync(id);
             if (recordatorio != null)
             {
+                // 1. Marcamos la tarea como completada
                 recordatorio.Resuelto = true;
+                recordatorio.ResultadoObservacion = observacion;
+
+                // 2. MAGIA: Si estaba vinculada a una residente, creamos el Seguimiento automático
+                if (recordatorio.RegistroId.HasValue)
+                {
+                    var nuevoSeguimiento = new Seguimiento
+                    {
+                        RegistroId = recordatorio.RegistroId.Value,
+                        PersonalId = personalId,
+                        FechaHora = DateTime.Now,
+                        Categoria = "Operativa / Alerta Resuelta", // Categoría automática
+                        Descripcion = $"[Alerta Resuelta: {recordatorio.Descripcion}] \nResultado: {observacion}"
+                    };
+
+                    _context.Seguimientos.Add(nuevoSeguimiento);
+                }
+
                 await _context.SaveChangesAsync();
+                TempData["MensajeExito"] = "Tarea resuelta y guardada en el historial.";
             }
 
             return RedirectToAction("Index", "Home");
