@@ -132,6 +132,15 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             ViewBag.PersonalActivo = new SelectList(personalActivo, "Id", "Nombre");
 
+            var residentesActivas = await _context.Registros
+        .Include(r => r.Mujer)
+        .Where(r => !_context.Egresos.Any(e => e.RegistroId == r.Id))
+        .Select(r => new { Id = r.Id, Nombre = r.Mujer.Apellido + ", " + r.Mujer.Nombre })
+        .OrderBy(r => r.Nombre)
+        .ToListAsync();
+
+            ViewBag.ResidentesActivas = new SelectList(residentesActivas, "Id", "Nombre");
+
             return View(modelo);
         }
     }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.Models;
+using System.Threading.Tasks;
 
 
 namespace TPI_GESTION_HOGAR.Controllers
@@ -35,7 +36,18 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             return View(registro);
         }
+        [HttpGet]
+        public async Task<IActionResult> Legajo(int? id)
+        {
+            
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var registro = await _context.Registros.Include(r => r.Mujer).Include(r => r.Seguimientos).ThenInclude(s => s.Personal).FirstOrDefaultAsync(m => m.Id == id);
 
+            return View(registro);
+        }
 
         [HttpGet]
         public async Task<IActionResult> AsignarHabitacion(int? id)
@@ -59,7 +71,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 .Where(h => h.Estado == true)
                 .ToListAsync();
 
-            // 3. LA NUEVA LÓGICA DEL HOGAR (Exclusividad + Capacidad)
+          
             var listaHabitaciones = habitacionesActivas
                 .Where(h =>
                     // Condición A: Es la habitación que la familia ya tiene asignada (la mostramos para que pueda mantenerla o cambiar)
@@ -71,7 +83,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 .Select(h => new SelectListItem
                 {
                     Value = h.Id.ToString(),
-                    // Como ya no compartimos camas, no hace falta mostrar "lugares libres", solo mostramos su capacidad total
+                   
                     Text = $"Habitación {h.NroHabitacion} - (Capacidad total: {h.Capacidad} plazas)",
                     Selected = h.Id == registro.HabitacionId
                 }).ToList();
@@ -100,6 +112,6 @@ namespace TPI_GESTION_HOGAR.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        
     }
 }

@@ -11,6 +11,9 @@
         </h2>
         <span class="text-muted">Ingresada el @Model.Fecha.ToString("dd/MM/yyyy")</span>
     </div>
+    <a asp-controller="Registros" asp-action="Legajo" asp-route-id="@Model.Id" class="btn btn-warning fw-bold text-dark me-2">
+        Ver Historial / Seguimiento
+    </a>
     <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary shadow-sm">
         <i class="bi bi-arrow-left"></i> Volver al Dashboard
     </a>

@@ -22,15 +22,15 @@ namespace TPI_GESTION_HOGAR.Models
         public List<Denuncia>? Denuncias { get; set; }
         public List<Observacion>? Observaciones { get; set; }
         public List<Agresor>? Agresores { get; set; }
-       
-
-        
-
-           
+        public ICollection<Seguimiento>? Seguimientos { get; set; }
 
 
-        
-        
+
+
+
+
+
+
 
 
     }
