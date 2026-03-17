@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label asp-for="FechaNac" class="form-label fw-bold">Fecha de Nacimiento</label>
-                    <input asp-for="FechaNac" class="form-control" type="date" />
+                    <input asp-for="FechaNac" type="date" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" required />
                     <span asp-validation-for="FechaNac" class="text-danger"></span>
                 </div>
                 <div class="col-md-4 mb-3">
