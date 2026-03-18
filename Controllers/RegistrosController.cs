@@ -54,7 +54,7 @@ namespace TPI_GESTION_HOGAR.Controllers
         {
             if (id == null) return NotFound();
 
-            // 1. Buscamos el expediente INCLUYENDO a los hijos para saber el tamaño del grupo familiar
+     
             var registro = await _context.Registros
                 .Include(r => r.Mujer)
                     .ThenInclude(m => m.Hijos)
@@ -62,28 +62,23 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             if (registro == null) return NotFound();
 
-            // Calculamos el tamaño de la familia (1 Mujer + cantidad de menores)
+            
             int camasNecesarias = 1 + (registro.Mujer?.Hijos?.Count ?? 0);
-
-            // 2. Traemos TODAS las habitaciones operativas y chequeamos si tienen algún ingreso activo adentro
             var habitacionesActivas = await _context.Habitaciones
-                .Include(h => h.Registros.Where(r => r.Estado == true))
+                .Include(h => h.Registros.Where(r => r.Mujer != null && r.Mujer.estado == true))
                 .Where(h => h.Estado == true)
                 .ToListAsync();
 
-          
             var listaHabitaciones = habitacionesActivas
                 .Where(h =>
-                    // Condición A: Es la habitación que la familia ya tiene asignada (la mostramos para que pueda mantenerla o cambiar)
+                 
                     h.Id == registro.HabitacionId ||
-
-                    // Condición B: La habitación está VACÍA (nadie asignado) Y además tiene el tamaño suficiente para esta familia
+                   
                     (!h.Registros.Any() && h.Capacidad >= camasNecesarias)
                 )
                 .Select(h => new SelectListItem
                 {
                     Value = h.Id.ToString(),
-                   
                     Text = $"Habitación {h.NroHabitacion} - (Capacidad total: {h.Capacidad} plazas)",
                     Selected = h.Id == registro.HabitacionId
                 }).ToList();

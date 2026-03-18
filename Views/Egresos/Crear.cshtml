@@ -31,39 +31,43 @@
                             </div>
                         </div>
 
-                        <div id="seccionReferente" class="p-3 border rounded mb-4">
-                            <h5 class="fw-bold text-muted border-bottom pb-2 mb-3">Datos del Referente Responsable</h5>
+                        <div class="p-3 border rounded mb-4 shadow-sm bg-light">
+                            <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="bi bi-geo-alt"></i> Datos de Destino y Contacto</h5>
 
                             <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold small">Apellido</label>
-                                    <input asp-for="ApellidoRef" class="form-control referente-input" placeholder="Ej: Gómez" />
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold small">Nombre</label>
-                                    <input asp-for="NombreRef" class="form-control referente-input" placeholder="Ej: Juan" />
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-bold small">DNI</label>
-                                    <input asp-for="DNIRef" type="number" class="form-control referente-input" placeholder="Sin puntos" />
-                                </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold small">Teléfono de Contacto</label>
-                                    <input asp-for="TelefonoRef" class="form-control referente-input" placeholder="Cod. área + número" />
+                                    <input asp-for="TelefonoRef" class="form-control" placeholder="Cod. área + número" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold small">Localidad de Destino</label>
+                                    <input asp-for="LocalidadRef" class="form-control" placeholder="Ej: San Clemente" required />
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-md-8">
-                                    <label class="form-label fw-bold small">Domicilio</label>
-                                    <input asp-for="DomicilioRef" class="form-control referente-input" placeholder="Calle y número" />
+                                <div class="col-md-12">
+                                    <label class="form-label fw-bold small">Domicilio de Destino</label>
+                                    <input asp-for="DomicilioRef" class="form-control" placeholder="Calle y número" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="seccionReferente" class="p-3 border rounded mb-4">
+                            <h5 class="fw-bold text-muted border-bottom pb-2 mb-3"><i class="bi bi-person-badge"></i> Datos del Referente Responsable</h5>
+
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">Apellido</label>
+                                    <input asp-for="ApellidoRef" class="form-control referente-input" placeholder="Ej: Gómez" />
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label fw-bold small">Localidad</label>
-                                    <input asp-for="LocalidadRef" class="form-control referente-input" placeholder="Ej: San Clemente" />
+                                    <label class="form-label fw-bold small">Nombre</label>
+                                    <input asp-for="NombreRef" class="form-control referente-input" placeholder="Ej: Juan" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold small">DNI</label>
+                                    <input asp-for="DNIRef" type="number" class="form-control referente-input" placeholder="Sin puntos" />
                                 </div>
                             </div>
                         </div>
@@ -85,18 +89,18 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-        
-            $('#checkSeRetiraSola').change(function() {
-                if(this.checked) {
-                    
-                    $('#seccionReferente').slideUp();
-                    
-                    $('.referente-input').val('');
-                } else {
-                    
-                    $('#seccionReferente').slideDown();
-                }
+        $('#checkSeRetiraSola').change(function() {
+        if(this.checked) {
+        // Ocultamos SOLO los datos personales del referente
+        $('#seccionReferente').slideUp();
+
+                        // Limpiamos SOLO Apellido, Nombre y DNI
+                        $('.referente-input').val('');
+                    } else {
+                        // Mostramos los datos personales del referente
+                        $('#seccionReferente').slideDown();
+                    }
+                });
             });
-        });
     </script>
 }
