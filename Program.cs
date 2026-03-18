@@ -35,6 +35,8 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 //Crear base si no existe y/o aplicar migraciones pendientes
 using (var scope = app.Services.CreateScope())
 {
