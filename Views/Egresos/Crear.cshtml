@@ -19,7 +19,7 @@
 
                         <div class="p-3 bg-light rounded border mb-4">
                             <label class="form-label fw-bold text-dark mb-1">Fecha de Salida</label>
-                            <input asp-for="Fecha" type="date" class="form-control border-danger shadow-sm w-50" required />
+                            <input asp-for="Fecha" type="date" class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" required />
                         </div>
 
                         <div class="p-3 mb-4 rounded border border-warning" style="background-color: #fff3cd;">

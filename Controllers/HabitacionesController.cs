@@ -13,11 +13,49 @@ namespace TPI_GESTION_HOGAR.Controllers
         {
             _context = context;
         }
+
         [HttpGet]
+        public async Task<IActionResult> Crear()
+        {
+            
+            int proximoNumero = 1; 
+
+           
+            if (await _context.Habitaciones.AnyAsync())
+            {
+                proximoNumero = await _context.Habitaciones.MaxAsync(h => h.NroHabitacion) + 1;
+            }
+
+           
+            var nuevaHabitacion = new Habitacion
+            {
+                NroHabitacion = proximoNumero,
+                Estado = true
+            };
+
+            return View(nuevaHabitacion);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Crear(Habitacion habitacion)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Habitaciones.Add(habitacion);
+                await _context.SaveChangesAsync();
+
+               
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(habitacion);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            // Traemos las habitaciones con los ingresos activos, sus mujeres y los menores a cargo
+           
             var habitaciones = await _context.Habitaciones
                 .Include(h => h.Registros.Where(r => r.Estado == true))
                     .ThenInclude(r => r.Mujer)

@@ -1,0 +1,47 @@
+﻿@model TPI_GESTION_HOGAR.Models.Habitacion
+
+@{
+    ViewData["Title"] = "Nueva Habitación";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 border-top border-primary border-4">
+                <div class="card-header bg-white text-center py-3">
+                    <h4 class="fw-bold text-primary mb-0"><i class="bi bi-door-open"></i> Alta de Nueva Habitación</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Crear" method="post">
+
+                        <div class="mb-3">
+                            <label  class="form-label fw-bold text-secondary">Número de Habitación</label>
+                            <input asp-for="NroHabitacion" type="number" class="form-control bg-light fw-bold text-primary" readonly />
+                            <span asp-validation-for="NroHabitacion" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-secondary">Capacidad (Cantidad de Camas)</label>
+                            <input asp-for="Capacidad" type="number" min="1" class="form-control" placeholder="Ej: 4" />
+                            <span asp-validation-for="Capacidad" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check form-switch fs-5">
+                                <input class="form-check-input border-primary" type="checkbox" role="switch" asp-for="Estado">
+                                    <label class="form-check-label fw-bold ms-2 fs-6 text-secondary" for="Estado">
+                                        Habitación Habilitada y Disponible
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary fw-bold me-md-2">Cancelar</a>
+                                <button type="submit" class="btn btn-primary fw-bold text-white"><i class="bi bi-save"></i> Guardar Habitación</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
