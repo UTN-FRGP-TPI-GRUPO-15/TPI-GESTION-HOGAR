@@ -245,9 +245,7 @@ namespace TPI_GESTION_HOGAR.Controllers
         }
 
 
-        // ==========================================
-        // EDITAR DATOS Y/O GENERAR RE-INGRESO
-        // ==========================================
+     
         [HttpGet]
         public async Task<IActionResult> Editar(int? id)
         {
@@ -262,7 +260,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 return NotFound();
             }
 
-            // Podés cargar acá los ViewBag de Provincias o Condiciones si los usás en la vista
+           
             return View(mujer);
         }
 
@@ -279,7 +277,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             {
                 try
                 {
-                   
+                    mujerModificada.estado = true;
                     _context.Update(mujerModificada);
                     await _context.SaveChangesAsync();
 
@@ -290,12 +288,13 @@ namespace TPI_GESTION_HOGAR.Controllers
                         {
                             Fecha = DateOnly.FromDateTime(DateTime.Today), 
                             Estado = true,                                 
-                            MujerID = mujerModificada.ID                   
-                                                                           
+                            MujerID = mujerModificada.ID 
+                                                                                                       
                         };
 
                         _context.Registros.Add(nuevoIngreso);
                         await _context.SaveChangesAsync();
+                        
 
                         TempData["MensajeExito"] = "Los datos de la residente fueron actualizados y se registró su nuevo ingreso al hogar.";
 

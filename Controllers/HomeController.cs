@@ -26,7 +26,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 .Include(r => r.Mujer)
                     .ThenInclude(m => m.Hijos)
                 .Include(r => r.Habitacion)
-                .Where(r => r.Estado == true)
+                .Where(r => r.Mujer != null && r.Mujer.estado == true)
                 .Where(r => !_context.Egresos.Any(e => e.RegistroId == r.Id))
                 .OrderByDescending(r => r.Fecha)
                 .ToListAsync();
@@ -35,16 +35,14 @@ namespace TPI_GESTION_HOGAR.Controllers
             modelo.TotalMujeres = modelo.IngresosActivos.Count;
             modelo.TotalMenores = modelo.IngresosActivos.Sum(r => r.Mujer?.Hijos?.Count ?? 0);
 
-            // 3. Calculamos la ocupación de habitaciones operativas
             var habitacionesActivas = await _context.Habitaciones
-                .Include(h => h.Registros.Where(r => r.Estado == true))
-                .Where(h => h.Estado == true)
-                .ToListAsync();
-
-            modelo.HabitacionesTotales = habitacionesActivas.Count;
-            // Contamos como "ocupada" si tiene al menos un registro adentro
+            .Include(h => h.Registros.Where(r => r.Mujer != null && r.Mujer.estado == true))
+            .Where(h => h.Estado == true)
+            .ToListAsync();
+            modelo.HabitacionesTotales = habitacionesActivas.Count;          
             modelo.HabitacionesOcupadas = habitacionesActivas.Count(h => h.Registros.Any());
 
+            
             int horaActual = DateTime.Now.Hour;
             DateOnly fechaHoy = DateOnly.FromDateTime(DateTime.Now);
             DateOnly fechaAyer = fechaHoy.AddDays(-1);
@@ -133,15 +131,14 @@ namespace TPI_GESTION_HOGAR.Controllers
             ViewBag.PersonalActivo = new SelectList(personalActivo, "Id", "Nombre");
 
             var residentesActivas = await _context.Registros
-        .Include(r => r.Mujer)
-        .Where(r => !_context.Egresos.Any(e => e.RegistroId == r.Id))
-        .Select(r => new { Id = r.Id, Nombre = r.Mujer.Apellido + ", " + r.Mujer.Nombre })
-        .OrderBy(r => r.Nombre)
-        .ToListAsync();
+                .Include(r => r.Mujer)
+                .Where(r => r.Mujer != null && r.Mujer.estado == true)
+                .Select(r => new { Id = r.Id, Nombre = r.Mujer.Apellido + ", " + r.Mujer.Nombre })
+                .OrderBy(r => r.Nombre)
+                .ToListAsync();
 
             ViewBag.ResidentesActivas = new SelectList(residentesActivas, "Id", "Nombre");
-
             return View(modelo);
         }
     }
-}
+}   

@@ -45,9 +45,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 egreso.ApellidoRef = null;
                 egreso.NombreRef = null;
                 egreso.DNIRef = null;
-                egreso.TelefonoRef = null;
-                egreso.DomicilioRef = null;
-                egreso.LocalidadRef = null;
+                
             }
 
             ModelState.Remove("Registro");
@@ -56,11 +54,19 @@ namespace TPI_GESTION_HOGAR.Controllers
             {
                 _context.Egresos.Add(egreso);
 
-                var registro = await _context.Registros.FindAsync(egreso.RegistroId);
+                var registro = await _context.Registros
+                    .Include(r => r.Mujer)
+                    .FirstOrDefaultAsync(r => r.Id == egreso.RegistroId);
                 if (registro != null)
                 {
-                    registro.HabitacionId = null; // Liberamos la cama
+                    
+
+                    if (registro.Mujer != null)
+                    {
+                        registro.Mujer.estado = false;
+                    }
                 }
+
 
                 await _context.SaveChangesAsync();
 
