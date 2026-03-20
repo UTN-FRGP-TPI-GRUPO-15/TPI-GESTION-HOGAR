@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Globalization
+@{
     ViewData["Title"] = "Planificación";
 }
 
@@ -47,7 +48,7 @@
 
                 <tr>
                     <td>
-                        @fecha.ToString("dddd dd/MM")
+                        @fecha.ToString("dddd dd/MM", new CultureInfo("es-ES"))
                     </td>
 
                     @foreach (var tipo in tipoTurnos)
