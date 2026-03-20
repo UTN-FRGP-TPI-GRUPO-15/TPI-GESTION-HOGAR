@@ -151,8 +151,10 @@
 </div>
 
 <script>
+    let estadoInicial = [];
+    let btnDeshacer;
+
     document.addEventListener("DOMContentLoaded", function () {
-        const estadoInicial = [];
 
         document.querySelectorAll(".personal-principal").forEach(p => {
             const index = p.dataset.index;
@@ -165,12 +167,12 @@
             });
         });
 
-        const btnDeshacer = document.getElementById("deshacerCambios");
+        btnDeshacer = document.getElementById("deshacerCambios");
 
         btnDeshacer.addEventListener("click", function () {
             estadoInicial.forEach(item => {
-                const principal = document.querySelector(`.personal-principal[data-index="${item.index}"`);
-                const opcional = document.querySelector(`.personal-opcional[data-index="${item.index}"`);
+                const principal = document.querySelector(`.personal-principal[data-index="${item.index}"]`);
+                const opcional = document.querySelector(`.personal-opcional[data-index="${item.index}"]`);
 
                 if (!principal || !opcional) return;
 
@@ -179,6 +181,8 @@
 
                 principal.dispatchEvent(new Event("change"));
             });
+
+            actualizarBoton();
         });
 
         const principales = document.querySelectorAll(".personal-principal");
@@ -206,6 +210,8 @@
                 if (opcional.value === this.value) {
                     opcional.value = "";
                 }
+
+                actualizarBoton();
             });
         });
 
@@ -218,10 +224,29 @@
                 p.value = "";
                 p.dispatchEvent(new Event("change"));
             });
+
+            actualizarBoton();
         });
 
         //Forzar el cambio para aplicar las reglas al cargar la página
         principales.forEach(p => p.dispatchEvent(new Event("change")));
+        actualizarBoton();
     });
+
+    function hayCambios() {
+        return estadoInicial.some(item => {
+            const principal = document.querySelector(`.personal-principal[data-index="${item.index}"]`);
+            const opcional = document.querySelector(`.personal-opcional[data-index="${item.index}"]`);
+
+            return principal.value !== item.principal ||
+                    (opcional?.value || "") !== item.opcional;
+        });
+    }
+
+    function actualizarBoton() {
+        if (!btnDeshacer) return;
+
+        btnDeshacer.disabled = !hayCambios();
+    }
 
 </script>
