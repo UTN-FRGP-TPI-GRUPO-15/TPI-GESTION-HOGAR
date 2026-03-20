@@ -4,7 +4,7 @@
 
 @{
     var turnos = (List<Turno>)ViewBag.Turnos;
-    var personal = (List<Personal>)ViewBag.Personal;
+    var personal = (List<Personal>)ViewBag.Operadores;
     var tipoTurnos = (List<TipoTurno>)ViewBag.TipoTurnos;
 
     DateOnly inicioSemana = (DateOnly)ViewBag.InicioSemana;
@@ -82,6 +82,28 @@
                                 }
 
                             </select>
+
+                            <select name="turnos[@contador].PersonalOpcId" class="form-select">
+                                <option value="">-- Opcional --</option>
+
+                                @foreach (var p in personal)
+                                {
+                                    if (turno?.PersonalOpcId == p.Id)
+                                    {
+                                        <option value="@p.Id" selected>
+                                            @p.Nombre @p.Apellido
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@p.Id">
+                                            @p.Nombre @p.Apellido
+                                        </option>
+                                    }
+                                }
+
+                            </select>
+
                         </td>
 
                         contador++;
