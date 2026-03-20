@@ -23,8 +23,9 @@ namespace TPI_GESTION_HOGAR.Models
         public string? Ocupacion { get; set; }
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
+        public string? Provincia { get; set; }
         public string? Localidad { get; set; }
-        public bool estado { get; set; }
+        public bool Estado { get; set; }
 
         public ICollection<Hijo> Hijos { get; set; } = new List<Hijo>();
         public ICollection<Condicion> Condiciones { get; set; } = new List<Condicion>();

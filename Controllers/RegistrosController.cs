@@ -65,7 +65,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             
             int camasNecesarias = 1 + (registro.Mujer?.Hijos?.Count ?? 0);
             var habitacionesActivas = await _context.Habitaciones
-                .Include(h => h.Registros.Where(r => r.Mujer != null && r.Mujer.estado == true))
+                .Include(h => h.Registros.Where(r => r.Mujer != null && r.Mujer.Estado == true))
                 .Where(h => h.Estado == true)
                 .ToListAsync();
 

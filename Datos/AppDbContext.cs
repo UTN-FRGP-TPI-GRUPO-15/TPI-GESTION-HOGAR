@@ -132,7 +132,7 @@ namespace TPI_GESTION_HOGAR.Datos
                     Telefono = "2246-554433",
                     Domicilio = "Av. San Martín 456",
                     Localidad = "Mar de Ajó",
-                    estado = true
+                    Estado = true
                 }
             );
 
