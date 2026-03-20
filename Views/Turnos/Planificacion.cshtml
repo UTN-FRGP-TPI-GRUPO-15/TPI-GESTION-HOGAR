@@ -62,7 +62,9 @@
                             <input type="hidden" name="turnos[@contador].Fecha" value="@fecha" />
                             <input type="hidden" name="turnos[@contador].TipoTurnoId" value="@tipo.Id" />
 
-                            <select name="turnos[@contador].PersonalId" class="form-select">
+                            <select name="turnos[@contador].PersonalId" 
+                                class="form-select personal-principal"
+                                data-index="@contador">
 
                                 <option value="">-- Seleccionar --</option>
 
@@ -84,7 +86,11 @@
 
                             </select>
 
-                            <select name="turnos[@contador].PersonalOpcId" class="form-select">
+                            <select name="turnos[@contador].PersonalOpcId" 
+                                class="form-select personal-opcional"
+                                data-index="@contador"
+                                @(turno?.PersonalId == null ? "disabled" : "")>
+
                                 <option value="">-- Opcional --</option>
 
                                 @foreach (var p in personal)
@@ -120,3 +126,39 @@
     </button>
 
 </form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const principales = document.querySelectorAll(".personal-principal");
+
+        principales.forEach(principal => {
+            principal.addEventListener("change", function () {
+                const index = this.dataset.index;
+                const opcional = document.querySelector(`.personal-opcional[data-index="${index}"]`);
+
+                Array.from(opcional.options).forEach(opt => opt.disabled = false);
+
+                if (!this.value) {
+                    opcional.value = "";
+                    opcional.disabled = true;
+                    return
+                }
+
+                opcional.disabled = false;
+
+                const opcionIgual = opcional.querySelector(`option[value="${this.value}"]`);
+                if (opcionIgual) {
+                    opcionIgual.disabled = true;
+                }
+
+                if (opcional.value === this.value) {
+                    opcional.value = "";
+                }
+            });
+        });
+
+        //Forzar el cambio para aplicar las reglas al cargar la página
+        principales.forEach(p => p.dispatchEvent(new Event("change")));
+    });
+
+</script>
