@@ -17,7 +17,7 @@
     {
 
         
-        var registrosActivos = hab.Registros.Where(r => r.Mujer != null && r.Mujer.estado == true).ToList();
+        var registrosActivos = hab.Registros.Where(r => r.Mujer != null && r.Mujer.Estado == true).ToList();
 
         int personasAlojadas = registrosActivos.Sum(r => 1 + (r.Mujer?.Hijos?.Count ?? 0));
 

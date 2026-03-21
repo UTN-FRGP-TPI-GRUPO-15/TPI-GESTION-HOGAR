@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPI_GESTION_HOGAR.Datos;
 
@@ -11,9 +12,11 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260321030355_fixRolSeed")]
+    partial class fixRolSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -761,17 +764,12 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<int>("PersonalId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonalOpcId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TipoTurnoId")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.HasIndex("PersonalId");
-
-                    b.HasIndex("PersonalOpcId");
 
                     b.HasIndex("TipoTurnoId");
 
@@ -999,13 +997,8 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasOne("TPI_GESTION_HOGAR.Models.Personal", "Personal")
                         .WithMany("Turnos")
                         .HasForeignKey("PersonalId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TPI_GESTION_HOGAR.Models.Personal", "PersonalOpc")
-                        .WithMany("TurnosOpcionales")
-                        .HasForeignKey("PersonalOpcId")
-                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("TPI_GESTION_HOGAR.Models.TipoTurno", "TipoTurno")
                         .WithMany("Turnos")
@@ -1014,8 +1007,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsRequired();
 
                     b.Navigation("Personal");
-
-                    b.Navigation("PersonalOpc");
 
                     b.Navigation("TipoTurno");
                 });
@@ -1064,8 +1055,6 @@ namespace TPI_GESTION_HOGAR.Migrations
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Personal", b =>
                 {
                     b.Navigation("Turnos");
-
-                    b.Navigation("TurnosOpcionales");
 
                     b.Navigation("Usuario")
                         .IsRequired();

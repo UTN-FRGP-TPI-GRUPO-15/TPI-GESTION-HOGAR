@@ -1,0 +1,216 @@
+﻿@model TPI_GESTION_HOGAR.ViewModels.EstadisticasViewModel
+
+@{
+    ViewData["Title"] = "Dashboard de Estadísticas";
+    Layout = null; 
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tablero de Estadísticas </title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    
+    <style>
+        body { background-color: #f8f9fa; }
+        .kpi-card { border-left: 5px solid; border-radius: 8px; }
+        .kpi-primary { border-color: #0d6efd; }
+        .kpi-success { border-color: #198754; }
+        .kpi-warning { border-color: #ffc107; }
+        
+        
+        .chart-container { position: relative; height: 300px; width: 100%; }
+    </style>
+</head>
+<body>
+    
+    <div class="bg-dark text-white p-3 d-flex justify-content-between align-items-center mb-4" data-html2canvas-ignore="true">
+        <h5 class="mb-0 ms-3"><i class="bi bi-pie-chart-fill me-2"></i> Visualizador de Estadísticas</h5>
+        <div>
+            <button onclick="guardarPDF()" class="btn btn-danger fw-bold shadow-sm me-3">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Descargar PDF
+            </button>
+            <button onclick="window.close()" class="btn btn-outline-light btn-sm">Cerrar Pestaña</button>
+        </div>
+    </div>
+
+    <div id="areaReporte" class="container bg-white p-5 shadow-sm rounded">
+        
+        <div class="mb-4 border-bottom pb-3">
+            <h2 class="text-primary fw-bold">Reporte Estadístico del Hogar</h2>
+            <p class="text-muted mb-0">Total de mujeres en esta muestra: <strong>@Model.TotalRegistros</strong></p>
+        </div>
+
+        @if (Model.TotalRegistros == 0)
+        {
+            <div class="alert alert-warning text-center">
+                <h4>No hay registros para graficar</h4>
+                <p>Intente ampliar el rango de fechas o los filtros seleccionados.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row mb-5">
+                <div class="col-md-4">
+                    <div class="card shadow-sm kpi-card kpi-primary h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted fw-bold text-uppercase">Edad Promedio</h6>
+                            <h2 class="display-4 text-primary fw-bold mb-0">@Model.PromedioEdadMujeres <small class="fs-6 text-muted">años</small></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm kpi-card kpi-success h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted fw-bold text-uppercase">Estadía Promedio</h6>
+                            <h2 class="display-4 text-success fw-bold mb-0">@Model.PromedioDiasEstadia <small class="fs-6 text-muted">días</small></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm kpi-card kpi-warning h-100 border-0 bg-light">
+                        <div class="card-body text-center">
+                            <h6 class="text-muted fw-bold text-uppercase">Edad Prom. Hijos</h6>
+                            <h2 class="display-4 text-warning fw-bold mb-0">@Model.PromedioEdadHijos <small class="fs-6 text-muted">años</small></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100 border-0">
+                        <div class="card-header bg-white border-0 pt-3">
+                            <h6 class="fw-bold text-center">Maternidad</h6>
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <div class="chart-container">
+                                <canvas id="chartHijos"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100 border-0">
+                        <div class="card-header bg-white border-0 pt-3">
+                            <h6 class="fw-bold text-center">Consumo Problemático</h6>
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <div class="chart-container">
+                                <canvas id="chartConsumo"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100 border-0">
+                        <div class="card-header bg-white border-0 pt-3">
+                            <h6 class="fw-bold text-center">Procedencia</h6>
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            <div class="chart-container">
+                                <canvas id="chartLocalidad"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    @if(Model.TotalRegistros > 0)
+    {
+        <script>
+            // ACTIVAR EL PLUGIN DE PORCENTAJES
+            Chart.register(ChartDataLabels);
+
+            // CONFIGURACIÓN UNIVERSAL DE LOS PORCENTAJES
+            const opcionesConPorcentaje = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    datalabels: {
+                        color: '#ffffff', // Letra blanca para que resalte
+                        font: { weight: 'bold', size: 14 },
+                        formatter: (value, context) => {
+                            // Calculamos el porcentaje matemático
+                            let total = context.chart._metasets[context.datasetIndex].total;
+                            if (total === 0 || value === 0) return ''; // Si es 0, no mostramos nada
+                            let porcentaje = ((value * 100) / total).toFixed(1) + "%";
+                            return porcentaje;
+                        }
+                    }
+                }
+            };
+
+            // Gráfico 1: Hijos
+            new Chart(document.getElementById('chartHijos'), {
+                type: 'pie',
+                data: {
+                    labels: ['Con Hijos', 'Sin Hijos'],
+                    datasets: [{
+                        data: [@Model.MujeresConHijos, @Model.MujeresSinHijos],
+                        backgroundColor: ['#0dcaf0', '#adb5bd'] // Celeste y Gris
+                    }]
+                },
+                options: opcionesConPorcentaje
+            });
+
+            // Gráfico 2: Consumo
+            new Chart(document.getElementById('chartConsumo'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Con Adicción', 'Sin Adicción'],
+                    datasets: [{
+                        data: [@Model.ConConsumo, @Model.SinConsumo],
+                        backgroundColor: ['#ffc107', '#198754'] // Amarillo y Verde
+                    }]
+                },
+                options: opcionesConPorcentaje
+            });
+
+            // Gráfico 3: Procedencia
+            new Chart(document.getElementById('chartLocalidad'), {
+                type: 'pie',
+                data: {
+                    labels: ['De La Costa', 'Otras Localidades'],
+                    datasets: [{
+                        data: [@Model.DeLaCosta, @Model.DeAfuera],
+                        backgroundColor: ['#6f42c1', '#fd7e14'] // Violeta y Naranja
+                    }]
+                },
+                options: opcionesConPorcentaje
+            });
+
+            // FUNCIÓN MÁGICA PARA DESCARGAR EL PDF
+            function guardarPDF() {
+                // Agarramos el div que tiene toda la info blanca
+                const elemento = document.getElementById('areaReporte');
+                
+                // Le damos las opciones de calidad y tamaño de hoja
+                const opciones = {
+                    margin:       0.5,
+                    filename:     'Reporte_Hogar_Mara_Mateu.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'in', format: 'A4', orientation: 'landscape' }
+                };
+
+                // Disparamos la descarga
+                html2pdf().set(opciones).from(elemento).save();
+            }
+        </script>
+    }
+</body>
+</html>

@@ -63,7 +63,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
                     if (registro.Mujer != null)
                     {
-                        registro.Mujer.estado = false;
+                        registro.Mujer.Estado = false;
                     }
                 }
 
