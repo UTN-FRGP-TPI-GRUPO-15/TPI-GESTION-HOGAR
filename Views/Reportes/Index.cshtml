@@ -1,0 +1,289 @@
+﻿@model TPI_GESTION_HOGAR.ViewModels.ReporteViewModel
+
+@{
+    ViewData["Title"] = "Reporte";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary fw-bold"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Reporte General y Exportación</h2>
+        <button class="btn btn-outline-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#panelFiltros">
+            <i class="bi bi-funnel"></i> Mostrar/Ocultar Filtros
+        </button>
+    </div>
+
+    <div class="collapse mb-4" id="panelFiltros">
+        <div class="card card-body bg-light border-0 shadow-sm border-top border-primary border-4">
+            <form asp-action="Index" method="get">
+                <div class="row align-items-end">
+                    
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label small fw-bold text-secondary">Ingreso Desde</label>
+                        <input asp-for="FechaDesde" type="date" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label small fw-bold text-secondary">Ingreso Hasta</label>
+                        <input asp-for="FechaHasta" type="date" class="form-control form-control-sm" />
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label small fw-bold text-secondary">Provincia</label>
+                        <select asp-for="Provincia" class="form-select form-select-sm" id="selectProvincia">
+                            <option value="">Todas...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label small fw-bold text-secondary">Municipio/Localidad</label>
+                        <select asp-for="Localidad" class="form-select form-select-sm" id="selectLocalidad" disabled>
+                            <option value="">Todos...</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label class="form-label small fw-bold text-secondary">Hijos (Min)</label>
+                        <input asp-for="CantidadHijosMinima" type="number" min="0" class="form-control form-control-sm" />
+                    </div>
+
+                    <div class="col-md-2 mb-3 d-flex flex-column justify-content-center">
+                        <div class="form-check form-switch mb-1">
+                            <input class="form-check-input border-primary" type="checkbox" asp-for="SoloActivas">
+                                <label class="form-check-label small fw-bold" for="SoloActivas">Solo activas hoy</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-2 border-top pt-3 text-end">
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-sm me-2">Limpiar Filtros</a>
+                        
+                            <button type="submit" asp-action="Graficos" formtarget="_blank" class="btn btn-info btn-sm fw-bold text-white me-2 shadow-sm">
+                                <i class="bi bi-pie-chart-fill"></i> Ver Gráficos
+                            </button>
+                        
+                            <button type="submit" class="btn btn-primary btn-sm fw-bold shadow-sm"><i class="bi bi-search"></i> Filtrar Tabla</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm bg-primary text-white p-3">
+                    <h6 class="mb-0">Mujeres Encontradas: <span class="fs-3 fw-bold ms-2">@Model.TotalMujeres</span></h6>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm bg-info text-white p-3">
+                    <h6 class="mb-0">Menores Involucrados: <span class="fs-3 fw-bold ms-2">@Model.TotalMenores</span></h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-body">
+                <table id="tablaReportes" class="table table-hover table-striped align-middle mb-0 w-100 display responsive nowrap">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Ingreso</th>
+                            <th>DNI</th>
+                            <th>Nombre y Apellido</th>
+                            <th>Nacimiento</th>
+                            <th>Edad</th>
+                            <th>Provincia/Localidad</th>
+                            <th>¿Es de La Costa?</th>
+                            <th>Cant. Hijos</th>
+                            <th>¿Denuncia Penal?</th>
+                            <th>¿Adicción?</th>
+                            <th>Fecha Egreso</th>
+                            <th>Días Transc.</th>
+                            <th>Dirección Egreso</th>
+                            <th>Teléfono Ref.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Resultados != null)
+                        {
+                            foreach (var reg in Model.Resultados)
+                            {
+                                int edad = 0;
+                                if (reg.Mujer != null)
+                                {
+                                    var today = DateTime.Today;
+                                    var bday = reg.Mujer.FechaNac.ToDateTime(TimeOnly.MinValue);
+                                    edad = today.Year - bday.Year;
+                                    if (bday.Date > today.AddYears(-edad)) edad--;
+                                }
+
+                                int dias = 0;
+                                var fechaIngreso = reg.Fecha.ToDateTime(TimeOnly.MinValue);
+                                if (reg.Egreso != null)
+                                {
+                                    dias = (reg.Egreso.Fecha.ToDateTime(TimeOnly.MinValue) - fechaIngreso).Days;
+                                }
+                                else
+                                {
+                                    dias = (DateTime.Today - fechaIngreso).Days;
+                                }
+
+                                bool esDeLaCosta = reg.Mujer?.Localidad != null &&
+                                    (reg.Mujer.Localidad.Contains("La Costa", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("San Clemente", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("Santa Teresita", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("Mar de Ajó", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("Mar del Tuyú", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("Las Toninas", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("San Bernardo", StringComparison.OrdinalIgnoreCase));
+
+                                bool tieneDenuncia = reg.Denuncias != null && reg.Denuncias.Any(d => d.NroIPP != null);
+                            
+                                // LÓGICA PARA ADICCIÓN (TipoCondicionId == 4)
+                                bool tieneAdiccion = reg.Mujer?.Condiciones != null && reg.Mujer.Condiciones.Any(c => c.TipoCondicionId == 4);
+
+                                <tr>
+                                    <td class="fw-bold text-success">@reg.Fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@(reg.Mujer?.DNI.ToString() ?? "-")</td>
+                                    <td class="fw-bold">@reg.Mujer?.Apellido, @reg.Mujer?.Nombre</td>
+                                    <td>@(reg.Mujer?.FechaNac.ToString("dd/MM/yyyy") ?? "-")</td>
+                                    <td>@edad años</td>
+                                    <td>@reg.Mujer?.Provincia <br> <small class="text-muted">@reg.Mujer?.Localidad</small></td>
+                                
+                                    <td class="text-center">
+                                        @if (esDeLaCosta)
+                                        {
+                                            <span class="badge bg-info text-dark">Sí</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge bg-secondary">No</span>
+                                        }
+                                    </td>
+                                
+                                    <td class="text-center">@(reg.Mujer?.Hijos?.Count ?? 0)</td>
+                                
+                                    <td class="text-center">
+                                        @if (tieneDenuncia)
+                                        {
+                                            <span class="badge bg-danger">Sí</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge bg-secondary">No</span>
+                                        }
+                                    </td>
+
+                                    <td class="text-center">
+                                        @if (tieneAdiccion)
+                                        {
+                                            <span class="badge bg-warning text-dark">Sí</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge bg-secondary">No</span>
+                                        }
+                                    </td>
+
+                                    <td class="fw-bold text-danger">@(reg.Egreso != null ? reg.Egreso.Fecha.ToString("dd/MM/yyyy") : "-")</td>
+                                    <td class="text-center fw-bold text-primary">@dias días</td>
+                                    <td>@(reg.Egreso?.DomicilioRef ?? "-")</td>
+                                    <td>@(reg.Egreso?.TelefonoRef ?? "-")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+            
+            $('#tablaReportes').DataTable({
+            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
+            responsive: true,
+            dom: "<'row mb-3'<'col-sm-12 col-md-6'B><'col-sm-12 col-md-6'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row mt-3'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+            buttons: [
+            {
+            extend: 'excelHtml5',
+            text: '<i class="bi bi-file-earmark-excel-fill"></i> Descargar Excel',
+            className: 'btn btn-success fw-bold',
+            title: 'Reporte_Hogar_Residentes'
+            }
+            ],
+            order: []
+            });
+
+            // LÓGICA DE LA API
+            const selectProvincia = document.getElementById("selectProvincia");
+            const selectLocalidad = document.getElementById("selectLocalidad");
+            const provinciaSeleccionada = '@Html.Raw(Model?.Provincia ?? "")';
+            const localidadSeleccionada = '@Html.Raw(Model?.Localidad ?? "")';
+
+            fetch('https://apis.datos.gob.ar/georef/api/provincias')
+            .then(response => response.json())
+            .then(data => {
+            let provincias = data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            provincias.forEach(prov => {
+            let option = document.createElement("option");
+            option.value = prov.nombre;
+            option.textContent = prov.nombre;
+            if (prov.nombre === provinciaSeleccionada) option.selected = true;
+            selectProvincia.appendChild(option);
+            });
+                    
+            if (provinciaSeleccionada) {
+            cargarLocalidades(provinciaSeleccionada);
+            }
+            })
+            .catch(err => console.error("Error", err));
+
+            selectProvincia.addEventListener("change", function () {
+            cargarLocalidades(this.value);
+            });
+
+            function cargarLocalidades(provinciaNombre) {
+            selectLocalidad.innerHTML = '<option value="">Todos los municipios...</option>';
+            if (!provinciaNombre) {
+            selectLocalidad.disabled = true;
+            return;
+            }
+                
+            selectLocalidad.disabled = false;
+            const url = `https://apis.datos.gob.ar/georef/api/municipios?provincia=${encodeURIComponent(provinciaNombre)}&max=1000`;
+                
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+            let municipios = data.municipios.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            municipios.forEach(mun => {
+            let option = document.createElement("option");
+            option.value = mun.nombre;
+            option.textContent = mun.nombre;
+            if (mun.nombre === localidadSeleccionada) option.selected = true;
+            selectLocalidad.appendChild(option);
+            });
+            })
+            .catch(err => console.error("Error", err));
+            }
+            });
+        </script>
+    }

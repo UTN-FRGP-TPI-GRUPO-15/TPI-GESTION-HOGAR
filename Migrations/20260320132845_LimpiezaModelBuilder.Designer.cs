@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPI_GESTION_HOGAR.Datos;
 
@@ -11,9 +12,11 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260320132845_LimpiezaModelBuilder")]
+    partial class LimpiezaModelBuilder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -578,11 +581,16 @@ namespace TPI_GESTION_HOGAR.Migrations
                         new
                         {
                             Id = 1,
-                            Descripcion = "Equipo Técnico"
+                            Descripcion = "Administradora"
                         },
                         new
                         {
                             Id = 2,
+                            Descripcion = "Equipo Técnico"
+                        },
+                        new
+                        {
+                            Id = 3,
                             Descripcion = "Operadora"
                         });
                 });
