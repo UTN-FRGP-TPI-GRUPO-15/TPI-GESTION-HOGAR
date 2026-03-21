@@ -17,7 +17,7 @@ namespace TPI_GESTION_HOGAR.Controllers
         public async Task<IActionResult> Index(string buscarTexto)
         {
            
-            var query = _context.Mujeres.Where(m => m.estado == true);
+            var query = _context.Mujeres.Where(m => m.Estado == true);
 
            
             if (!string.IsNullOrEmpty(buscarTexto))
@@ -88,11 +88,12 @@ namespace TPI_GESTION_HOGAR.Controllers
         {
             if (ModelState.IsValid)
             {
-                nuevaMujer.estado = true;
+                nuevaMujer.Estado = true;
 
                 if (!string.IsNullOrEmpty(Provincia))
                 {
-                    nuevaMujer.Localidad = $"{nuevaMujer.Localidad}, {Provincia}";
+                    nuevaMujer.Provincia = $"{nuevaMujer.Provincia}";
+                    nuevaMujer.Localidad = $"{nuevaMujer.Localidad}";
                 }
 
                 _context.Mujeres.Add(nuevaMujer);
@@ -277,7 +278,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             {
                 try
                 {
-                    mujerModificada.estado = true;
+                    mujerModificada.Estado = true;
                     _context.Update(mujerModificada);
                     await _context.SaveChangesAsync();
 

@@ -14,10 +14,10 @@ namespace TPI_GESTION_HOGAR.Models
         public string Nombre { get; set; }
         [Required(ErrorMessage = "Debe especificar el vínculo con la residente.")]
         public string Vinculo { get; set; }
-        [Required(ErrorMessage = "La nacionalidad es obligatoria.")]
-        public string Nacionalidad { get; set; }
-        [Required(ErrorMessage = "La fecha de nacimiento es obligatoria.")]
-        public DateOnly FechaNac { get; set; }
+       
+        public string? Nacionalidad { get; set; }
+        
+        public DateOnly? FechaNac { get; set; }
         public string? Genero { get; set; }
         public string? NivelEducativo { get; set; }
         public string? Ocupacion { get; set; }

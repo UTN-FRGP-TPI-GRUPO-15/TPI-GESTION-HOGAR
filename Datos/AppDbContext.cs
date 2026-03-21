@@ -57,17 +57,15 @@ namespace TPI_GESTION_HOGAR.Datos
             // =========================================================
 
             modelBuilder.Entity<Rol>().HasData(
-                new Rol { Id = 1, Descripcion = "Administradora" },
-                new Rol { Id = 2, Descripcion = "Equipo Técnico" },
-                new Rol { Id = 3, Descripcion = "Operadora" }
-            );
+        new Rol { Id = 1, Descripcion = "Equipo Tecnico" },
+        new Rol { Id = 2, Descripcion = "Operadora" }
+    );
 
             modelBuilder.Entity<TipoTurno>().HasData(
                 new TipoTurno { Id = 1, Descripcion = "Mañana (08:00 a 14:00)" },
                 new TipoTurno { Id = 2, Descripcion = "Tarde (14:00 a 20:00)" },
                 new TipoTurno { Id = 3, Descripcion = "Noche (20:00 a 08:00)" }
             );
-
 
             modelBuilder.Entity<TipoCondicion>().HasData(
                 new TipoCondicion { Id = 1, Descripcion = "Enfermedad Crónica" },
@@ -83,7 +81,6 @@ namespace TPI_GESTION_HOGAR.Datos
                 new ObservacionCondicion { Id = 3, Descripcion = "Requiere Atención/Derivación" }
             );
 
-
             modelBuilder.Entity<Habitacion>().HasData(
                 new Habitacion { Id = 1, NroHabitacion = 1, Capacidad = 5, Estado = true },
                 new Habitacion { Id = 2, NroHabitacion = 2, Capacidad = 5, Estado = true },
@@ -93,136 +90,14 @@ namespace TPI_GESTION_HOGAR.Datos
                 new Habitacion { Id = 6, NroHabitacion = 6, Capacidad = 5, Estado = true }
             );
 
-            // =========================================================
-            // 2. PERSONAL Y USUARIOS
-            // =========================================================
-
-
-            modelBuilder.Entity<Personal>().HasData(
-                new Personal
-                {
-                    Id = 1,
-                    Legajo = 1001,
-                    Apellido = "García",
-                    Nombre = "Laura",
-                    DNI = "25123456",
-                    Nacionalidad = "Argentina",
-                    FechaNac = new DateOnly(1980, 5, 12),
-                    Telefono = "2246-112233",
-                    Domicilio = "Calle 4 Nro 123",
-                    Localidad = "San Clemente del Tuyú",
-                    Activo = true
-                }
-            );
-
-            modelBuilder.Entity<Usuario>().HasData(
-                new Usuario
-                {
-                    Id = 1,
-                    NombreUsuario = "lgarcia",
-                    Email = "lgarcia@test.com",
-                    Clave = "123456",
-                    PersonalId = 1,
-                    RolId = 2
-                }
-            );
-
-            // =========================================================
-            // 3. CASO DE PRUEBA (Mujer, Hijos, Registro, Agresor, Salud)
-            // =========================================================
-
-            modelBuilder.Entity<Mujer>().HasData(
-                new Mujer
-                {
-                    ID = 1,
-                    DNI = 30111222,
-                    Apellido = "López",
-                    Nombre = "María",
-                    Nacionalidad = "Argentina",
-                    FechaNac = new DateOnly(1985, 10, 20),
-                    Genero = "Femenino",
-                    NivelEducativo = "Secundario Completo",
-                    Ocupacion = "Empleada de Comercio",
-                    Telefono = "2246-554433",
-                    Domicilio = "Av. San Martín 456",
-                    Localidad = "Mar de Ajó",
-                    estado = true
-                }
-            );
-
-            // Ejemplo de cómo registraríamos que María requiere medicación para el asma
-            modelBuilder.Entity<Condicion>().HasData(
-                new Condicion
-                {
-                    Id = 1,
-                    MujerId = 1,
-                    TipoCondicionId = 1, // Enfermedad Crónica
-                    ObservacionCondicionId = 1 // En Tratamiento Médico
-                }
-            );
-
-            modelBuilder.Entity<Hijo>().HasData(
-                new Hijo
-                {
-                    ID = 1,
-                    DNI = 50333444,
-                    Apellido = "Pérez López",
-                    Nombre = "Mateo",
-                    FechaNac = new DateOnly(2015, 3, 15),
-                    MujerId = 1
-                }
-            );
-
-            modelBuilder.Entity<Registro>().HasData(
-                new Registro
-                {
-                    Id = 1,
-                    Fecha = new DateOnly(2026, 2, 10),
-                    Estado = true,
-                    MujerID = 1,
-                    HabitacionId = 1
-                }
-            );
-
-            modelBuilder.Entity<Agresor>().HasData(
-                new Agresor
-                {
-                    ID = 1,
-                    DNI = 29888777,
-                    Apellido = "Pérez",
-                    Nombre = "Carlos",
-                    Nacionalidad = "Argentina",
-                    FechaNac = new DateOnly(1982, 8, 5),
-                    Genero = "Masculino",
-                    NivelEducativo = "Primario",
-                    Ocupacion = "Albañil",
-                    Telefono = "2246-998877",
-                    Domicilio = "Av. San Martín 456",
-                    Localidad = "Mar de Ajó",
-                    Vinculo = "Ex-Pareja",
-                    RegistroId = 1
-                }
-            );
-
-            modelBuilder.Entity<Denuncia>().HasData(
-                new Denuncia
-                {
-                    ID = 1,
-                    Fecha = new DateOnly(2026, 2, 9),
-                    NroIPP = 12345,
-                    NroExp = 67890,
-                    RegistroId = 1
-                }
-            );
             modelBuilder.Entity<TipoMedida>().HasData(
-        new TipoMedida { Id = 1, Descripcion = "Prohibición de acercamiento (Perimetral)" },
-        new TipoMedida { Id = 2, Descripcion = "Exclusión del hogar del agresor" },
-        new TipoMedida { Id = 3, Descripcion = "Entrega de Botón Antipánico / Aplicación Móvil" },
-        new TipoMedida { Id = 4, Descripcion = "Cese de actos de perturbación / hostigamiento" },
-        new TipoMedida { Id = 5, Descripcion = "Restitución de efectos personales" },
-        new TipoMedida { Id = 6, Descripcion = "Ronda policial periódica en el domicilio" }
-        
-    );
+                new TipoMedida { Id = 1, Descripcion = "Prohibición de acercamiento (Perimetral)" },
+                new TipoMedida { Id = 2, Descripcion = "Exclusión del hogar del agresor" },
+                new TipoMedida { Id = 3, Descripcion = "Entrega de Botón Antipánico / Aplicación Móvil" },
+                new TipoMedida { Id = 4, Descripcion = "Cese de actos de perturbación / hostigamiento" },
+                new TipoMedida { Id = 5, Descripcion = "Restitución de efectos personales" },
+                new TipoMedida { Id = 6, Descripcion = "Ronda policial periódica en el domicilio" }
+            );
 
 
         }

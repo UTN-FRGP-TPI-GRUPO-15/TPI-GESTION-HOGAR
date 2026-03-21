@@ -26,7 +26,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 .Include(r => r.Mujer)
                     .ThenInclude(m => m.Hijos)
                 .Include(r => r.Habitacion)
-                .Where(r => r.Mujer != null && r.Mujer.estado == true)
+                .Where(r => r.Mujer != null && r.Mujer.Estado == true)
                 .Where(r => !_context.Egresos.Any(e => e.RegistroId == r.Id))
                 .OrderByDescending(r => r.Fecha)
                 .ToListAsync();
@@ -36,7 +36,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             modelo.TotalMenores = modelo.IngresosActivos.Sum(r => r.Mujer?.Hijos?.Count ?? 0);
 
             var habitacionesActivas = await _context.Habitaciones
-            .Include(h => h.Registros.Where(r => r.Mujer != null && r.Mujer.estado == true))
+            .Include(h => h.Registros.Where(r => r.Mujer != null && r.Mujer.Estado == true))
             .Where(h => h.Estado == true)
             .ToListAsync();
             modelo.HabitacionesTotales = habitacionesActivas.Count;          
@@ -132,7 +132,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             var residentesActivas = await _context.Registros
                 .Include(r => r.Mujer)
-                .Where(r => r.Mujer != null && r.Mujer.estado == true)
+                .Where(r => r.Mujer != null && r.Mujer.Estado == true)
                 .Select(r => new { Id = r.Id, Nombre = r.Mujer.Apellido + ", " + r.Mujer.Nombre })
                 .OrderBy(r => r.Nombre)
                 .ToListAsync();
