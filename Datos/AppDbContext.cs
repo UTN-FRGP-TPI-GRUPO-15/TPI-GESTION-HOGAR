@@ -38,6 +38,20 @@ namespace TPI_GESTION_HOGAR.Datos
         {
             base.OnModelCreating(modelBuilder);
 
+            //Definir relaciones entre Personal y Turnos
+
+            modelBuilder.Entity<Turno>()
+                .HasOne(t => t.Personal)
+                .WithMany(p => p.Turnos)
+                .HasForeignKey(t => t.PersonalId)
+                .OnDelete(DeleteBehavior.Restrict); // Evita que se borre el personal si tiene turnos asociados
+
+            modelBuilder.Entity<Turno>()
+                .HasOne(t => t.PersonalOpc)
+                .WithMany(p => p.TurnosOpcionales)
+                .HasForeignKey(t => t.PersonalOpcId)
+                .OnDelete(DeleteBehavior.Restrict); // Evita que se borre el personal opcional si tiene turnos asociados
+
             // =========================================================
             // 1. TABLAS CATÁLOGO (Configuraciones base)
             // =========================================================

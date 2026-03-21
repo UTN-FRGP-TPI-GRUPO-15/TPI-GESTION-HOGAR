@@ -21,5 +21,6 @@ namespace TPI_GESTION_HOGAR.Models
         public Usuario Usuario { get; set; } = null!;
 
         public ICollection<Turno> Turnos { get; set; } = [];
+        public ICollection<Turno> TurnosOpcionales { get; set; } = [];
     }
 }

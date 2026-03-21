@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 
 namespace TPI_GESTION_HOGAR.Models
@@ -17,9 +18,11 @@ namespace TPI_GESTION_HOGAR.Models
         public required int TipoTurnoId { get; set; }
         [Required(ErrorMessage = "Debe ingresar el personal")]
         public required int  PersonalId { get; set; }
+        public int? PersonalOpcId { get; set; }
 
         //Relaciones
         public TipoTurno? TipoTurno { get; set; }
         public Personal? Personal { get; set; }
+        public Personal? PersonalOpc { get; set; }
     }
 }
