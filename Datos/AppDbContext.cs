@@ -37,7 +37,7 @@ namespace TPI_GESTION_HOGAR.Datos
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Rol>().HasData(
-        new Rol { Id = 1, Descripcion = "Equipo Técnico" },
+        new Rol { Id = 1, Descripcion = "Equipo Tecnico" },
         new Rol { Id = 2, Descripcion = "Operadora" }
     );
 

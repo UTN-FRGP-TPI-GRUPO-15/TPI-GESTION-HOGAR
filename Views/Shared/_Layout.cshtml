@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Hogar Mara Matheu</title>
+    <title>@ViewData["Title"] - Hogar Mara Mateu</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -148,7 +148,7 @@
                         </a>
                     </li>
 
-                    @if (User.IsInRole("Administradora") || User.IsInRole("Equipo Tecnico"))
+                    @if ( User.IsInRole("Equipo Tecnico"))
                     {
                         <li class="px-3 mb-2 mt-4">
                             <small class="text-uppercase text-light opacity-75 fw-bold" style="font-size: 0.75rem;">Administración</small>
