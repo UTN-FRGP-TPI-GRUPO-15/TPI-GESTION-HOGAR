@@ -296,7 +296,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             DateOnly finSemana = inicioSemana.AddDays(6);
 
             ViewBag.Turnos = await ObtenerTurnos(inicioSemana, finSemana);
-            ViewBag.Personal = await ObtenerPersonal();
+            ViewBag.Operadores = await ObtenerOperadores();
             ViewBag.TipoTurnos = await ObtenerTipoTurnos();
             ViewBag.InicioSemana = inicioSemana;
 
@@ -319,7 +319,10 @@ namespace TPI_GESTION_HOGAR.Controllers
                 if (turnoExistente != null)
                 {
                     if (dto.PersonalId != null)
+                    {
                         turnoExistente.PersonalId = dto.PersonalId.Value;
+                        turnoExistente.PersonalOpcId = dto.PersonalOpcId;
+                    }
 
                     else
                         _context.Turnos.Remove(turnoExistente);
@@ -330,7 +333,8 @@ namespace TPI_GESTION_HOGAR.Controllers
                     {
                         Fecha = dto.Fecha,
                         TipoTurnoId = dto.TipoTurnoId,
-                        PersonalId = dto.PersonalId.Value
+                        PersonalId = dto.PersonalId.Value,
+                        PersonalOpcId = dto.PersonalOpcId
                     };
 
                     _context.Turnos.Add(nuevoTurno);
@@ -353,9 +357,11 @@ namespace TPI_GESTION_HOGAR.Controllers
             return turnos;
         }
 
-        private async Task<List<Personal>> ObtenerPersonal()
+        private async Task<List<Personal>> ObtenerOperadores()
         {
-            List<Personal> personal = await _context.Personal.ToListAsync();
+            List<Personal> personal = await _context.Personal
+                .Where(p => p.Activo && p.Usuario.Rol.Descripcion == "Operadora")
+                .ToListAsync();
 
             return personal;
         }

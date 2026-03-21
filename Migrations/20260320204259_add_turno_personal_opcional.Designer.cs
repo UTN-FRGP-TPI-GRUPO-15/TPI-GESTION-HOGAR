@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TPI_GESTION_HOGAR.Datos;
 
@@ -11,9 +12,11 @@ using TPI_GESTION_HOGAR.Datos;
 namespace TPI_GESTION_HOGAR.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260320204259_add_turno_personal_opcional")]
+    partial class add_turno_personal_opcional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +43,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Domicilio")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("FechaNac")
+                    b.Property<DateOnly>("FechaNac")
                         .HasColumnType("date");
 
                     b.Property<string>("Genero")
@@ -50,6 +53,7 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nacionalidad")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NivelEducativo")
@@ -77,6 +81,25 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("RegistroId");
 
                     b.ToTable("Agresores");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Apellido = "Pérez",
+                            DNI = 29888777,
+                            Domicilio = "Av. San Martín 456",
+                            FechaNac = new DateOnly(1982, 8, 5),
+                            Genero = "Masculino",
+                            Localidad = "Mar de Ajó",
+                            Nacionalidad = "Argentina",
+                            NivelEducativo = "Primario",
+                            Nombre = "Carlos",
+                            Ocupacion = "Albañil",
+                            RegistroId = 1,
+                            Telefono = "2246-998877",
+                            Vinculo = "Ex-Pareja"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Condicion", b =>
@@ -105,6 +128,15 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("TipoCondicionId");
 
                     b.ToTable("Condiciones");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            MujerId = 1,
+                            ObservacionCondicionId = 1,
+                            TipoCondicionId = 1
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Denuncia", b =>
@@ -132,6 +164,16 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("RegistroId");
 
                     b.ToTable("Denuncias");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Fecha = new DateOnly(2026, 2, 9),
+                            NroExp = 67890,
+                            NroIPP = 12345,
+                            RegistroId = 1
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Egreso", b =>
@@ -270,6 +312,17 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("MujerId");
 
                     b.ToTable("Hijos");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Apellido = "Pérez López",
+                            DNI = 50333444,
+                            FechaNac = new DateOnly(2015, 3, 15),
+                            MujerId = 1,
+                            Nombre = "Mateo"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Medida", b =>
@@ -313,9 +366,6 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Domicilio")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Estado")
-                        .HasColumnType("bit");
-
                     b.Property<DateOnly>("FechaNac")
                         .HasColumnType("date");
 
@@ -339,15 +389,33 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.Property<string>("Ocupacion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Provincia")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Telefono")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("estado")
+                        .HasColumnType("bit");
 
                     b.HasKey("ID");
 
                     b.ToTable("Mujeres");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Apellido = "López",
+                            DNI = 30111222,
+                            Domicilio = "Av. San Martín 456",
+                            FechaNac = new DateOnly(1985, 10, 20),
+                            Genero = "Femenino",
+                            Localidad = "Mar de Ajó",
+                            Nacionalidad = "Argentina",
+                            NivelEducativo = "Secundario Completo",
+                            Nombre = "María",
+                            Ocupacion = "Empleada de Comercio",
+                            Telefono = "2246-554433",
+                            estado = true
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Novedad", b =>
@@ -488,6 +556,22 @@ namespace TPI_GESTION_HOGAR.Migrations
                         .IsUnique();
 
                     b.ToTable("Personal");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Activo = true,
+                            Apellido = "García",
+                            DNI = "25123456",
+                            Domicilio = "Calle 4 Nro 123",
+                            FechaNac = new DateOnly(1980, 5, 12),
+                            Legajo = 1001,
+                            Localidad = "San Clemente del Tuyú",
+                            Nacionalidad = "Argentina",
+                            Nombre = "Laura",
+                            Telefono = "2246-112233"
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Recordatorio", b =>
@@ -556,6 +640,16 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("MujerID");
 
                     b.ToTable("Registros");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Estado = true,
+                            Fecha = new DateOnly(2026, 2, 10),
+                            HabitacionId = 1,
+                            MujerID = 1
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Rol", b =>
@@ -578,11 +672,16 @@ namespace TPI_GESTION_HOGAR.Migrations
                         new
                         {
                             Id = 1,
-                            Descripcion = "Equipo Tecnico"
+                            Descripcion = "Administradora"
                         },
                         new
                         {
                             Id = 2,
+                            Descripcion = "Equipo Técnico"
+                        },
+                        new
+                        {
+                            Id = 3,
                             Descripcion = "Operadora"
                         });
                 });
@@ -827,6 +926,17 @@ namespace TPI_GESTION_HOGAR.Migrations
                     b.HasIndex("RolId");
 
                     b.ToTable("Usuarios");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Clave = "123456",
+                            Email = "lgarcia@test.com",
+                            NombreUsuario = "lgarcia",
+                            PersonalId = 1,
+                            RolId = 2
+                        });
                 });
 
             modelBuilder.Entity("TPI_GESTION_HOGAR.Models.Agresor", b =>
