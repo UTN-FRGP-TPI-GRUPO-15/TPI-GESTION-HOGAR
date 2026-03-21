@@ -9,7 +9,7 @@ using TPI_GESTION_HOGAR.Models;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
-    [Authorize(Roles = "Administradora")]
+    [Authorize(Roles = "Equipo Tecnico")]
     public class PersonalController : Controller
     {
         private readonly AppDbContext _context;
