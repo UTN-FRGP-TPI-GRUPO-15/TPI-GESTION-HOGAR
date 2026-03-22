@@ -66,6 +66,18 @@ using (var scope = app.Services.CreateScope())
         );
         db.SaveChanges();
     }
+
+    if(db.Configuracion.FirstOrDefault(c => c.Clave == "MaxHorasSemanalesOperadora") == null)
+    {
+        db.Configuracion.Add(new Configuracion { Clave = "MaxHorasSemanalesOperadora", Valor = "48" });
+        db.SaveChanges();
+    }
+
+    if (db.Configuracion.FirstOrDefault(c => c.Clave == "MinHorasSemanalesOperadora") == null)
+    {
+        db.Configuracion.Add(new Configuracion { Clave = "MinHorasSemanalesOperadora", Valor = "30" });
+        db.SaveChanges();
+    }
 }
 
 // Configure the HTTP request pipeline.
