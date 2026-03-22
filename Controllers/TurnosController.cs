@@ -321,8 +321,50 @@ namespace TPI_GESTION_HOGAR.Controllers
                 return View("Planificacion");
             }
 
-            //TO-DO: Validar carga horaria semanal máxima
-            //TO-DO: Persistir estado del formulario para no perder cambios al mostrar mensaje de error
+            // Validar carga horaria semanal máxima
+            Dictionary<int, int> tipoTurnoCantidadHoras = new Dictionary<int, int>
+            {
+                { 1, 6 }, // Mañana
+                { 2, 6 }, // Tarde
+                { 3, 12 } // Noche
+            };
+
+            var horasPorOperadora = turnos
+                .Where(t => t.PersonalId != null)
+                .GroupBy(t => t.PersonalId!.Value)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Sum(t => tipoTurnoCantidadHoras[t.TipoTurnoId])
+                );
+
+            var valor = await _context.Configuracion
+                .Where(c => c.Clave == "MaxHorasSemanalesOperadora")
+                .Select(c => c.Valor)
+                .FirstOrDefaultAsync();
+
+            int maxHoras = int.TryParse(valor, out int resultado) ? resultado : 48;
+
+            var excedidas = horasPorOperadora
+                .Where(kv => kv.Value > maxHoras)
+                .Select(kv => kv.Key)
+                .ToList();
+
+            if (excedidas.Any())
+            {
+                var nombres = await _context.Personal
+                    .Where(p => excedidas.Contains(p.Id))
+                    .Select(p => p.Apellido + ", " + p.Nombre)
+                    .ToListAsync();
+
+                var listaHtml = "<ul>" + string.Join("", nombres.Select(n => $"<li>{n}</li>")) + "</ul>";
+
+                TempData["MensajeError"] =
+                    $"Las siguientes operadoras exceden la carga horaria semanal máxima de {maxHoras} horas:{listaHtml}";
+
+                await CargarPlanificacionView(fecha, turnos);
+                return View("Planificacion");
+            }
+
 
             var hoy = DateOnly.FromDateTime(DateTime.Today);
 
