@@ -31,7 +31,10 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                turnos = turnos.Where(t => t.Personal.Apellido.Contains(searchString) || t.Personal.Nombre.Contains(searchString)).ToList();
+                turnos = turnos.Where(
+                    t => t.Personal.Apellido.ToLower().Contains(searchString.ToLower()) || 
+                    t.Personal.Nombre.ToLower().Contains(searchString.ToLower())).
+                    ToList();
             }
 
             switch (sortOrder)
@@ -67,8 +70,13 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                turnos = turnos.Where(t => t.Personal.Apellido.Contains(searchString) || t.Personal.Nombre.Contains(searchString)).ToList();
+                turnos = turnos.Where(
+                    t => t.Personal.Apellido.ToLower().Contains(searchString.ToLower()) || 
+                    t.Personal.Nombre.ToLower().Contains(searchString.ToLower()))
+                    .ToList();
             }
+
+            
 
             switch (sortOrder)
             {
