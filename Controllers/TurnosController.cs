@@ -298,15 +298,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             DateOnly fechaBuscada = fecha ?? hoy;
 
-            int diferencia = fechaBuscada.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)fechaBuscada.DayOfWeek - 1;
-
-            DateOnly inicioSemana = fechaBuscada.AddDays(-diferencia);
-            DateOnly finSemana = inicioSemana.AddDays(6);
-
-            ViewBag.Turnos = await ObtenerTurnos(inicioSemana, finSemana);
-            ViewBag.Operadores = await ObtenerOperadores();
-            ViewBag.TipoTurnos = await ObtenerTipoTurnos();
-            ViewBag.InicioSemana = inicioSemana;
+            await CargarPlanificacionView(fechaBuscada);
 
             return View();
         }
@@ -323,8 +315,14 @@ namespace TPI_GESTION_HOGAR.Controllers
             if (hayDuplicado)
             {
                 TempData["MensajeError"] = "No se puede asignar a la misma operadora más de un turno por día.";
-                return RedirectToAction("Planificacion", new { fecha });
+
+                await CargarPlanificacionView(fecha, turnos);
+
+                return View("Planificacion");
             }
+
+            //TO-DO: Validar carga horaria semanal máxima
+            //TO-DO: Persistir estado del formulario para no perder cambios al mostrar mensaje de error
 
             var hoy = DateOnly.FromDateTime(DateTime.Today);
 
@@ -351,7 +349,10 @@ namespace TPI_GESTION_HOGAR.Controllers
                     if (huboCambio)
                     {
                         TempData["MensajeError"] = "No se pueden modificar turnos pasados.";
-                        return RedirectToAction("Planificacion", new { fecha });
+
+                        await CargarPlanificacionView(fecha, turnos);
+
+                        return View("Planificacion");
                     }
 
                     continue;
@@ -389,13 +390,32 @@ namespace TPI_GESTION_HOGAR.Controllers
             return RedirectToAction("Planificacion", new { fecha });
         }
 
-        private async Task<List<Turno>> ObtenerTurnos(DateOnly fechaInicio, DateOnly fechaFin)
+        private async Task CargarPlanificacionView(DateOnly fecha, List<NuevoTurnoDTO>? turnos = null)
+        {
+            int diferencia = fecha.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)fecha.DayOfWeek - 1;
+
+            DateOnly inicioSemana = fecha.AddDays(-diferencia);
+            DateOnly finSemana = inicioSemana.AddDays(6);
+
+            ViewBag.Turnos = turnos ?? await ObtenerTurnosDTO(inicioSemana, finSemana);
+            ViewBag.Operadores = await ObtenerOperadores();
+            ViewBag.TipoTurnos = await ObtenerTipoTurnos();
+            ViewBag.InicioSemana = inicioSemana;
+        }
+
+        private async Task<List<NuevoTurnoDTO>> ObtenerTurnosDTO(DateOnly fechaInicio, DateOnly fechaFin)
         {
             List<Turno> turnos = await _context.Turnos
                                     .Where(t => t.Fecha >= fechaInicio && t.Fecha <= fechaFin.AddDays(6))
                                     .ToListAsync();
 
-            return turnos;
+            return turnos.Select(t => new NuevoTurnoDTO
+            {
+                Fecha = t.Fecha,
+                TipoTurnoId = t.TipoTurnoId,
+                PersonalId = t.PersonalId,
+                PersonalOpcId = t.PersonalOpcId
+            }).ToList();
         }
 
         private async Task<List<Personal>> ObtenerOperadores()
