@@ -11,6 +11,12 @@ namespace TPI_GESTION_HOGAR.Controllers
     public class TurnosController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly Dictionary<int, int> _horasTipoTurno = new()
+        {
+            { 1, 6 },
+            { 2, 6 },
+            { 3, 12 }
+        };
 
         public TurnosController(AppDbContext context)
         {
@@ -306,66 +312,6 @@ namespace TPI_GESTION_HOGAR.Controllers
         [HttpPost]
         public async Task<IActionResult> GuardarPlanificacion(List<NuevoTurnoDTO> turnos, DateOnly fecha)
         {
-            // Verificar que no haya una operadora con más de un turno el mismo d´´ia
-            bool hayDuplicado = turnos
-                .Where(t => t.PersonalId != null)
-                .GroupBy(t => new { t.Fecha, t.PersonalId })
-                .Any(g => g.Count() > 1);
-
-            if (hayDuplicado)
-            {
-                TempData["MensajeError"] = "No se puede asignar a la misma operadora más de un turno por día.";
-
-                await CargarPlanificacionView(fecha, turnos);
-
-                return View("Planificacion");
-            }
-
-            // Validar carga horaria semanal máxima
-            Dictionary<int, int> tipoTurnoCantidadHoras = new Dictionary<int, int>
-            {
-                { 1, 6 }, // Mañana
-                { 2, 6 }, // Tarde
-                { 3, 12 } // Noche
-            };
-
-            var horasPorOperadora = turnos
-                .Where(t => t.PersonalId != null)
-                .GroupBy(t => t.PersonalId!.Value)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Sum(t => tipoTurnoCantidadHoras[t.TipoTurnoId])
-                );
-
-            var valor = await _context.Configuracion
-                .Where(c => c.Clave == "MaxHorasSemanalesOperadora")
-                .Select(c => c.Valor)
-                .FirstOrDefaultAsync();
-
-            int maxHoras = int.TryParse(valor, out int resultado) ? resultado : 48;
-
-            var excedidas = horasPorOperadora
-                .Where(kv => kv.Value > maxHoras)
-                .Select(kv => kv.Key)
-                .ToList();
-
-            if (excedidas.Any())
-            {
-                var nombres = await _context.Personal
-                    .Where(p => excedidas.Contains(p.Id))
-                    .Select(p => p.Apellido + ", " + p.Nombre)
-                    .ToListAsync();
-
-                var listaHtml = "<ul>" + string.Join("", nombres.Select(n => $"<li>{n}</li>")) + "</ul>";
-
-                TempData["MensajeError"] =
-                    $"Las siguientes operadoras exceden la carga horaria semanal máxima de {maxHoras} horas:{listaHtml}";
-
-                await CargarPlanificacionView(fecha, turnos);
-                return View("Planificacion");
-            }
-
-
             var hoy = DateOnly.FromDateTime(DateTime.Today);
 
             var fechas = turnos.Select(t => t.Fecha).Distinct();
@@ -400,6 +346,15 @@ namespace TPI_GESTION_HOGAR.Controllers
                     continue;
                 }
 
+                var error = await ValidarTurnos(turnos);
+
+                if (error != null)
+                {
+                    TempData["MensajeError"] = error;
+                    await CargarPlanificacionView(fecha, turnos);
+                    return View("Planificacion");
+                }
+
                 if (turnoExistente != null)
                 {
                     if (dto.PersonalId != null)
@@ -430,6 +385,86 @@ namespace TPI_GESTION_HOGAR.Controllers
             TempData["MensajeExito"] = "Planificación guardada correctamente";
 
             return RedirectToAction("Planificacion", new { fecha });
+        }
+
+        private async Task<string?> ValidarTurnos(List<NuevoTurnoDTO> turnos)
+        {
+            string errorHtml = "<ul>";
+            int contadorErrores = 0;
+
+            // 1. Verificar que no haya una operadora con más de un turno el mismo día
+            bool hayDuplicado = turnos
+                .Where(t => t.PersonalId != null)
+                .GroupBy(t => new { t.Fecha, t.PersonalId })
+                .Any(g => g.Count() > 1);
+
+            if (hayDuplicado)
+            {
+                contadorErrores++;
+                errorHtml += "<li>No se puede asignar a la misma operadora más de un turno por día.</li>";
+            }
+
+            // 2. Validar no más de 12 horas continuas (noche -> mañana)
+            var turnosOrdenados = turnos
+                .Where(t => t.PersonalId != null)
+                .OrderBy(t => t.PersonalId)
+                .ThenBy(t => t.Fecha)
+                .ToList();
+
+            for (int i = 0; i < turnosOrdenados.Count - 1; i++)
+            {
+                var actual = turnosOrdenados[i];
+                var siguiente = turnosOrdenados[i + 1];
+
+                if (actual.PersonalId != siguiente.PersonalId)
+                    continue;
+
+                if (actual.TipoTurnoId == 3 &&
+                    siguiente.TipoTurnoId == 1 &&
+                    siguiente.Fecha == actual.Fecha.AddDays(1))
+                {
+                    contadorErrores++;
+                    errorHtml += "<li>No se puede asignar turno mañana luego de un turno noche para la misma operadora.</li>";
+                    break;
+                }
+            }
+
+            // 3. Validar carga horaria semanal máxima
+            var horasPorOperadora = turnos
+                .Where(t => t.PersonalId != null)
+                .GroupBy(t => t.PersonalId!.Value)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Sum(t => _horasTipoTurno[t.TipoTurnoId])
+                );
+
+            var valor = await _context.Configuracion
+                .Where(c => c.Clave == "MaxHorasSemanalesOperadora")
+                .Select(c => c.Valor)
+                .FirstOrDefaultAsync();
+
+            int maxHoras = int.TryParse(valor, out int resultado) ? resultado : 48;
+
+            var excedidas = horasPorOperadora
+                .Where(kv => kv.Value > maxHoras)
+                .Select(kv => kv.Key)
+                .ToList();
+
+            if (excedidas.Any())
+            {
+                contadorErrores++;
+
+                var nombres = await _context.Personal
+                    .Where(p => excedidas.Contains(p.Id))
+                    .Select(p => p.Apellido + ", " + p.Nombre)
+                    .ToListAsync();
+
+                var listaHtml = "<ul>" + string.Join("", nombres.Select(n => $"<li>{n}</li>")) + "</ul>";
+
+                errorHtml += $"<li>Las siguientes operadoras exceden la carga horaria semanal máxima de {maxHoras} horas:{listaHtml}</li>";
+            }
+
+            return contadorErrores > 0 ? errorHtml += "</ul>" : null;
         }
 
         private async Task CargarPlanificacionView(DateOnly fecha, List<NuevoTurnoDTO>? turnos = null)
