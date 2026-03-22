@@ -314,6 +314,18 @@ namespace TPI_GESTION_HOGAR.Controllers
         [HttpPost]
         public async Task<IActionResult> GuardarPlanificacion(List<NuevoTurnoDTO> turnos, DateOnly fecha)
         {
+            // Verificar que no haya una operadora con más de un turno el mismo d´´ia
+            bool hayDuplicado = turnos
+                .Where(t => t.PersonalId != null)
+                .GroupBy(t => new { t.Fecha, t.PersonalId })
+                .Any(g => g.Count() > 1);
+
+            if (hayDuplicado)
+            {
+                TempData["MensajeError"] = "No se puede asignar a la misma operadora más de un turno por día.";
+                return RedirectToAction("Planificacion", new { fecha });
+            }
+
             var hoy = DateOnly.FromDateTime(DateTime.Today);
 
             var fechas = turnos.Select(t => t.Fecha).Distinct();
