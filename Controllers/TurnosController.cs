@@ -314,6 +314,8 @@ namespace TPI_GESTION_HOGAR.Controllers
         [HttpPost]
         public async Task<IActionResult> GuardarPlanificacion(List<NuevoTurnoDTO> turnos, DateOnly fecha)
         {
+            var hoy = DateOnly.FromDateTime(DateTime.Today);
+
             var fechas = turnos.Select(t => t.Fecha).Distinct();
 
             var turnosExistentes = await _context.Turnos
@@ -322,7 +324,26 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             foreach (var dto in turnos)
             {
-                var turnoExistente = turnosExistentes.FirstOrDefault(t => t.Fecha == dto.Fecha && t.TipoTurnoId == dto.TipoTurnoId);
+                var turnoExistente = turnosExistentes
+                    .FirstOrDefault(t => t.Fecha == dto.Fecha && t.TipoTurnoId == dto.TipoTurnoId);
+
+                // Cortar si hay cambios en un turno pasado, sino pasar a siguiente iteración
+                if (dto.Fecha < hoy)
+                {
+                    bool huboCambio =
+                        (turnoExistente == null && dto.PersonalId != null) || // Crea
+                        (turnoExistente != null && dto.PersonalId == null) || // Borra
+                        (turnoExistente != null && dto.PersonalId != turnoExistente.PersonalId) ||
+                        (turnoExistente != null && dto.PersonalOpcId != turnoExistente.PersonalOpcId);
+
+                    if (huboCambio)
+                    {
+                        TempData["MensajeError"] = "No se pueden modificar turnos pasados.";
+                        return RedirectToAction("Planificacion", new { fecha });
+                    }
+
+                    continue;
+                }
 
                 if (turnoExistente != null)
                 {
