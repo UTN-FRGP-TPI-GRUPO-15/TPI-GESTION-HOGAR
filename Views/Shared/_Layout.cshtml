@@ -215,8 +215,11 @@
                 @if (TempData["MensajeError"] != null)
                 {
                     <div class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index:1055;">
-                        <div class="alert alert-danger alert-dismissible fade show shadow border-0 border-start border-danger border-4" role="alert">
-                            <i class="bi bi-exclamation-triange-fill text-success me-2"></i> @TempData["MensajeError"]
+                        <div class="alert alert-danger alert-dismissible fade show shadow border-0 border-start border-danger border-4 d-flex align-items-start gap-2" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill text-danger mt-1"></i>
+                            <div>
+                                @Html.Raw(TempData["MensajeError"])
+                            </div>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     </div>

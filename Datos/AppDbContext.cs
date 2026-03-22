@@ -30,6 +30,7 @@ namespace TPI_GESTION_HOGAR.Datos
         public DbSet<Turno> Turnos { get; set; }
         public DbSet<Seguimiento> Seguimientos { get; set; }
         public DbSet<TipoTurno> TipoTurnos { get; set; }
+        public DbSet<Configuracion> Configuracion { get; set; }
 
 
 
