@@ -7,10 +7,12 @@ namespace TPI_GESTION_HOGAR.Controllers
     public class SeguimientosController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public SeguimientosController(AppDbContext context)
+        public SeguimientosController(AppDbContext context, IWebHostEnvironment env )
         {
             _context = context;
+            _env = env;
         }
 
         [HttpPost]
@@ -30,7 +32,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             await _context.SaveChangesAsync();
             if (archivoAdjunto != null && archivoAdjunto.Length > 0)
             {
-                string rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "documentos");
+                string rutaCarpeta = Path.Combine(_env.WebRootPath, "uploads", "documentos");
                 if (!Directory.Exists(rutaCarpeta)) Directory.CreateDirectory(rutaCarpeta);
 
                 string nombreUnico = Guid.NewGuid().ToString() + "_" + archivoAdjunto.FileName;
