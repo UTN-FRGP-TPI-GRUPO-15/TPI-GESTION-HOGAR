@@ -11,6 +11,7 @@ namespace TPI_GESTION_HOGAR.Datos
         //DbSets
         public DbSet<Agresor> Agresores { get; set; }
         public DbSet<Denuncia> Denuncias { get; set; }
+        public DbSet<Documento> Documentos { get; set; }
         public DbSet<Egreso> Egresos { get; set; }
         public DbSet<Habitacion> Habitaciones { get; set; }
         public DbSet<Hijo> Hijos { get; set; }

@@ -351,7 +351,8 @@
                 <h5 class="modal-title fw-bold"><i class="bi bi-journal-text"></i> Cargar Novedad Diaria</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form asp-controller="Seguimientos" asp-action="CargaRapida" method="post">
+            
+            <form asp-controller="Seguimientos" asp-action="CargaRapida" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="registroId" id="novedadRegistroId" value="" />
 
                 <div class="modal-body p-4">
@@ -381,6 +382,30 @@
                         <label class="form-label fw-bold small">Desarrollo de la novedad</label>
                         <textarea name="descripcion" class="form-control border-warning shadow-sm" rows="4" placeholder="Describa lo sucedido..." required></textarea>
                     </div>
+
+                    <div class="mb-3 border-top border-warning pt-3 mt-3">
+                        <label class="form-label fw-bold small text-secondary"><i class="bi bi-paperclip"></i> Adjuntar Documento (Opcional)</label>
+    
+                        <div class="row">
+                            <div class="col-md-5 mb-2">
+                                <select name="tipoDocumento" class="form-select form-select-sm border-warning">
+                                    <option value="Otro">-- Otro --</option>
+                                    <option value="DNI / Identidad">DNI / Identidad</option>
+                                    <option value="Receta Médica">Receta Médica</option>
+                                    <option value="Estudio Médico">Estudio Médico</option>
+                                    <option value="Oficio Judicial">Oficio Judicial</option>
+                                    <option value="Denuncia Policial">Denuncia Policial</option>
+                                    <option value="Informe Profesional">Informe Profesional</option>
+                                    <option value="Alta / Baja">Alta / Baja</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="file" name="archivoAdjunto" class="form-control form-control-sm border-warning" accept=".jpg,.jpeg,.png,.pdf" />
+                            </div>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">Si adjunta un archivo, por favor indique qué tipo de documento es en el menú de al lado.</small>
+                    </div>
+
                 </div>
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
