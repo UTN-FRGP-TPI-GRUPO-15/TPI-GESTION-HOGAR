@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
     options.UseSqlServer(connectionString);
 });
+builder.Services.AddScoped<TPI_GESTION_HOGAR.Servicios.PersonalService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.Models;
+using TPI_GESTION_HOGAR.Servicios;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
     public class NovedadesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly PersonalService _personalService;
 
-        public NovedadesController(AppDbContext context)
+        public NovedadesController(AppDbContext context,PersonalService personalService)
         {
             _context = context;
+            _personalService = personalService;
         }
 
        
@@ -30,21 +33,15 @@ namespace TPI_GESTION_HOGAR.Controllers
             }
             else
             {
-               
+                
                 ViewBag.FechaActual = "";
             }
 
             
             var historial = await query.OrderByDescending(n => n.FechaHora).ToListAsync();
 
-           
-            var personalActivo = await _context.Personal
-                .Where(p => p.Activo)
-                .Select(p => new { Id = p.Id, Nombre = p.Apellido + ", " + p.Nombre })
-                .OrderBy(p => p.Nombre)
-                .ToListAsync();
 
-            ViewBag.PersonalActivo = new SelectList(personalActivo, "Id", "Nombre");
+            ViewBag.PersonalActivo = await _personalService.ObtenerPersonalAutorizadoAsync();
 
             return View(historial);
         }

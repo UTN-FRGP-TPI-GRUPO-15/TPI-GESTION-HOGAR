@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.Models;
+using TPI_GESTION_HOGAR.Servicios;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
@@ -11,11 +12,14 @@ namespace TPI_GESTION_HOGAR.Controllers
     public class HomeController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly PersonalService _personalService;
 
-        public HomeController(AppDbContext context)
+        public HomeController(AppDbContext context,PersonalService personalService)
         {
             _context = context;
-        }
+            _personalService = personalService;
+
+        }   
 
         public async Task<IActionResult> Index()
         {
@@ -98,6 +102,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             var turnosRecientes = await _context.Turnos
                 .Include(t => t.Personal)
                 .Include(t => t.TipoTurno)
+                .Include(t => t.PersonalOpc)
                 .Where(t => t.Fecha >= fechaAyer && t.Fecha <= fechaManana)
                 .ToListAsync();
 
@@ -122,13 +127,8 @@ namespace TPI_GESTION_HOGAR.Controllers
                 .ToListAsync();
 
             // La lista de Personal Activo
-            var personalActivo = await _context.Personal
-                .Where(p => p.Activo)
-                .Select(p => new { Id = p.Id, Nombre = p.Apellido + ", " + p.Nombre })
-                .OrderBy(p => p.Nombre)
-                .ToListAsync();
+            ViewBag.PersonalActivo = await _personalService.ObtenerPersonalAutorizadoAsync();
 
-            ViewBag.PersonalActivo = new SelectList(personalActivo, "Id", "Nombre");
 
             var residentesActivas = await _context.Registros
                 .Include(r => r.Mujer)
