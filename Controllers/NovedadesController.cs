@@ -15,14 +15,14 @@ namespace TPI_GESTION_HOGAR.Controllers
             _context = context;
         }
 
-        // PANTALLA PRINCIPAL DEL LIBRO
+       
         [HttpGet]
         public async Task<IActionResult> Index(DateTime? fechaBusqueda)
         {
-            // Empezamos la consulta
+            
             var query = _context.Novedades.Include(n => n.Personal).AsQueryable();
 
-            // Lógica del buscador por fecha
+            
             if (fechaBusqueda.HasValue)
             {
                 query = query.Where(n => n.FechaHora.Date == fechaBusqueda.Value.Date);
@@ -30,14 +30,14 @@ namespace TPI_GESTION_HOGAR.Controllers
             }
             else
             {
-                // Por defecto muestra las últimas novedades sin filtro estricto de hoy
+               
                 ViewBag.FechaActual = "";
             }
 
-            // Ordenamos desde lo más nuevo a lo más viejo
+            
             var historial = await query.OrderByDescending(n => n.FechaHora).ToListAsync();
 
-            // Mandamos el personal para el formulario de carga
+           
             var personalActivo = await _context.Personal
                 .Where(p => p.Activo)
                 .Select(p => new { Id = p.Id, Nombre = p.Apellido + ", " + p.Nombre })
