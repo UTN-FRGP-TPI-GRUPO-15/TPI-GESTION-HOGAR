@@ -23,6 +23,7 @@ namespace TPI_GESTION_HOGAR.Models
         public List<Observacion>? Observaciones { get; set; }
         public List<Agresor>? Agresores { get; set; }
         public ICollection<Seguimiento>? Seguimientos { get; set; }
+        public ICollection<Documento> Documentos { get; set; }
 
 
 
