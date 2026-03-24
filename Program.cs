@@ -7,6 +7,9 @@ using TPI_GESTION_HOGAR.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuramos la carpeta wwwroot para servir archivos estáticos
+builder.WebHost.UseWebRoot("wwwroot");
+
 //Cofiguramos cadena de concexión a la base de datos
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
