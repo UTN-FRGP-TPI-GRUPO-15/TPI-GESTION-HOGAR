@@ -46,7 +46,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 recordatorio.Resuelto = true;
                 recordatorio.ResultadoObservacion = observacion;
 
-                // 2. MAGIA: Si estaba vinculada a una residente, creamos el Seguimiento automático
+                // 2. Si estaba vinculada a una residente, creamos el Seguimiento automático
                 if (recordatorio.RegistroId.HasValue)
                 {
                     var nuevoSeguimiento = new Seguimiento
