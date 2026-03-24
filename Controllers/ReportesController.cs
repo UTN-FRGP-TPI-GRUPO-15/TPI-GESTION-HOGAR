@@ -73,7 +73,7 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             return View(filtros);
         }
-        // NUEVO MÉTODO PARA GENERAR LOS GRÁFICOS
+        // MÉTODO PARA GENERAR LOS GRÁFICOS
         public async Task<IActionResult> Graficos(ReporteViewModel filtros)
         {
             // 1. Replicamos la misma consulta base

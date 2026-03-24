@@ -46,8 +46,12 @@ namespace TPI_GESTION_HOGAR.Controllers
             modelo.HabitacionesTotales = habitacionesActivas.Count;          
             modelo.HabitacionesOcupadas = habitacionesActivas.Count(h => h.Registros.Any());
 
-            
-            int horaActual = DateTime.Now.Hour;
+
+            TimeZoneInfo zonaArgentina = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
+            DateTime ahoraEnArgentina = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaArgentina);
+
+            var fechaTurno = DateOnly.FromDateTime(ahoraEnArgentina);
+            var horaActual = ahoraEnArgentina.Hour;
             DateOnly fechaHoy = DateOnly.FromDateTime(DateTime.Now);
             DateOnly fechaAyer = fechaHoy.AddDays(-1);
             DateOnly fechaManana = fechaHoy.AddDays(1);
@@ -57,13 +61,13 @@ namespace TPI_GESTION_HOGAR.Controllers
             DateOnly fechaTurnoAnterior = fechaHoy;
             DateOnly fechaTurnoSiguiente = fechaHoy;
 
-            // 2. Definimos los bloques horarios reales (8 a 14, 14 a 20, 20 a 8)
+            
             if (horaActual >= 8 && horaActual < 14)
             {
                 // TURNO MAÑANA (08:00 a 13:59)
                 descActual = "Mañana";
                 descAnterior = "Noche";
-                fechaTurnoAnterior = fechaAyer; // La noche arrancó ayer a las 20hs
+                fechaTurnoAnterior = fechaAyer; 
                 descSiguiente = "Tarde";
             }
             else if (horaActual >= 14 && horaActual < 20)
