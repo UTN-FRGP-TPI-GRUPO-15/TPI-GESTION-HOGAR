@@ -38,9 +38,17 @@ namespace TPI_GESTION_HOGAR.Controllers
                 string nombreUnico = Guid.NewGuid().ToString() + "_" + archivoAdjunto.FileName;
                 string rutaFisica = Path.Combine(rutaCarpeta, nombreUnico);
 
-                using (var stream = new FileStream(rutaFisica, FileMode.Create))
+                try
                 {
-                    await archivoAdjunto.CopyToAsync(stream);
+                    using (var stream = new FileStream(rutaFisica, FileMode.Create))
+                    {
+                        await archivoAdjunto.CopyToAsync(stream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    throw;
                 }
 
                 
