@@ -1,5 +1,6 @@
 ﻿@model TPI_GESTION_HOGAR.Models.Registro
 
+
 @{
     ViewData["Title"] = "Legajo";
 }
@@ -13,20 +14,59 @@
             </div>
             <div class="d-flex align-items-center">
                 <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@Model.Id" class="btn btn-outline-secondary fw-bold">
-                    Volver a la Ficha
+                    <i class="bi bi-arrow-left"></i> Volver a la Ficha
                 </a>
             </div>
         </div>
     </div>
 
-    <h5 class="fw-bold text-secondary mb-3">Historial de Evolución y Novedades</h5>
+    @if (Model.Documentos != null && Model.Documentos.Any())
+    {
+        <h5 class="fw-bold text-info mb-3"><i class="bi bi-folder-fill"></i> Documentos del Legajo</h5>
+        
+        <div class="row mb-5">
+            @foreach (var doc in Model.Documentos.OrderByDescending(d => d.FechaSubida))
+            {
+                bool esPdf = doc.RutaArchivo.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase);
+
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="card h-100 shadow-sm border-0 border-top border-info border-3 bg-light">
+                        <div class="card-body text-center p-3">
+                            @if (esPdf)
+                            {
+                                <i class="bi bi-file-earmark-pdf-fill text-danger" style="font-size: 2.5rem;"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-file-earmark-image-fill text-primary" style="font-size: 2.5rem;"></i>
+                            }
+                            
+                            <h6 class="mt-2 text-truncate fw-bold mb-1" title="@doc.TipoDocumento">@doc.TipoDocumento</h6>
+                            <small class="text-muted d-block text-truncate mb-2" title="@doc.NombreArchivo">@doc.NombreArchivo</small>
+                            <small class="text-muted d-block mb-3" style="font-size: 0.75rem;">@doc.FechaSubida.ToString("dd/MM/yyyy")</small>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="@doc.RutaArchivo" target="_blank" class="btn btn-sm btn-outline-info fw-bold">
+                                    <i class="bi bi-eye"></i> Ver
+                                </a>
+                                <a href="@doc.RutaArchivo" download="@doc.NombreArchivo" class="btn btn-sm btn-info text-white fw-bold">
+                                    <i class="bi bi-download"></i> Descargar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-clock-history"></i> Historial de Evolución y Novedades</h5>
 
     <div class="row">
         <div class="col-md-10 offset-md-1">
-
             @if (Model.Seguimientos != null && Model.Seguimientos.Any())
             {
-                foreach (var nota in Model.Seguimientos)
+                foreach (var nota in Model.Seguimientos.OrderByDescending(s => s.FechaHora))
                 {
                     <div class="card shadow-sm mb-3 border-0 border-start border-4 border-secondary">
                         <div class="card-header bg-white d-flex justify-content-between py-2">
@@ -48,8 +88,6 @@
                     Aún no hay novedades registradas en el legajo de esta residente.
                 </div>
             }
-
         </div>
     </div>
-
-</div> 
+</div>

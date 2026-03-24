@@ -53,24 +53,34 @@
     <div class="col-md-4">
         <div class="card shadow-sm border-0 border-start border-warning border-4 h-100 bg-light">
             <div class="card-body">
-                <h6 class="text-muted fw-bold text-uppercase mb-2">Guardia Activa</h6>
+                <h6 class="text-muted fw-bold text-uppercase mb-2"><i class="bi bi-shield-check"></i> Guardia Activa</h6>
 
                 @if (Model.OperadorasTurnoActual != null && Model.OperadorasTurnoActual.Any())
                 {
                     foreach (var turno in Model.OperadorasTurnoActual)
                     {
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-person-badge fs-3 text-warning me-2"></i>
+                        <div class="d-flex align-items-start mb-3 bg-white p-2 rounded border shadow-sm">
+                            <i class="bi bi-person-badge fs-2 text-warning me-3 mt-1"></i>
                             <div>
-                                <span class="badge bg-warning text-dark">Turno @(turno.TipoTurno?.Descripcion)</span>
-                                <div class="fw-bold">@(turno.Personal?.Apellido), @(turno.Personal?.Nombre)</div>
+                                <span class="badge bg-warning text-dark mb-1">Turno @(turno.TipoTurno?.Descripcion)</span>
+                            
+                                <div class="fw-bold text-dark">
+                                    <i class="bi bi-person-fill text-primary"></i> @(turno.Personal?.Apellido), @(turno.Personal?.Nombre)
+                                </div>
+                            
+                                @if (turno.PersonalOpc != null)
+                                {
+                                    <div class="fw-bold text-secondary mt-1" style="font-size: 0.9rem;">
+                                        <i class="bi bi-person-plus-fill text-info"></i> @(turno.PersonalOpc?.Apellido), @(turno.PersonalOpc?.Nombre) <span class="badge bg-light text-muted border">Apoyo</span>
+                                    </div>
+                                }
                             </div>
                         </div>
                     }
                 }
                 else
                 {
-                    <div class="d-flex align-items-center mb-2">
+                    <div class="d-flex align-items-center mb-2 bg-white p-2 rounded border border-danger shadow-sm">
                         <i class="bi bi-exclamation-triangle fs-3 text-danger me-2"></i>
                         <div>
                             <span class="badge bg-danger">Sin Cobertura</span>
@@ -81,14 +91,21 @@
 
                 @if (Model.OperadorasTurnoSiguiente != null && Model.OperadorasTurnoSiguiente.Any())
                 {
+                    var proximoTurno = Model.OperadorasTurnoSiguiente.First();
                     <div class="text-muted small mt-2 border-top pt-2">
-                        <i class="bi bi-arrow-right-short"></i> Próximo Relevo: <strong>@(Model.OperadorasTurnoSiguiente.First().Personal?.Apellido)</strong> (@(Model.OperadorasTurnoSiguiente.First().TipoTurno?.Descripcion))
+                        <i class="bi bi-arrow-right-short fs-5 text-primary"></i> Próximo Relevo:
+                        <strong>@(proximoTurno.Personal?.Apellido)</strong>
+                    
+                        @if (proximoTurno.PersonalOpc != null)
+                        {
+                            <span> y <strong>@(proximoTurno.PersonalOpc?.Apellido)</strong></span>
+                        }
+                        <span class="text-secondary">(@(proximoTurno.TipoTurno?.Descripcion))</span>
                     </div>
                 }
             </div>
         </div>
     </div>
-</div>
 
 
 
@@ -351,7 +368,8 @@
                 <h5 class="modal-title fw-bold"><i class="bi bi-journal-text"></i> Cargar Novedad Diaria</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form asp-controller="Seguimientos" asp-action="CargaRapida" method="post">
+            
+            <form asp-controller="Seguimientos" asp-action="CargaRapida" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="registroId" id="novedadRegistroId" value="" />
 
                 <div class="modal-body p-4">
@@ -381,6 +399,30 @@
                         <label class="form-label fw-bold small">Desarrollo de la novedad</label>
                         <textarea name="descripcion" class="form-control border-warning shadow-sm" rows="4" placeholder="Describa lo sucedido..." required></textarea>
                     </div>
+
+                    <div class="mb-3 border-top border-warning pt-3 mt-3">
+                        <label class="form-label fw-bold small text-secondary"><i class="bi bi-paperclip"></i> Adjuntar Documento (Opcional)</label>
+    
+                        <div class="row">
+                            <div class="col-md-5 mb-2">
+                                <select name="tipoDocumento" class="form-select form-select-sm border-warning">
+                                    <option value="Otro">-- Otro --</option>
+                                    <option value="DNI / Identidad">DNI / Identidad</option>
+                                    <option value="Receta Médica">Receta Médica</option>
+                                    <option value="Estudio Médico">Estudio Médico</option>
+                                    <option value="Oficio Judicial">Oficio Judicial</option>
+                                    <option value="Denuncia Policial">Denuncia Policial</option>
+                                    <option value="Informe Profesional">Informe Profesional</option>
+                                    <option value="Alta / Baja">Alta / Baja</option>
+                                </select>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="file" name="archivoAdjunto" class="form-control form-control-sm border-warning" accept=".jpg,.jpeg,.png,.pdf" />
+                            </div>
+                        </div>
+                        <small class="text-muted" style="font-size: 0.75rem;">Si adjunta un archivo, por favor indique qué tipo de documento es en el menú de al lado.</small>
+                    </div>
+
                 </div>
                 <div class="modal-footer bg-light">
                     <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>

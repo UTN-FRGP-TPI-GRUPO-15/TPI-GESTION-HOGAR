@@ -3,26 +3,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TPI_GESTION_HOGAR.Datos;
 using TPI_GESTION_HOGAR.Models;
+using TPI_GESTION_HOGAR.Servicios;
 
 namespace TPI_GESTION_HOGAR.Controllers
 {
     public class NovedadesController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly PersonalService _personalService;
 
-        public NovedadesController(AppDbContext context)
+        public NovedadesController(AppDbContext context,PersonalService personalService)
         {
             _context = context;
+            _personalService = personalService;
         }
 
-        // PANTALLA PRINCIPAL DEL LIBRO
+       
         [HttpGet]
         public async Task<IActionResult> Index(DateTime? fechaBusqueda)
         {
-            // Empezamos la consulta
+            
             var query = _context.Novedades.Include(n => n.Personal).AsQueryable();
 
-            // Lógica del buscador por fecha
+            
             if (fechaBusqueda.HasValue)
             {
                 query = query.Where(n => n.FechaHora.Date == fechaBusqueda.Value.Date);
@@ -30,21 +33,15 @@ namespace TPI_GESTION_HOGAR.Controllers
             }
             else
             {
-                // Por defecto muestra las últimas novedades sin filtro estricto de hoy
+                
                 ViewBag.FechaActual = "";
             }
 
-            // Ordenamos desde lo más nuevo a lo más viejo
+            
             var historial = await query.OrderByDescending(n => n.FechaHora).ToListAsync();
 
-            // Mandamos el personal para el formulario de carga
-            var personalActivo = await _context.Personal
-                .Where(p => p.Activo)
-                .Select(p => new { Id = p.Id, Nombre = p.Apellido + ", " + p.Nombre })
-                .OrderBy(p => p.Nombre)
-                .ToListAsync();
 
-            ViewBag.PersonalActivo = new SelectList(personalActivo, "Id", "Nombre");
+            ViewBag.PersonalActivo = await _personalService.ObtenerPersonalAutorizadoAsync();
 
             return View(historial);
         }

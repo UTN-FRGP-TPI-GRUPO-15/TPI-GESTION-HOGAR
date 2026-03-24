@@ -7,6 +7,9 @@ using TPI_GESTION_HOGAR.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configuramos la carpeta wwwroot para servir archivos estáticos
+builder.WebHost.UseWebRoot("wwwroot");
+
 //Cofiguramos cadena de concexión a la base de datos
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
@@ -14,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
     options.UseSqlServer(connectionString);
 });
+builder.Services.AddScoped<TPI_GESTION_HOGAR.Servicios.PersonalService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -89,17 +93,18 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+//app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+    //.WithStaticAssets();
 
 
 app.Run();

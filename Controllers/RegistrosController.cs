@@ -39,13 +39,17 @@ namespace TPI_GESTION_HOGAR.Controllers
         [HttpGet]
         public async Task<IActionResult> Legajo(int? id)
         {
-            
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var registro = await _context.Registros.Include(r => r.Mujer).Include(r => r.Seguimientos).ThenInclude(s => s.Personal).FirstOrDefaultAsync(m => m.Id == id);
 
+            if (id == null) return NotFound();
+
+            var registro = await _context.Registros
+                .Include(r => r.Mujer)
+                .Include(r => r.Seguimientos)
+                    .ThenInclude(s => s.Personal)
+                .Include(r => r.Documentos)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (registro == null) return NotFound();
             return View(registro);
         }
 
