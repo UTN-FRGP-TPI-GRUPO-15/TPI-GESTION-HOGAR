@@ -47,12 +47,21 @@ namespace TPI_GESTION_HOGAR.Controllers
             modelo.HabitacionesOcupadas = habitacionesActivas.Count(h => h.Registros.Any());
 
 
-            TimeZoneInfo zonaArgentina = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
-            DateTime ahoraEnArgentina = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaArgentina);
+            TimeZoneInfo zonaArgentina;
+            try
+            {
+                
+                zonaArgentina = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                
+                zonaArgentina = TimeZoneInfo.FindSystemTimeZoneById("America/Argentina/Buenos_Aires");
+            }
 
-            var fechaTurno = DateOnly.FromDateTime(ahoraEnArgentina);
-            var horaActual = ahoraEnArgentina.Hour;
-            DateOnly fechaHoy = DateOnly.FromDateTime(DateTime.Now);
+            DateTime fechaHoraArg = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaArgentina);
+            int horaActual = fechaHoraArg.Hour;
+            DateOnly fechaHoy = DateOnly.FromDateTime(fechaHoraArg);
             DateOnly fechaAyer = fechaHoy.AddDays(-1);
             DateOnly fechaManana = fechaHoy.AddDays(1);
 
