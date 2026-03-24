@@ -37,6 +37,7 @@ jobs:
           docker run -d \
             --name tpi-hogar \
             -p 8082:8080 \
+            -v /var/uploads-tpi-hogar:/app/wwwroot/uploads \
             -e DB_CONNECTION="${{ secrets.DB_CONNECTION }}" \
             -e EmailSettings__SenderEmail="${{ secrets.EMAIL_SENDER }}" \
             -e EmailSettings__Password="${{ secrets.EMAIL_PASSWORD }}" \
