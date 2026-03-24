@@ -16,9 +16,21 @@ namespace TPI_GESTION_HOGAR.Servicios
 
         public async Task<SelectList> ObtenerPersonalAutorizadoAsync()
         {
-            var ahora = DateTime.Now;
-            var hoy = DateOnly.FromDateTime(DateTime.Now);
-            var horaActual = ahora.Hour;
+            TimeZoneInfo zonaArgentina;
+            try
+            {
+                zonaArgentina = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                zonaArgentina = TimeZoneInfo.FindSystemTimeZoneById("America/Argentina/Buenos_Aires"); 
+            }
+
+            DateTime ahoraEnArgentina = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaArgentina);
+
+           
+            var hoy = DateOnly.FromDateTime(ahoraEnArgentina);
+            var horaActual = ahoraEnArgentina.Hour;
 
             string turnoDefinido = "";
 
