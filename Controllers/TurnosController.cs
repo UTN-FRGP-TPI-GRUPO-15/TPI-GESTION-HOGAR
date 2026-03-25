@@ -480,15 +480,40 @@ namespace TPI_GESTION_HOGAR.Controllers
                 resultado = turnos ?? await ObtenerTurnosDTO(inicioSemana, finSemana);
             else
             {
+                var hoy = DateOnly.FromDateTime(DateTime.Today);
+
+                var turnosSemanaActual = await ObtenerTurnosDTO(inicioSemana, finSemana);
                 var turnosSemanaAnterior = await ObtenerTurnosDTO(inicioSemana.AddDays(-7), finSemana.AddDays(-7));
-                
-                resultado = turnosSemanaAnterior.Select(t => new NuevoTurnoDTO
+
+                var repetidos = turnosSemanaAnterior.Select(t => new NuevoTurnoDTO
                 {
                     Fecha = t.Fecha.AddDays(7),
                     TipoTurnoId = t.TipoTurnoId,
                     PersonalId = t.PersonalId,
                     PersonalOpcId = t.PersonalOpcId
-                }).ToList();
+                })
+                .Where(t => t.Fecha >= hoy)
+                .ToList();
+
+                foreach (var rep in repetidos)
+                {
+                    var existe = turnosSemanaActual.FirstOrDefault(a =>
+                        a.Fecha == rep.Fecha &&
+                        a.TipoTurnoId == rep.TipoTurnoId
+                    );
+
+                    if (existe == null || existe.PersonalId == null)
+                    {
+                        turnosSemanaActual.RemoveAll(a =>
+                            a.Fecha == rep.Fecha &&
+                            a.TipoTurnoId == rep.TipoTurnoId
+                        );
+
+                        turnosSemanaActual.Add(rep);
+                    }
+                }
+
+                resultado = turnosSemanaActual;
             }
 
             ViewBag.Turnos = resultado;
