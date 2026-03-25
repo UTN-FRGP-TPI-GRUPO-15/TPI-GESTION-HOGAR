@@ -10,6 +10,8 @@
     var tipoTurnos = (List<TipoTurno>)ViewBag.TipoTurnos;
 
     DateOnly inicioSemana = (DateOnly)ViewBag.InicioSemana;
+    DateOnly hoy = DateOnly.FromDateTime(DateTime.Today);
+    bool semanaEditable = inicioSemana.AddDays(6) >= hoy;
 }
 
 <div class="card shadow-sm border-0">
@@ -84,7 +86,7 @@
                                         t.Fecha == fecha &&
                                         t.TipoTurnoId == tipo.Id);
 
-                                    bool esPasado = fecha < DateOnly.FromDateTime(DateTime.Today);
+                                    bool esPasado = fecha < hoy;
 
                                     <td class="@(turno?.PersonalId == null ? "bg-warning-subtle" : "")">
 
@@ -138,22 +140,24 @@
                 </table>
             </div>
 
-            <div class="d-flex justify-content-end mt-3 gap-2">
-                <button type="button" id="limpiarSemana" class="btn btn-outline-danger">
-                    <i class="bi bi-trash"></i> Limpiar Semana
-                </button>
-                <a class="btn btn-outline-secondary" asp-action="Planificacion" asp-route-fecha="@inicioSemana.ToString("yyyy-MM-dd")">
-                    <i class="bi bi-arrow-counterclockwise"></i> Restablecer
-                </a>
-                <a class="btn btn-success" asp-action="Planificacion" 
-                    asp-route-fecha="@inicioSemana.ToString("yyyy-MM-dd")" 
-                    asp-route-repetir="true">
-                    <i class="bi bi-repeat"></i> Repetir
-                </a>
-                <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">
-                    <i class="bi bi-save"></i> Guardar
-                </button>
-            </div>
+            @if (semanaEditable) {
+                <div class="d-flex justify-content-end mt-3 gap-2">
+                    <button type="button" id="limpiarSemana" class="btn btn-outline-danger">
+                        <i class="bi bi-trash"></i> Limpiar Semana
+                    </button>
+                    <a class="btn btn-outline-secondary" asp-action="Planificacion" asp-route-fecha="@inicioSemana.ToString("yyyy-MM-dd")">
+                        <i class="bi bi-arrow-counterclockwise"></i> Restablecer
+                    </a>
+                    <a class="btn btn-success" asp-action="Planificacion" 
+                        asp-route-fecha="@inicioSemana.ToString("yyyy-MM-dd")" 
+                        asp-route-repetir="true">
+                        <i class="bi bi-repeat"></i> Repetir
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                </div>
+            }
 
         </form>
 
