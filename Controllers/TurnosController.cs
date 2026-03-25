@@ -298,13 +298,13 @@ namespace TPI_GESTION_HOGAR.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Planificacion(DateOnly? fecha)
+        public async Task<IActionResult> Planificacion(DateOnly? fecha, bool repetir = false)
         {
             DateOnly hoy = DateOnly.FromDateTime(DateTime.Today);
 
             DateOnly fechaBuscada = fecha ?? hoy;
 
-            await CargarPlanificacionView(fechaBuscada);
+            await CargarPlanificacionView(fechaBuscada, null, repetir);
 
             return View();
         }
@@ -467,14 +467,56 @@ namespace TPI_GESTION_HOGAR.Controllers
             return contadorErrores > 0 ? errorHtml += "</ul>" : null;
         }
 
-        private async Task CargarPlanificacionView(DateOnly fecha, List<NuevoTurnoDTO>? turnos = null)
+        private async Task CargarPlanificacionView(DateOnly fecha, List<NuevoTurnoDTO>? turnos = null, bool repetir = false)
         {
             int diferencia = fecha.DayOfWeek == DayOfWeek.Sunday ? 6 : (int)fecha.DayOfWeek - 1;
 
             DateOnly inicioSemana = fecha.AddDays(-diferencia);
             DateOnly finSemana = inicioSemana.AddDays(6);
 
-            ViewBag.Turnos = turnos ?? await ObtenerTurnosDTO(inicioSemana, finSemana);
+            List<NuevoTurnoDTO> resultado;
+
+            if (!repetir)
+                resultado = turnos ?? await ObtenerTurnosDTO(inicioSemana, finSemana);
+            else
+            {
+                var hoy = DateOnly.FromDateTime(DateTime.Today);
+
+                var turnosSemanaActual = await ObtenerTurnosDTO(inicioSemana, finSemana);
+                var turnosSemanaAnterior = await ObtenerTurnosDTO(inicioSemana.AddDays(-7), finSemana.AddDays(-7));
+
+                var repetidos = turnosSemanaAnterior.Select(t => new NuevoTurnoDTO
+                {
+                    Fecha = t.Fecha.AddDays(7),
+                    TipoTurnoId = t.TipoTurnoId,
+                    PersonalId = t.PersonalId,
+                    PersonalOpcId = t.PersonalOpcId
+                })
+                .Where(t => t.Fecha >= hoy)
+                .ToList();
+
+                foreach (var rep in repetidos)
+                {
+                    var existe = turnosSemanaActual.FirstOrDefault(a =>
+                        a.Fecha == rep.Fecha &&
+                        a.TipoTurnoId == rep.TipoTurnoId
+                    );
+
+                    if (existe == null || existe.PersonalId == null)
+                    {
+                        turnosSemanaActual.RemoveAll(a =>
+                            a.Fecha == rep.Fecha &&
+                            a.TipoTurnoId == rep.TipoTurnoId
+                        );
+
+                        turnosSemanaActual.Add(rep);
+                    }
+                }
+
+                resultado = turnosSemanaActual;
+            }
+
+            ViewBag.Turnos = resultado;
             ViewBag.Operadores = await ObtenerOperadores();
             ViewBag.TipoTurnos = await ObtenerTipoTurnos();
             ViewBag.InicioSemana = inicioSemana;
