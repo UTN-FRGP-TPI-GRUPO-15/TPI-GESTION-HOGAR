@@ -84,6 +84,8 @@
                                         t.Fecha == fecha &&
                                         t.TipoTurnoId == tipo.Id);
 
+                                    bool esPasado = fecha < DateOnly.FromDateTime(DateTime.Today);
+
                                     <td class="@(turno?.PersonalId == null ? "bg-warning-subtle" : "")">
 
                                         <div class="d-flex flex-column gap-1">
@@ -93,7 +95,8 @@
 
                                             <select name="turnos[@contador].PersonalId"
                                                     class="form-select form-select-sm personal-principal"
-                                                    data-index="@contador">
+                                                    data-index="@contador"
+                                                    @(esPasado ? "disabled" : "")>
 
                                                 <option value="">Principal</option>
 
@@ -109,7 +112,8 @@
                                             <select name="turnos[@contador].PersonalOpcId"
                                                     class="form-select form-select-sm personal-opcional"
                                                     data-index="@contador"
-                                                @(turno?.PersonalId == null ? "disabled" : "")>
+                                                    data-pasado="@esPasado"
+                                                @(turno?.PersonalId == null || esPasado ? "disabled" : "")>
 
                                                 <option value="">Opcional</option>
 
@@ -141,6 +145,11 @@
                 <a class="btn btn-outline-secondary" asp-action="Planificacion" asp-route-fecha="@inicioSemana.ToString("yyyy-MM-dd")">
                     <i class="bi bi-arrow-counterclockwise"></i> Restablecer
                 </a>
+                <a class="btn btn-success" asp-action="Planificacion" 
+                    asp-route-fecha="@inicioSemana.ToString("yyyy-MM-dd")" 
+                    asp-route-repetir="true">
+                    <i class="bi bi-repeat"></i> Repetir
+                </a>
                 <button type="submit" class="btn btn-primary px-4 fw-bold shadow-sm">
                     <i class="bi bi-save"></i> Guardar
                 </button>
@@ -160,6 +169,9 @@
             principal.addEventListener("change", function () {
                 const index = this.dataset.index;
                 const opcional = document.querySelector(`.personal-opcional[data-index="${index}"]`);
+
+                const esPasado = opcional.dataset.pasado === "True";
+                if (esPasado) return;
 
                 Array.from(opcional.options).forEach(opt => opt.disabled = false);
 
