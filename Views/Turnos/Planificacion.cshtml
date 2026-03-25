@@ -170,15 +170,18 @@
                 const index = this.dataset.index;
                 const opcional = document.querySelector(`.personal-opcional[data-index="${index}"]`);
 
-                const esPasado = opcional.dataset.pasado === "True";
-                if (esPasado) return;
-
                 Array.from(opcional.options).forEach(opt => opt.disabled = false);
 
                 if (!this.value) {
                     opcional.value = "";
                     opcional.disabled = true;
                     return
+                }
+
+                const esPasado = opcional.dataset.pasado === "True";
+                if (esPasado) {
+                    opcional.disabled = true;
+                    return;
                 }
 
                 opcional.disabled = false;
