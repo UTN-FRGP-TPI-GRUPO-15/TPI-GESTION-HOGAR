@@ -33,16 +33,14 @@
             <input type="text" class="form-control" id="Nacionalidad" name="Nacionalidad" value="Argentina" required>
         </div>
 
-        <div class="col-md-6 mb-3">
-            <label for="Genero" class="form-label">Identidad de Género</label>
-            <select class="form-select" id="Genero" name="Genero" required>
-                <option value="">Seleccione una opción...</option>
-                <option value="Mujer (Cis)">Mujer</option>
-                <option value="Mujer Trans">Mujer Trans</option>
-                <option value="No Binario">No Binario</option>
-                <option value="Otro">Otro</option>
-            </select>
-        </div>
+        <select asp-for="Genero" class="form-select">
+            <option value="">-- Seleccione --</option>
+            <option value="Femenino" selected="@(Model?.Genero?.Trim().ToLower() == "femenino")">Femenino</option>
+            <option value="Masculino" selected="@(Model?.Genero?.Trim().ToLower() == "masculino")">Masculino</option>
+            <option value="Trans" selected="@(Model?.Genero?.Trim().ToLower() == "trans")">Trans</option>
+            <option value="No Binario" selected="@(Model?.Genero?.Trim().ToLower() == "no binario")">No Binario</option>
+            <option value="Otro" selected="@(Model?.Genero?.Trim().ToLower() == "otro")">Otro</option>
+        </select>
 
         <hr class="mt-4 mb-4">
         <h5 class="mb-3">Datos de Contacto y Socioeducativos</h5>
