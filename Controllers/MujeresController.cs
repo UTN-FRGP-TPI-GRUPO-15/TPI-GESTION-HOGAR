@@ -197,7 +197,7 @@ namespace TPI_GESTION_HOGAR.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AgregarCondicion(int MujerId, int TipoCondicionId, string? ObservacionesCondicion)
         {
-            // 1. Validamos que haya seleccionado una condición
+           
             if (TipoCondicionId == 0)
             {
                 ModelState.AddModelError("", "Debe seleccionar un tipo de condición.");
@@ -206,7 +206,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 return View();
             }
 
-            // 2. Creamos y guardamos la observación
+          
             var nuevaObservacion = new ObservacionCondicion
             {
                 Descripcion = !string.IsNullOrWhiteSpace(ObservacionesCondicion) ? ObservacionesCondicion : "Sin observaciones adicionales"
@@ -215,7 +215,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             _context.Add(nuevaObservacion);
             await _context.SaveChangesAsync();
 
-            // 3. Creamos el puente (Condición) uniendo a la Mujer, el Tipo y la Observación
+           
             var nuevaCondicion = new Condicion
             {
                 MujerId = MujerId,
@@ -226,7 +226,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             _context.Condiciones.Add(nuevaCondicion);
             await _context.SaveChangesAsync();
 
-            // 4. Cartel de éxito y volvemos a la ficha de la residente
+           
             TempData["MensajeExito"] = "Nueva condición agregada correctamente al historial.";
             return RedirectToAction("VerCondicion", new { id = MujerId });
         }
@@ -238,7 +238,7 @@ namespace TPI_GESTION_HOGAR.Controllers
                 return NotFound();
             }
 
-            // Buscamos a la residente y traemos todo su historial médico adjunto
+            
             var mujer = await _context.Mujeres
                 .Include(m => m.Condiciones)
                 .ThenInclude(c => c.TipoCondicion)
