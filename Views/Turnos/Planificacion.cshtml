@@ -110,6 +110,10 @@
                                                 }
 
                                             </select>
+                                            @if (esPasado)
+                                            {
+                                                <input type="hidden" name="turnos[@contador].PersonalId" value="@turno?.PersonalId" />
+                                            }
 
                                             <select name="turnos[@contador].PersonalOpcId"
                                                     class="form-select form-select-sm personal-opcional"
@@ -127,6 +131,10 @@
                                                 }
 
                                             </select>
+                                            @if (esPasado)
+                                            {
+                                                <input type="hidden" name="turnos[@contador].PersonalOpcId" value="@turno?.PersonalOpcId" />
+                                            }
 
                                         </div>
 
@@ -207,6 +215,8 @@
             const principales = document.querySelectorAll(".personal-principal");
 
             principales.forEach(p => {
+                if (p.disabled) return;
+
                 p.value = "";
                 p.dispatchEvent(new Event("change"));
             });
