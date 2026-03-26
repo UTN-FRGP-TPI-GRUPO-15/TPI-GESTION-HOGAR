@@ -23,7 +23,13 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             var registro = await _context.Registros
                 .Include(r => r.Mujer)
-                    .ThenInclude(m => m.Hijos)     
+                    .ThenInclude(m => m.Hijos)
+                    .Include(r => r.Mujer)
+                        .ThenInclude(m => m.Condiciones)
+                            .ThenInclude(c => c.TipoCondicion)
+                 .Include(r => r.Mujer)
+                    .ThenInclude(m => m.Condiciones)
+                        .ThenInclude(c => c.ObservacionCondicion)
                 .Include(r => r.Habitacion)        
                 .Include(r => r.Agresores)         
                 .Include(r => r.Denuncias)
