@@ -1,4 +1,11 @@
 ﻿@model TPI_GESTION_HOGAR.Models.DashboardViewModel
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm fw-bold mt-3" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["MensajeExito"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 @{
     ViewData["Title"] = "Panel de Control";

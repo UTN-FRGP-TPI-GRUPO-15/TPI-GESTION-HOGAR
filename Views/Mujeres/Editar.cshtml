@@ -67,10 +67,11 @@
 
             <div class="row bg-light p-3 rounded border mx-0 mb-3">
                 <div class="col-md-6 mb-3">
-                    <label for="selectProvincia" class="form-label fw-bold text-primary">Provincia</label>
-                    <select id="selectProvincia" class="form-select border-primary">
+                    <label asp-for="Provincia" class="form-label fw-bold text-primary">Provincia</label>
+                    <select asp-for="Provincia" id="selectProvincia" class="form-select border-primary">
                         <option value="">Cargando provincias...</option>
                     </select>
+                    <span asp-validation-for="Provincia" class="text-danger"></span>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label asp-for="Localidad" class="form-label fw-bold text-primary">Localidad</label>
@@ -128,9 +129,18 @@
                     <i class="bi bi-save"></i> Solo Guardar Cambios
                 </button>
 
-                <button type="submit" name="generarIngreso" value="true" class="btn btn-success fw-bold shadow-sm">
-                    <i class="bi bi-door-open-fill"></i> Guardar y Generar Nuevo Ingreso
-                </button>
+                @if (Model.Estado == false)
+                {
+                    <button type="submit" name="generarIngreso" value="true" class="btn btn-success fw-bold shadow-sm">
+                        <i class="bi bi-door-open-fill"></i> Guardar y Generar Nuevo Ingreso
+                    </button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-secondary fw-bold shadow-sm" disabled title="La residente ya se encuentra activa en el hogar.">
+                        <i class="bi bi-door-closed-fill"></i> Residente actualmente alojada
+                    </button>
+                }
             </div>
         </form>
     </div>
@@ -142,54 +152,69 @@
     }
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const selectProvincia = document.getElementById("selectProvincia");
-            const selectLocalidad = document.getElementById("selectLocalidad");
+       document.addEventListener("DOMContentLoaded", function () {
+        const selectProvincia = document.getElementById("selectProvincia");
+        const selectLocalidad = document.getElementById("selectLocalidad");
 
-            // 1. Apenas carga la pantalla, vamos a buscar las provincias a la API
-            fetch("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre&max=100")
+        // 1. Guardamos los datos que vinieron de la base de datos en variables de JS
+        const provinciaActual = '@Html.Raw(Model?.Provincia ?? "")';
+        const localidadActual = '@Html.Raw(Model?.Localidad ?? "")';
+
+        // 2. Buscamos las provincias
+        fetch("https://apis.datos.gob.ar/georef/api/provincias?campos=id,nombre&max=100")
+            .then(response => response.json())
+            .then(data => {
+                let provincias = data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                selectProvincia.innerHTML = '<option value="">-- Cambiar Provincia --</option>';
+
+                provincias.forEach(prov => {
+                    // Si la provincia de la API coincide con la de la base de datos, le ponemos "selected"
+                    let isSelected = (prov.nombre === provinciaActual) ? "selected" : "";
+                    selectProvincia.innerHTML += `<option value="${prov.nombre}" data-id="${prov.id}" ${isSelected}>${prov.nombre}</option>`;
+                });
+
+                // 3. Si la chica ya tenía provincia, buscamos sus localidades automáticamente
+                if (provinciaActual) {
+                    let provId = selectProvincia.options[selectProvincia.selectedIndex]?.getAttribute("data-id");
+                    if(provId) cargarLocalidades(provId, localidadActual);
+                }
+            })
+            .catch(error => console.error("Error cargando provincias:", error));
+
+        // 4. ¿Qué pasa si la operadora cambia la provincia a mano?
+        selectProvincia.addEventListener("change", function () {
+            let provinciaId = this.options[this.selectedIndex].getAttribute("data-id");
+            cargarLocalidades(provinciaId, ""); // Mandamos vacío porque es una selección nueva
+        });
+
+        // 5. Función aislada para buscar localidades
+        function cargarLocalidades(provId, localidadSeleccionada) {
+            if (!provId) {
+                selectLocalidad.innerHTML = '<option value="">Seleccione una provincia primero...</option>';
+                return;
+            }
+
+            selectLocalidad.innerHTML = '<option value="">Cargando localidades...</option>';
+
+            fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provId}&campos=id,nombre&max=1000`)
                 .then(response => response.json())
                 .then(data => {
-                    // Ordenamos alfabéticamente para que sea fácil buscar
-                    let provincias = data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    let localidades = data.localidades.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    selectLocalidad.innerHTML = '<option value="">-- Seleccione localidad --</option>';
 
-                    // Limpiamos el texto de "Cargando..."
-                    selectProvincia.innerHTML = '<option value="">-- Cambiar Provincia --</option>';
+                    // Blindaje: Si la localidad que tenía en la base no está en la API (ej. error de ortografía al cargarla antes), la agregamos a la fuerza para no perderla
+                    let existeEnApi = localidades.some(l => l.nombre === localidadSeleccionada);
+                    if (localidadSeleccionada && !existeEnApi) {
+                        selectLocalidad.innerHTML += `<option value="${localidadSeleccionada}" selected>${localidadSeleccionada} (Dato actual)</option>`;
+                    }
 
-                    // Llenamos el desplegable
-                    provincias.forEach(prov => {
-                        // Guardamos el ID de la provincia en un data-attribute para buscar las localidades después
-                        selectProvincia.innerHTML += `<option value="${prov.nombre}" data-id="${prov.id}">${prov.nombre}</option>`;
+                    localidades.forEach(loc => {
+                        let isSelected = (loc.nombre === localidadSeleccionada) ? "selected" : "";
+                        selectLocalidad.innerHTML += `<option value="${loc.nombre}" ${isSelected}>${loc.nombre}</option>`;
                     });
                 })
-                .catch(error => console.error("Error cargando provincias:", error));
-
-            // 2. ¿Qué pasa si la operadora decide cambiar la provincia para corregir el dato?
-            selectProvincia.addEventListener("change", function () {
-                // Obtenemos el ID de la provincia seleccionada
-                let provinciaId = this.options[this.selectedIndex].getAttribute("data-id");
-
-                if (!provinciaId) {
-                    selectLocalidad.innerHTML = '<option value="">Seleccione una provincia primero...</option>';
-                    return;
-                }
-
-                selectLocalidad.innerHTML = '<option value="">Cargando localidades...</option>';
-
-                // Buscamos las localidades de esa provincia específica
-                fetch(`https://apis.datos.gob.ar/georef/api/localidades?provincia=${provinciaId}&campos=id,nombre&max=1000`)
-                    .then(response => response.json())
-                    .then(data => {
-                        let localidades = data.localidades.sort((a, b) => a.nombre.localeCompare(b.nombre));
-
-                        selectLocalidad.innerHTML = '<option value="">-- Seleccione nueva localidad --</option>';
-
-                        localidades.forEach(loc => {
-                            selectLocalidad.innerHTML += `<option value="${loc.nombre}">${loc.nombre}</option>`;
-                        });
-                    })
-                    .catch(error => console.error("Error cargando localidades:", error));
-            });
-        });
+                .catch(error => console.error("Error cargando localidades:", error));
+        }
+    });
     </script>
 }

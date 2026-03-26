@@ -1,4 +1,11 @@
 ﻿@model IEnumerable<TPI_GESTION_HOGAR.Models.Mujer>
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm fw-bold mt-3" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["MensajeExito"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 @{
     ViewData["Title"] = "Listado de Residentes";
@@ -7,34 +14,57 @@
 <h2 class="mb-4 text-primary"><i class="bi bi-people-fill"></i> Gestión de Residentes</h2>
 
 <div class="row mb-4 align-items-center">
-    <div class="col-md-4">
-        <a class="btn btn-primary shadow-sm" asp-action="VerificarDni">
+    <div class="col-md-3">
+        <a class="btn btn-primary shadow-sm w-100" asp-action="VerificarDni">
             <i class="bi bi-plus-circle"></i> Nuevo Ingreso
         </a>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-9">
         <form asp-action="Index" method="get" class="d-flex justify-content-end">
-            <input type="text" name="buscarTexto" class="form-control w-75 me-2 shadow-sm"
+            
+           
+            <select name="estadoFiltro" class="form-select w-auto me-2 shadow-sm text-secondary fw-bold">
+                @if (ViewData["EstadoFiltro"]?.ToString() == "activas")
+                {
+                    <option value="todas">Todas (Historial)</option>
+                    <option value="activas" selected>Solo Activas (En el hogar)</option>
+                    <option value="inactivas">Solo Egresadas</option>
+                }
+                else if (ViewData["EstadoFiltro"]?.ToString() == "inactivas")
+                {
+                    <option value="todas">Todas (Historial)</option>
+                    <option value="activas">Solo Activas (En el hogar)</option>
+                    <option value="inactivas" selected>Solo Egresadas</option>
+                }
+                else
+                {
+                    <option value="todas" selected>Todas (Historial)</option>
+                    <option value="activas">Solo Activas (En el hogar)</option>
+                    <option value="inactivas">Solo Egresadas</option>
+                }
+            </select>
+
+            <input type="text" name="buscarTexto" class="form-control w-50 me-2 shadow-sm"
                    placeholder="Buscar por DNI, Nombre o Apellido..."
                    value="@ViewData["FiltroTexto"]">
 
-            <button type="submit" class="btn btn-success shadow-sm">Buscar</button>
+            <button type="submit" class="btn btn-success shadow-sm"><i class="bi bi-search"></i> Buscar</button>
             <a asp-action="Index" class="btn btn-outline-secondary ms-2 shadow-sm">Limpiar</a>
         </form>
     </div>
-    
 </div>
 
 <div class="card shadow-sm border-0">
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-hover table-striped mb-0">
+            <table class="table table-hover table-striped align-middle mb-0">
                 <thead class="table-dark">
                     <tr>
                         <th>DNI</th>
                         <th>Apellido</th>
                         <th>Nombre</th>
                         <th>Edad</th>
+                        <th class="text-center">Estado</th> 
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -44,16 +74,29 @@
                         foreach (var mujer in Model)
                         {
                             <tr>
-                                <td class="fw-bold">@mujer.DNI</td>
-                                <td>@mujer.Apellido</td>
+                                <td class="fw-bold text-secondary">@mujer.DNI</td>
+                                <td class="fw-bold">@mujer.Apellido</td>
                                 <td>@mujer.Nombre</td>
-                                <td>@mujer.Edad</td>                                                              
+                                <td>@mujer.Edad años</td>
+                                
+
                                 <td class="text-center">
-                                    <a asp-action="Editar" asp-route-id="@mujer.ID" class="btn btn-sm btn-outline-primary" title="Editar">
-                                        <i class="bi bi-pencil-square">Editar</i>
+                                    @if (mujer.Estado == true)
+                                    {
+                                        <span class="badge bg-success shadow-sm"><i class="bi bi-house-door-fill"></i> Activa</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary shadow-sm"><i class="bi bi-door-closed-fill"></i> Egresada</span>
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    <a asp-action="Editar" asp-route-id="@mujer.ID" class="btn btn-sm btn-outline-primary shadow-sm" title="Editar">
+                                        <i class="bi bi-pencil-square"></i> Editar
                                     </a>
-                                    <a asp-action="Detalles" asp-route-id="@mujer.ID" class="btn btn-sm btn-outline-info" title="Ver Ficha">
-                                        <i class="bi bi-eye">Ver Ficha</i>
+                                    <a asp-action="Detalles" asp-route-id="@mujer.ID" class="btn btn-sm btn-outline-info shadow-sm" title="Ver Ficha">
+                                        <i class="bi bi-eye"></i> Ver Ficha
                                     </a>
                                 </td>
                             </tr>
@@ -62,7 +105,7 @@
                     else
                     {
                         <tr>
-                            <td colspan="5" class="text-center p-5 text-muted">
+                            <td colspan="6" class="text-center p-5 text-muted">
                                 <h5><i class="bi bi-inbox fs-1"></i></h5>
                                 <p class="mb-0">No se encontraron residentes registradas con ese criterio de búsqueda.</p>
                             </td>
