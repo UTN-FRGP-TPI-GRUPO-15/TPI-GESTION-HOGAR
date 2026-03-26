@@ -14,27 +14,35 @@ namespace TPI_GESTION_HOGAR.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<IActionResult> Index(string buscarTexto)
+        
+        public async Task<IActionResult> Index(string buscarTexto, string estadoFiltro = "todas")
         {
-           
-            var query = _context.Mujeres.Where(m => m.Estado == true);
+            
+            ViewData["FiltroTexto"] = buscarTexto;
+            ViewData["EstadoFiltro"] = estadoFiltro;
+
+            var query = _context.Mujeres.AsQueryable();
 
            
+            if (estadoFiltro == "activas")
+            {
+                query = query.Where(m => m.Estado == true);
+            }
+            else if (estadoFiltro == "inactivas")
+            {
+                query = query.Where(m => m.Estado == false);
+            }
+            
             if (!string.IsNullOrEmpty(buscarTexto))
             {
-                
-                query = query.Where(m =>
-                    m.DNI.ToString().Contains(buscarTexto) ||
-                    m.Nombre.Contains(buscarTexto) ||
-                    m.Apellido.Contains(buscarTexto));
+                query = query.Where(m => m.Nombre.Contains(buscarTexto) ||
+                                         m.Apellido.Contains(buscarTexto) ||
+                                         m.DNI.ToString().Contains(buscarTexto));
             }
 
-            var mujeres = await query.ToListAsync();
-
-           
-            ViewData["FiltroTexto"] = buscarTexto;
-
-            return View(mujeres);
+          
+            var mujeresFiltradas = await query.OrderBy(m => m.Apellido).ToListAsync();
+            return View(mujeresFiltradas);
         }
 
         [HttpGet]
@@ -129,7 +137,9 @@ namespace TPI_GESTION_HOGAR.Controllers
 
                 _context.Registros.Add(primerIngreso);
                 await _context.SaveChangesAsync();
-               
+
+               TempData["MensajeExito"] = "La residente se ha registrado y su ingreso fue generado exitosamente.";
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -137,7 +147,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             return View(nuevaMujer);
         }
 
-         
+
 
         [HttpGet]
         public async Task<IActionResult> VerCondicion(int? id)
