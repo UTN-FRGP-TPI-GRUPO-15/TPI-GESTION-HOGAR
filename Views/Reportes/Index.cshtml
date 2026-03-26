@@ -99,6 +99,7 @@
                             <th>Días Transc.</th>
                             <th>Dirección Egreso</th>
                             <th>Teléfono Ref.</th>
+                            <th class="text-center">Ficha</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -193,6 +194,11 @@
                                     <td class="text-center fw-bold text-primary">@dias días</td>
                                     <td>@(reg.Egreso?.DomicilioRef ?? "-")</td>
                                     <td>@(reg.Egreso?.TelefonoRef ?? "-")</td>
+                                    <td class="text-center">
+                                        <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@reg.Id" class="btn btn-sm btn-outline-primary fw-bold shadow-sm" target="_blank" title="Ver Expediente de Ingreso">
+                                            <i class="bi bi-folder2-open"></i> Ver
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                         }
