@@ -11,12 +11,10 @@
 <div class="container-fluid mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="text-primary fw-bold"><i class="bi bi-file-earmark-spreadsheet-fill"></i> Reporte General y Exportación</h2>
-        <button class="btn btn-outline-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#panelFiltros">
-            <i class="bi bi-funnel"></i> Mostrar/Ocultar Filtros
-        </button>
     </div>
 
-    <div class="collapse mb-4" id="panelFiltros">
+    
+    <div class="mb-4" id="panelFiltros">
         <div class="card card-body bg-light border-0 shadow-sm border-top border-primary border-4">
             <form asp-action="Index" method="get">
                 <div class="row align-items-end">
@@ -36,12 +34,12 @@
                             <option value="">Todas...</option>
                         </select>
                     </div>
-                    <div class="col-md-2 mb-3">
-                        <label class="form-label small fw-bold text-secondary">Municipio/Localidad</label>
-                        <select asp-for="Localidad" class="form-select form-select-sm" id="selectLocalidad" disabled>
-                            <option value="">Todos...</option>
-                        </select>
-                    </div>
+                    <div class="col-md-3 mb-3 d-flex flex-column justify-content-center">
+                        <div class="form-check form-switch mb-1 mt-4">
+                            <input class="form-check-input border-primary" type="checkbox" name="SoloDeLaCosta" value="true" @(Model != null && Model.SoloDeLaCosta ? "checked" : "")>
+                                <label class="form-check-label small fw-bold" for="SoloDeLaCosta">Solo Partido de La Costa</label>
+                            </div>
+                        </div>
 
                     <div class="col-md-2 mb-3">
                         <label class="form-label small fw-bold text-secondary">Hijos (Min)</label>
@@ -135,6 +133,9 @@
                                      reg.Mujer.Localidad.Contains("Mar de Ajó", StringComparison.OrdinalIgnoreCase) ||
                                      reg.Mujer.Localidad.Contains("Mar del Tuyú", StringComparison.OrdinalIgnoreCase) ||
                                      reg.Mujer.Localidad.Contains("Las Toninas", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("Nueva Atlantis", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("Punta Medanos", StringComparison.OrdinalIgnoreCase) ||
+                                     reg.Mujer.Localidad.Contains("Costa Esmeralda", StringComparison.OrdinalIgnoreCase) ||
                                      reg.Mujer.Localidad.Contains("San Bernardo", StringComparison.OrdinalIgnoreCase));
 
                                 bool tieneDenuncia = reg.Denuncias != null && reg.Denuncias.Any(d => d.NroIPP != null);
@@ -260,30 +261,7 @@
             cargarLocalidades(this.value);
             });
 
-            function cargarLocalidades(provinciaNombre) {
-            selectLocalidad.innerHTML = '<option value="">Todos los municipios...</option>';
-            if (!provinciaNombre) {
-            selectLocalidad.disabled = true;
-            return;
-            }
-                
-            selectLocalidad.disabled = false;
-            const url = `https://apis.datos.gob.ar/georef/api/municipios?provincia=${encodeURIComponent(provinciaNombre)}&max=1000`;
-                
-            fetch(url)
-            .then(response => response.json())
-            .then(data => {
-            let municipios = data.municipios.sort((a, b) => a.nombre.localeCompare(b.nombre));
-            municipios.forEach(mun => {
-            let option = document.createElement("option");
-            option.value = mun.nombre;
-            option.textContent = mun.nombre;
-            if (mun.nombre === localidadSeleccionada) option.selected = true;
-            selectLocalidad.appendChild(option);
-            });
-            })
-            .catch(err => console.error("Error", err));
-            }
+            
             });
         </script>
     }

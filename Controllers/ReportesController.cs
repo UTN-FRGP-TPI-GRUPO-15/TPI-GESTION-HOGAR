@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Ocsp;
 using System.Linq;
 using System.Threading.Tasks;
 using TPI_GESTION_HOGAR.Datos;
@@ -54,8 +55,24 @@ namespace TPI_GESTION_HOGAR.Controllers
             {
                 query = query.Where(r => r.Fecha <= filtros.FechaHasta.Value);
             }
+            if (filtros.SoloDeLaCosta)
+            {
+                query = query.Where(r => r.Mujer != null && r.Mujer.Localidad != null && (
+                    r.Mujer.Localidad.ToLower().Contains("la costa") ||
+                    r.Mujer.Localidad.ToLower().Contains("san clemente") ||
+                    r.Mujer.Localidad.ToLower().Contains("santa teresita") ||
+                    r.Mujer.Localidad.ToLower().Contains("mar de ajó") ||
+                    r.Mujer.Localidad.ToLower().Contains("mar del tuyú") ||
+                    r.Mujer.Localidad.ToLower().Contains("las toninas") ||
+                    r.Mujer.Localidad.ToLower().Contains("nueva atlantis") ||
+                    r.Mujer.Localidad.ToLower().Contains("punta medanos") ||
+                    r.Mujer.Localidad.ToLower().Contains("costa esmeralda") ||
+                    r.Mujer.Localidad.ToLower().Contains("san bernardo") ||
+                    r.Mujer.Localidad.ToLower().Contains("lucila del mar") ||
+                    r.Mujer.Localidad.ToLower().Contains("aguas verdes")
+                ));
+            }
 
-           
             var registrosFiltrados = await query.OrderByDescending(r => r.Fecha).ToListAsync();
 
            
@@ -89,7 +106,21 @@ namespace TPI_GESTION_HOGAR.Controllers
             if (!string.IsNullOrEmpty(filtros.Localidad)) query = query.Where(r => r.Mujer.Localidad.Contains(filtros.Localidad));
             if (filtros.FechaDesde.HasValue) query = query.Where(r => r.Fecha >= filtros.FechaDesde.Value);
             if (filtros.FechaHasta.HasValue) query = query.Where(r => r.Fecha <= filtros.FechaHasta.Value);
-
+            if (filtros.SoloDeLaCosta)
+            {
+                query = query.Where(r => r.Mujer.Localidad != null && (
+                    r.Mujer.Localidad.ToLower().Contains("la costa") ||
+                    r.Mujer.Localidad.ToLower().Contains("san clemente") ||
+                    r.Mujer.Localidad.ToLower().Contains("santa teresita") ||
+                    r.Mujer.Localidad.ToLower().Contains("mar de ajó") ||
+                    r.Mujer.Localidad.ToLower().Contains("mar del tuyú") ||
+                    r.Mujer.Localidad.ToLower().Contains("las toninas") ||
+                    r.Mujer.Localidad.ToLower().Contains("nueva atlantis") ||
+                    r.Mujer.Localidad.ToLower().Contains("punta medanos") ||
+                    r.Mujer.Localidad.ToLower().Contains("costa esmeralda") ||
+                    r.Mujer.Localidad.ToLower().Contains("san bernardo")
+                ));
+            }
             var registros = await query.ToListAsync();
 
             if (filtros.CantidadHijosMinima.HasValue)
