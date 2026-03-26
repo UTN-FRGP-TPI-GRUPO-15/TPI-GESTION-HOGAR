@@ -11,8 +11,9 @@ namespace TPI_GESTION_HOGAR.ViewModels
         public string? Localidad { get; set; }
         public int? CantidadHijosMinima { get; set; }
         public bool SoloActivas { get; set; }
+        public bool SoloDeLaCosta { get; set; }
 
-        
+
         public DateOnly? FechaDesde { get; set; }
         public DateOnly? FechaHasta { get; set; }
 
