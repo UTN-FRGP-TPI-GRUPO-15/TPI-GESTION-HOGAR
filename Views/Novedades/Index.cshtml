@@ -80,7 +80,7 @@
                                 </div>
                                 <div>
                                     <h6 class="mb-0 fw-bold text-dark">@(novedad.Personal?.Apellido), @(novedad.Personal?.Nombre)</h6>
-                                    <small class="text-muted"><i class="bi bi-calendar-event"></i> @novedad.FechaHora.ToString("dddd, dd de MMMM yyyy") - @novedad.FechaHora.ToString("HH:mm") hs</small>
+                                    <small class="text-muted"><i class="bi bi-calendar-event"></i> @novedad.FechaHora.ToString("dddd d 'de'  MMMM yyyy") - @novedad.FechaHora.ToString("HH:mm") hs</small>
                                 </div>
                             </div>
                             @if (novedad.EsPaseDeGuardia)
