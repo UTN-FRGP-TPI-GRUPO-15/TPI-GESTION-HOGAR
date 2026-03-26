@@ -224,6 +224,47 @@
                 }
             </div>
         </div>
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-danger text-white fw-bold d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-heart-pulse-fill"></i> Resumen de Condiciones</span>
+        
+               
+                <a asp-controller="Mujeres" asp-action="VerCondicion" asp-route-id="@Model.Mujer.ID" class="btn btn-sm btn-light text-danger fw-bold shadow-sm">
+                    Ver Historial Completo
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Mujer?.Condiciones != null && Model.Mujer.Condiciones.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var condicion in Model.Mujer.Condiciones)
+                        {
+                            <li class="list-group-item">
+                                <span class="fw-bold text-danger">@(condicion.TipoCondicion?.Descripcion ?? "Sin especificar")</span>
+                                <br />
+                                <small class="text-muted">@(condicion.ObservacionCondicion?.Descripcion ?? "Sin detalles")</small>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="text-center p-4 text-muted">
+                        <i class="bi bi-shield-check fs-2 text-success mb-2 d-block"></i>
+                        <p class="mb-0">No se registran condiciones médicas particulares.</p>
+                    </div>
+                }
+
+                <div class="p-3 bg-light border-top text-center">
+            
+                    
+                    <a asp-controller="Mujeres" asp-action="AgregarCondicion" asp-route-id="@Model.Mujer.ID" class="btn btn-outline-danger btn-sm w-100 fw-bold shadow-sm">
+                        <i class="bi bi-plus-circle"></i> Añadir Nueva Condición
+                    </a>
+            
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>
