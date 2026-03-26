@@ -8,6 +8,8 @@ COPY . .
 RUN dotnet publish TPI-GESTION-HOGAR.csproj -c Release -o /out
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
+ENV TZ=America/Argentina/Buenos_Aires
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /app
 COPY --from=build /out .
 
