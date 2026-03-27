@@ -1,0 +1,86 @@
+﻿@model TPI_GESTION_HOGAR.ViewModel.Perfil.MiPerfilViewModel
+
+@{
+    ViewData["Title"] = "Mi Perfil";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">Mi Perfil</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <!-- Datos personales -->
+                    <h5 class="mb-3">Datos Personales</h5>
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <strong>Nombre:</strong> @Model.Nombre
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Apellido:</strong> @Model.Apellido
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <strong>Legajo:</strong> @Model.Legajo
+                        </div>
+                        <div class="col-md-6">
+                            <strong>DNI:</strong> @Model.DNI
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <strong>Nacionalidad:</strong> @Model.Nacionalidad
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Fecha de Nacimiento:</strong> @Model.FechaNac.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <strong>Teléfono:</strong> @(Model.Telefono ?? "No especificado")
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Localidad:</strong> @(Model.Localidad ?? "No especificada")
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong>Domicilio:</strong> @(Model.Domicilio ?? "No especificado")
+                    </div>
+
+                    <hr />
+
+                    <!-- Datos de usuario -->
+                    <h5 class="mb-3">Datos de Usuario</h5>
+
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <strong>Email:</strong> @Model.Email
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Usuario:</strong> @Model.NombreUsuario
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-footer text-end">
+                    <a asp-action="Editar" class="btn btn-primary">
+                        Editar Perfil
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
