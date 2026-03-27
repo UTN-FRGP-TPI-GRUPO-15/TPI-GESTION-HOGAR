@@ -16,6 +16,8 @@
             --violeta-oscuro: #59339d;
             --lila-claro: #f1eaff;
             --lila-hover: #855ed6;
+            --bs-primary: #6f42c1;
+            --bs-primary-rgb: 111, 66, 193;
         }
 
         body {
@@ -88,7 +90,8 @@
 
         /* CONTENIDO PRINCIPAL */
         #content {
-            width: 100%;
+            flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
         }
@@ -112,14 +115,29 @@
                     margin-left: 0;
                 }
         }
+
+        /* OVERLAY MOBILE */
+        #sidebarOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 998;
+        }
     </style>
 </head>
 <body>
 
     <div id="wrapper">
 
+        <div id="sidebarOverlay"></div>
+
         <nav id="sidebar">
-            <div class="sidebar-header">
+            <div class="sidebar-header position-relative">
+                <button class="btn-close btn-close-white d-md-none position-absolute top-0 end-0 m-2" id="sidebarClose" aria-label="Cerrar menú"></button>
                 <img src="/images/logo-muni.png" alt="Logo" class="img-fluid mb-2" style="max-height: 70px;" />
                 <h6 class="text-uppercase mb-0 mt-2">Hogar de Protección integral de mujeres en situaciones de violencia</h6>
                 <div class="fw-bold fs-5"></div>
@@ -242,19 +260,43 @@
 
     <script>
         $(document).ready(function () {
-            // menú lateral para celulares
+            // Menú lateral para celulares
             $('#sidebarCollapse').on('click', function () {
                 $('#sidebar').toggleClass('active');
+                $('#sidebarOverlay').toggle();
             });
 
-            
-            setTimeout(function () {
-                       let alert = document.querySelector('.alert-dismissible');
-            if (alert) {
-                let bsAlert = new bootstrap.Alert(alert);
-                bsAlert.close();
+            // Cerrar sidebar al tocar el overlay o el botón de cierre
+            function cerrarSidebar() {
+                $('#sidebar').removeClass('active');
+                $('#sidebarOverlay').hide();
             }
-        }, 4000);
+            $('#sidebarOverlay').on('click', cerrarSidebar);
+            $('#sidebarClose').on('click', cerrarSidebar);
+
+            // Marcar link activo en el sidebar según la ruta actual
+            var path = window.location.pathname.toLowerCase();
+            $('#sidebar ul li a').each(function () {
+                var href = $(this).attr('href');
+                if (!href) return;
+                var hrefLower = href.toLowerCase();
+                if (hrefLower === '/' || hrefLower === '/home/index') {
+                    if (path === '/' || path === '/home' || path === '/home/index') {
+                        $(this).addClass('active');
+                    }
+                } else if (path.startsWith(hrefLower)) {
+                    $(this).addClass('active');
+                }
+            });
+
+            // Auto-cerrar alertas flash después de 4 segundos
+            setTimeout(function () {
+                let alert = document.querySelector('.alert-dismissible');
+                if (alert) {
+                    let bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }
+            }, 4000);
         });
     </script>
 
