@@ -2,6 +2,10 @@
 @using static System.Runtime.InteropServices.JavaScript.JSType
 @model IEnumerable<Turno>
 
+@{
+	ViewData["Title"] = "Historial de Turnos";
+}
+
 <h2>Historial de Turnos</h2>
 
 <form asp-controller="Turnos" asp-action="History" method="get">

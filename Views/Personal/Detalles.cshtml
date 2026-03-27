@@ -1,5 +1,9 @@
 ﻿@model TPI_GESTION_HOGAR.Models.Personal
 
+@{
+    ViewData["Title"] = $"{Model.Nombre} {Model.Apellido}";
+}
+
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="text-info"><i class="bi bi-person-badge-fill"></i> Datos del Personal</h2>
     <div>

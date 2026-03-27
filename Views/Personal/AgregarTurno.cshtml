@@ -1,6 +1,10 @@
 ﻿﻿@using TPI_GESTION_HOGAR.Models
 @model Turno
 
+@{
+	ViewData["Title"] = $"Agregar Turno a {ViewBag.PersonalNombre}";
+}
+
 <h2>Crear Turno para @ViewBag.PersonalNombre</h2>
 
 <form asp-action="AgregarTurno" method="POST">
