@@ -7,6 +7,11 @@ using TPI_GESTION_HOGAR.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var culture = new System.Globalization.CultureInfo("es-AR");
+
+System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
+System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
+
 // Configuramos la carpeta wwwroot para servir archivos estáticos
 builder.WebHost.UseWebRoot("wwwroot");
 
