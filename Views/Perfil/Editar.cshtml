@@ -55,7 +55,22 @@
 
                         <div class="mb-3">
                             <label asp-for="Localidad" class="form-label"></label>
-                            <input asp-for="Localidad" class="form-control" />
+                            <select asp-for="Localidad" class="form-control" id="Localidad" name="Localidad" required>
+                                <option value="">Seleccione una localidad...</option>
+                                <option value="San Clemente del Tuyú">San Clemente del Tuyú</option>
+                                <option value="Las Toninas">Las Toninas</option>
+                                <option value="Costa Chica">Costa Chica</option>
+                                <option value="Santa Teresita">Santa Teresita</option>
+                                <option value="Mar del Tuyú">Mar del Tuyú</option>
+                                <option value="Costa del Este">Costa del Este</option>
+                                <option value="Aguas Verdes">Aguas Verdes</option>
+                                <option value="La Lucila del Mar">La Lucila del Mar</option>
+                                <option value="Costa Azul">Costa Azul</option>
+                                <option value="San Bernardo del Tuyú">San Bernardo del Tuyú</option>
+                                <option value="Mar de Ajóú">Mar de Ajó</option>
+                                <option value="Nueva Atlantis">Nueva Atlantis</option>
+                                <option value="Costa Esmeralda">Costa Esmeralda</option>
+                            </select>
                         </div>
 
                         <div class="mb-3">
