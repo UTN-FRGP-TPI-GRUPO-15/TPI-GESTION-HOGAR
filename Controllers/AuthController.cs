@@ -122,6 +122,7 @@ namespace TPI_GESTION_HOGAR.Controllers
         {
             var claims = new List<Claim>
             {
+                new(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                 new(ClaimTypes.Name, usuario.NombreUsuario),
                 new(ClaimTypes.Role, usuario.Rol.Descripcion)
             };
