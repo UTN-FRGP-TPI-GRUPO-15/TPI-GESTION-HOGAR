@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<div class="row mb-4">
+<div class="row mb-4 gy-3">
     <div class="col-md-4">
         <div class="card shadow-sm border-0 border-start border-primary border-4 h-100">
             <div class="card-body">
@@ -113,11 +113,10 @@
             </div>
         </div>
     </div>
+</div>
 
-
-
-    <div class="row mb-4">
-        <div class="col-md-8">
+<div class="row mb-4 gy-3">
+    <div class="col-md-8">
             <div class="card shadow-sm border-0 h-100 border-danger">
                 <div class="card-header bg-danger text-white fw-bold d-flex justify-content-between align-items-center">
                     <span><i class="bi bi-bell-fill"></i> Alertas y Tareas Pendientes</span>
@@ -238,9 +237,9 @@
             <table class="table table-hover table-striped align-middle mb-0 text-center">
                 <thead class="table-light">
                     <tr>
-                        <th>Fecha de Ingreso</th>
+                        <th class="d-none d-md-table-cell">Fecha de Ingreso</th>
                         <th>Residente</th>
-                        <th>Menores a Cargo</th>
+                        <th class="d-none d-md-table-cell">Menores a Cargo</th>
                         <th>Habitación</th>
                         <th>Acciones</th>
                     </tr>
@@ -251,9 +250,9 @@
                         foreach (var item in Model.IngresosActivos)
                         {
                             <tr>
-                                <td class="fw-bold text-secondary">@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                <td class="fw-bold text-secondary d-none d-md-table-cell">@item.Fecha.ToString("dd/MM/yyyy")</td>
                                 <td class="text-start fw-bold text-primary">@(item.Mujer?.Apellido), @(item.Mujer?.Nombre)</td>
-                                <td><span class="badge bg-info text-dark">@(item.Mujer?.Hijos?.Count ?? 0)</span></td>
+                                <td class="d-none d-md-table-cell"><span class="badge bg-info text-dark">@(item.Mujer?.Hijos?.Count ?? 0)</span></td>
                                 <td>
                                     @if (item.Habitacion != null)
                                     {
@@ -267,7 +266,7 @@
                                     }
                                 </td>
                               
-                                <td>
+                                <td class="text-nowrap">
                                     <div class="btn-group shadow-sm" role="group">
                                         <a asp-controller="Registros" asp-action="Detalles" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary fw-bold" title="Ver Ficha Técnica">
                                             Ver Ficha
