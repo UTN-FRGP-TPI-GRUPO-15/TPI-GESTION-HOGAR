@@ -12,10 +12,12 @@ namespace TPI_GESTION_HOGAR.Controllers
     public class PerfilController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<PerfilController> _logger;
 
-        public PerfilController(AppDbContext context)
+        public PerfilController(AppDbContext context, ILogger<PerfilController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -24,6 +26,8 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             if (usuario == null)
                 return NotFound();
+
+            _logger.LogInformation("Usuario encontrado: {NombreUsuario}", usuario.NombreUsuario);
 
             var viewModel = new MiPerfilViewModel
             {
@@ -91,13 +95,15 @@ namespace TPI_GESTION_HOGAR.Controllers
 
                 await _context.SaveChangesAsync();
 
+                _logger.LogInformation("Perfil actualizado para el usuario: {NombreUsuario}", usuario.NombreUsuario);
+
                 TempData["MensajeExito"] = "Perfil actualizado correctamente.";
 
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                _logger.LogError(ex, "Error al actualizar el perfil para el usuario: {NombreUsuario}", User.Identity?.Name);
                 TempData["MensajeError"] = "Ocurrió un error al actualizar el perfil. Por favor, inténtalo nuevamente.";
                 return View(viewModel);
             }
