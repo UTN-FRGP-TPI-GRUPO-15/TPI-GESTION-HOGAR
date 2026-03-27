@@ -144,8 +144,8 @@ namespace TPI_GESTION_HOGAR.Controllers
                 _context.Usuarios.Add(usuario);
                 await _context.SaveChangesAsync();
 
-                ViewBag.Message = "Nuevo personal registrado con éxito.";
-                ViewBag.IsError = false;
+                TempData["MensajeExito"] = "Nuevo personal registrado correctamente.";
+
                 ModelState.Clear();
                 await CargarRoles();
                 return View();
