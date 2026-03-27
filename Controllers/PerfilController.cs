@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TPI_GESTION_HOGAR.Datos;
-using TPI_GESTION_HOGAR.DTOs;
+using TPI_GESTION_HOGAR.Models;
 using TPI_GESTION_HOGAR.ViewModel.Perfil;
 
 namespace TPI_GESTION_HOGAR.Controllers
@@ -20,17 +20,10 @@ namespace TPI_GESTION_HOGAR.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-            var usuario = await _context.Usuarios
-                            .Where(u => u.Id == userId)
-                            .Include(u => u.Personal)
-                            .FirstOrDefaultAsync();
+            var usuario = await GetUsuarioActualAsync();
 
             if (usuario == null)
-            {
                 return NotFound();
-            }
 
             var viewModel = new MiPerfilViewModel
             {
@@ -51,23 +44,76 @@ namespace TPI_GESTION_HOGAR.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Editar()
+        public async Task<IActionResult> Editar()
         {
-            return View();
+            var usuario = await GetUsuarioActualAsync();
+
+            if (usuario == null)
+                return NotFound();
+
+            var viewModel = new EditarPerfilViewModel
+            {
+                Nombre = usuario.Personal.Nombre,
+                Apellido = usuario.Personal.Apellido,
+                Nacionalidad = usuario.Personal.Nacionalidad,
+                FechaNac = usuario.Personal.FechaNac,
+                Telefono = usuario.Personal.Telefono,
+                Domicilio = usuario.Personal.Domicilio,
+                Localidad = usuario.Personal.Localidad,
+
+                Email = usuario.Email
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Editar(EditarPerfilDTO dto)
+        public async Task<IActionResult> Editar(EditarPerfilViewModel viewModel)
         {
-            return View();
+            if (!ModelState.IsValid)
+                return View(viewModel);
+
+            try
+            {
+                var usuario = await GetUsuarioActualAsync();
+
+                if (usuario == null)
+                    return NotFound();
+
+                usuario.Personal.Nombre = viewModel.Nombre;
+                usuario.Personal.Apellido = viewModel.Apellido;
+                usuario.Personal.Nacionalidad = viewModel.Nacionalidad;
+                usuario.Personal.FechaNac = viewModel.FechaNac;
+                usuario.Personal.Telefono = viewModel.Telefono;
+                usuario.Personal.Domicilio = viewModel.Domicilio;
+                usuario.Personal.Localidad = viewModel.Localidad;
+                usuario.Email = viewModel.Email;
+
+                await _context.SaveChangesAsync();
+
+                TempData["MensajeExito"] = "Perfil actualizado correctamente.";
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                TempData["MensajeError"] = "Ocurrió un error al actualizar el perfil. Por favor, inténtalo nuevamente.";
+                return View(viewModel);
+            }
         }
 
-        //private Task<IActionResult> ObtenerDatosUsuario()
-
-        public IActionResult GuardarCambios()
+        private async Task<Usuario?> GetUsuarioActualAsync()
         {
-            // Lógica para guardar los cambios del perfil
-            return RedirectToAction("Index");
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            if(!int.TryParse(userIdClaim, out int userId))
+                return null;
+
+            return await _context.Usuarios
+                            .Where(u => u.Id == userId)
+                            .Include(u => u.Personal)
+                            .FirstOrDefaultAsync();
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TPI_GESTION_HOGAR.DTOs
+namespace TPI_GESTION_HOGAR.ViewModel.Perfil
 {
-    public class EditarPerfilDTO
+    public class EditarPerfilViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Debe ingresar un apellido válido")]
         [StringLength(50, MinimumLength = 2)]
         public required string Apellido { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Debe ingresar un nombre válido")]
         [StringLength(50, MinimumLength = 2)]
         public required string Nombre { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Debe ingresar una nacionalidad válida")]
         public required string Nacionalidad { get; set; }
         [Required]
         public DateOnly FechaNac { get; set; }
@@ -18,6 +18,7 @@ namespace TPI_GESTION_HOGAR.DTOs
         public string? Telefono { get; set; }
         public string? Domicilio { get; set; }
         public string? Localidad { get; set; }
+        [Required]
         [EmailAddress(ErrorMessage = "Email inválido")]
         public required string Email { get; set; }
     }
