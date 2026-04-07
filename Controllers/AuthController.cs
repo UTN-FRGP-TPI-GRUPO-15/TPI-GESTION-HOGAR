@@ -80,11 +80,12 @@ namespace TPI_GESTION_HOGAR.Controllers
                 _logger.LogInformation("Usuario encontrado para {EmailUsuario}", email);
 
                 user.ResetToken = Guid.NewGuid().ToString();
+                user.ResetTokenExpiry = DateTime.Now.AddHours(1);
+                await _context.SaveChangesAsync();
+
                 _logger.LogInformation("Token generado para {EmailUsuario}: {ResetToken}", email, user.ResetToken);
                 _logger.LogInformation("Token expirará el {ExpiryTime} para {EmailUsuario}", user.ResetTokenExpiry, email);
                 _logger.LogInformation("Hora actual: {CurrentTime}", DateTime.Now);
-                user.ResetTokenExpiry = DateTime.Now.AddHours(1);
-                await _context.SaveChangesAsync();
 
                 var resetLink = Url.Action("ResetPassword", "Auth", new { token = user.ResetToken }, Request.Scheme);
 
