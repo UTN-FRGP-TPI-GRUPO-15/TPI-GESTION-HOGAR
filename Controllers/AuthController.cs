@@ -107,17 +107,15 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             var user = _context.Usuarios.FirstOrDefault(u => u.ResetToken == token);
 
-            if (user != null)
+            if (user == null)
             {
-                _logger.LogInformation("Expiry en DB: {ExpiryTime}", user.ResetTokenExpiry);
-                _logger.LogInformation("Hora actual: {CurrentTime}", DateTime.Now);
+                ViewBag.TokenValido = false;
             }
             else
             {
-                _logger.LogWarning("Usuario no encontrado con ese token");
+                ViewBag.TokenValido = user.ResetTokenExpiry > DateTime.Now;
             }
 
-            ViewBag.TokenValido = user != null;
             ViewBag.Token = token;
             return View();
         }
@@ -125,9 +123,9 @@ namespace TPI_GESTION_HOGAR.Controllers
         [HttpPost]
         public async Task<IActionResult> ResetPassword(string token, string newPassword)
         {
-            var user = _context.Usuarios.FirstOrDefault(u => u.ResetToken == token && u.ResetTokenExpiry > DateTime.Now);
+            var user = _context.Usuarios.FirstOrDefault(u => u.ResetToken == token);
 
-            if (user == null)
+            if (user == null || user.ResetTokenExpiry == null || user.ResetTokenExpiry < DateTime.Now)
             {
                 ViewBag.TokenValido = false;
                 return View();
