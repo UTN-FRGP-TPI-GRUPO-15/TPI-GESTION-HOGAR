@@ -76,6 +76,9 @@ namespace TPI_GESTION_HOGAR.Controllers
             if (user != null)
             {
                 user.ResetToken = Guid.NewGuid().ToString();
+                _logger.LogInformation("Token generado para {EmailUsuario}: {ResetToken}", email, user.ResetToken);
+                _logger.LogInformation("Token expirará el {ExpiryTime} para {EmailUsuario}", user.ResetTokenExpiry, email);
+                _logger.LogInformation("Hora actual: {CurrentTime}", DateTime.Now);
                 user.ResetTokenExpiry = DateTime.Now.AddHours(1);
                 await _context.SaveChangesAsync();
 
