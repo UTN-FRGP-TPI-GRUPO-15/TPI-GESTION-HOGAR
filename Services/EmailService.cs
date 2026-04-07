@@ -16,13 +16,66 @@ namespace TPI_GESTION_HOGAR.Services
 
         public async Task SendPasswordResetAsync(string toEmail, string resetLink)
         {
-            var subject = "Recuperar contraeña";
+            var subject = "Recuperar contraseña";
             var body = $@"
-                <h2>Recuperar contraseña</h2>
-                <p>Hacé click en el siguiente enlace para restablecer tu contraseña:</p>
-                <a href='{resetLink}'>Restablecer contraseña</a>
-                <p>Si no solicitaste esto, ignorá este email.</p>
+            <table width='100%' cellpadding='0' cellspacing='0' style='background-color:#f8f9fc; padding:20px; font-family: Arial, sans-serif;'>
+                <tr>
+                    <td align='center'>
+
+                        <table width='500' cellpadding='0' cellspacing='0' style='background-color:#ffffff;'>
+
+                            <!-- Header -->
+                            <tr>
+                                <td style='background-color:#6f42c1; padding:20px; text-align:center; color:white;'>
+                                    <h2 style='margin:0;'>Recuperar contraseña</h2>
+                                </td>
+                            </tr>
+
+                            <!-- Body -->
+                            <tr>
+                                <td style='padding:25px; text-align:center; color:#333;'>
+
+                                    <p style='font-size:15px; margin:0 0 15px 0;'>
+                                        Recibimos una solicitud para restablecer tu contraseña.
+                                    </p>
+
+                                    <p style='font-size:15px; margin:0 0 20px 0;'>
+                                        Hacé click en el botón para continuar:
+                                    </p>
+
+                                    <a href='{resetLink}' 
+                                       style='display:inline-block; padding:12px 20px; 
+                                              background-color:#6f42c1; color:#ffffff; 
+                                              text-decoration:none; font-weight:bold;'>
+                                        Restablecer contraseña
+                                    </a>
+
+                                    <p style='margin-top:20px; font-size:12px; color:#999; word-break:break-all;'>
+                                        Si el botón no funciona, copiá y pegá este enlace:<br/>
+                                        {resetLink}
+                                    </p>
+
+                                    <p style='margin-top:20px; font-size:13px; color:#777;'>
+                                        Si no solicitaste este cambio, podés ignorar este email.
+                                    </p>
+
+                                </td>
+                            </tr>
+
+                            <!-- Footer -->
+                            <tr>
+                                <td style='background-color:#f1eaff; padding:15px; text-align:center; font-size:12px; color:#666;'>
+                                    Hogar de Protección Integral
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
             ";
+
             await SendEmailAsync(toEmail, subject, body);
         }
 
