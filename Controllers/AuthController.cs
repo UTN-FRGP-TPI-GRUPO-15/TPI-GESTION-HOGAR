@@ -16,11 +16,13 @@ namespace TPI_GESTION_HOGAR.Controllers
         private readonly AppDbContext _context;
         private readonly PasswordHasher<Usuario> _hasher = new();
         private readonly IEmailService _emailService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(AppDbContext context, IEmailService emailService)
+        public AuthController(AppDbContext context, IEmailService emailService, ILogger<AuthController> logger)
         {
             _context = context;
             _emailService = emailService;
+            _logger = logger;
         }
 
         public IActionResult Login()
@@ -75,6 +77,8 @@ namespace TPI_GESTION_HOGAR.Controllers
 
             if (user != null)
             {
+                _logger.LogInformation("Usuario encontrado para {EmailUsuario}", email);
+
                 user.ResetToken = Guid.NewGuid().ToString();
                 user.ResetTokenExpiry = DateTime.Now.AddHours(1);
                 await _context.SaveChangesAsync();
@@ -85,6 +89,7 @@ namespace TPI_GESTION_HOGAR.Controllers
             }
             else
             {
+                _logger.LogWarning("No se encontró un usuario para {EmailUsuario}", email);
                 await Task.Delay(2000);
             }
 
@@ -94,6 +99,34 @@ namespace TPI_GESTION_HOGAR.Controllers
 
         public IActionResult ResetPassword(string token)
         {
+            var user = _context.Usuarios.FirstOrDefault(u => u.ResetToken == token && u.ResetTokenExpiry > DateTime.Now);
+
+            ViewBag.TokenValido = user != null;
+            ViewBag.Token = token;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string token, string newPassword)
+        {
+            var user = _context.Usuarios.FirstOrDefault(u => u.ResetToken == token && u.ResetTokenExpiry > DateTime.Now);
+
+            if (user == null)
+            {
+                ViewBag.TokenValido = false;
+                return View();
+            }
+
+            user.ResetToken = null;
+            user.ResetTokenExpiry = null;
+            user.Clave = _hasher.HashPassword(user, newPassword);
+
+            await _context.SaveChangesAsync();
+
+            ViewBag.TokenValido = true;
+            ViewBag.Token = token;
+            ViewBag.PasswordReset = true;
+
             return View();
         }
 
