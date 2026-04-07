@@ -103,7 +103,19 @@ namespace TPI_GESTION_HOGAR.Controllers
 
         public IActionResult ResetPassword(string token)
         {
-            var user = _context.Usuarios.FirstOrDefault(u => u.ResetToken == token && u.ResetTokenExpiry > DateTime.Now);
+            _logger.LogInformation("Token recibido: {Token}", token);
+
+            var user = _context.Usuarios.FirstOrDefault(u => u.ResetToken == token);
+
+            if (user != null)
+            {
+                _logger.LogInformation("Expiry en DB: {ExpiryTime}", user.ResetTokenExpiry);
+                _logger.LogInformation("Hora actual: {CurrentTime}", DateTime.Now);
+            }
+            else
+            {
+                _logger.LogWarning("Usuario no encontrado con ese token");
+            }
 
             ViewBag.TokenValido = user != null;
             ViewBag.Token = token;
