@@ -37,14 +37,17 @@
             <input type="text" class="form-control" id="Nacionalidad" name="Nacionalidad" value="Argentina" required>
         </div>
 
-        <select asp-for="Genero" class="form-select">
-            <option value="">-- Seleccione --</option>
-            <option value="Femenino" selected="@(Model?.Genero?.Trim().ToLower() == "femenino")">Femenino</option>
-            <option value="Masculino" selected="@(Model?.Genero?.Trim().ToLower() == "masculino")">Masculino</option>
-            <option value="Trans" selected="@(Model?.Genero?.Trim().ToLower() == "trans")">Trans</option>
-            <option value="No Binario" selected="@(Model?.Genero?.Trim().ToLower() == "no binario")">No Binario</option>
-            <option value="Otro" selected="@(Model?.Genero?.Trim().ToLower() == "otro")">Otro</option>
-        </select>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Genero" class="form-label">Género</label> 
+            <select asp-for="Genero" class="form-select">
+                <option value="">-- Seleccione --</option>
+                <option value="Femenino" selected="@(Model?.Genero?.Trim().ToLower() == "femenino")">Femenino</option>
+                <option value="Masculino" selected="@(Model?.Genero?.Trim().ToLower() == "masculino")">Masculino</option>
+                <option value="Trans" selected="@(Model?.Genero?.Trim().ToLower() == "trans")">Trans</option>
+                <option value="No Binario" selected="@(Model?.Genero?.Trim().ToLower() == "no binario")">No Binario</option>
+                <option value="Otro" selected="@(Model?.Genero?.Trim().ToLower() == "otro")">Otro</option>
+            </select>
+        </div>
 
         <hr class="mt-4 mb-4">
         <h5 class="mb-3">Datos de Contacto y Socioeducativos</h5>
