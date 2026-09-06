@@ -10,9 +10,7 @@
 
 <div class="row mb-4 align-items-center">
 	<div class="col-md-4">
-		<a class="btn btn-primary shadow-sm" href="/Personal/Alta">
-			<i class="bi bi-plus-circle"></i>Nuevo Personal
-		</a>
+		
 	</div>
 	<div class="col-md-8">
 		<form asp-action="Index" method="get" class="d-flex justify-content-end">
@@ -48,6 +46,7 @@
 								<td class="fw-bold">@personal.Legajo</td>
 								<td>@personal.Nombre</td>
 								<td>@personal.Apellido</td>	
+								
 								@if (personal.Activo)
 								{
 									<td class="fw-bold">Activo</td>
@@ -72,9 +71,7 @@
 											<i class="bi bi-eye">Activar</i>
 										</a>
 									}
-									<a asp-action="Delete" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-danger" title="Eliminar">
-										<i class="bi bi-eye">Eliminar</i>
-									</a>
+									
 									<a asp-action="Detalles" asp-route-id="@personal.Id" class="btn btn-sm btn-outline-info" title="Ver Ficha">
 										<i class="bi bi-eye">Ver Ficha</i>
 									</a>
