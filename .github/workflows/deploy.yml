@@ -27,5 +27,4 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./publish/
-        # Si tu hosting usa una carpeta específica para la web (ej: site/wwwroot), indicala acá:
-        # server-dir: /site/wwwroot/
+        server-dir: /site/wwwroot/
