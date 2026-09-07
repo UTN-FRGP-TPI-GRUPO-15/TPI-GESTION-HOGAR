@@ -1,0 +1,31 @@
+name: Deploy to SmarterASP.NET
+
+on:
+  push:
+    branches: [ "main" ] # O "master", según cómo se llame tu rama principal
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0' # O la versión de .NET que estés usando (ej. 6.0, 7.0, 8.0)
+
+    - name: Publish application
+      run: dotnet publish -c Release -o ./publish
+
+    - name: Upload to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./publish/
+        # Si tu hosting usa una carpeta específica para la web (ej: site/wwwroot), indicala acá:
+        # server-dir: /site/wwwroot/
