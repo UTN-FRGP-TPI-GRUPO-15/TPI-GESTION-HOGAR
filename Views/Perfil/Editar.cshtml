@@ -79,6 +79,28 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
 
+                        <hr />
+                        <h4>Cambiar Contraseña (Opcional)</h4>
+                        <p class="text-muted small">Dejá estos campos en blanco si no deseas cambiar tu contraseña.</p>
+
+                        <div class="mb-3">
+                            <label asp-for="PasswordActual" class="form-label"></label>
+                            <input asp-for="PasswordActual" class="form-control" />
+                            <span asp-validation-for="PasswordActual" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PasswordNueva" class="form-label"></label>
+                            <input asp-for="PasswordNueva" class="form-control" />
+                            <span asp-validation-for="PasswordNueva" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConfirmarPasswordNueva" class="form-label"></label>
+                            <input asp-for="ConfirmarPasswordNueva" class="form-control" />
+                            <span asp-validation-for="ConfirmarPasswordNueva" class="text-danger"></span>
+                        </div>
+
                         <div class="d-flex justify-content-between">
                             <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
                             <button type="submit" class="btn btn-primary">Guardar cambios</button>

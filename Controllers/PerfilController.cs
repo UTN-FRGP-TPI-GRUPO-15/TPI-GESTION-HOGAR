@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -40,7 +41,6 @@ namespace TPI_GESTION_HOGAR.Controllers
                 Telefono = usuario.Personal.Telefono,
                 Domicilio = usuario.Personal.Domicilio,
                 Localidad = usuario.Personal.Localidad,
-
                 Email = usuario.Email,
                 NombreUsuario = usuario.NombreUsuario
             };
@@ -64,7 +64,6 @@ namespace TPI_GESTION_HOGAR.Controllers
                 Telefono = usuario.Personal.Telefono,
                 Domicilio = usuario.Personal.Domicilio,
                 Localidad = usuario.Personal.Localidad,
-
                 Email = usuario.Email
             };
 
@@ -84,6 +83,28 @@ namespace TPI_GESTION_HOGAR.Controllers
                 if (usuario == null)
                     return NotFound();
 
+                if (!string.IsNullOrEmpty(viewModel.PasswordNueva))
+                {
+                    if (string.IsNullOrEmpty(viewModel.PasswordActual))
+                    {
+                        ModelState.AddModelError("PasswordActual", "Debes ingresar tu contraseña actual para establecer una nueva.");
+                        return View(viewModel);
+                    }
+
+                    // Verificamos usando el hasher de ASP.NET Core
+                    bool passwordCorrecta = VerificarPassword(usuario, viewModel.PasswordActual);
+
+                    if (!passwordCorrecta)
+                    {
+                        ModelState.AddModelError("PasswordActual", "La contraseña actual es incorrecta.");
+                        return View(viewModel);
+                    }
+
+                    // Guardamos la nueva contraseña hasheada en la propiedad 'Clave'
+                    usuario.Clave = EncriptarPassword(usuario, viewModel.PasswordNueva);
+                }
+
+                // Actualizar datos personales y de contacto
                 usuario.Personal.Nombre = viewModel.Nombre;
                 usuario.Personal.Apellido = viewModel.Apellido;
                 usuario.Personal.Nacionalidad = viewModel.Nacionalidad;
@@ -96,7 +117,6 @@ namespace TPI_GESTION_HOGAR.Controllers
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Perfil actualizado para el usuario: {NombreUsuario}", usuario.NombreUsuario);
-
                 TempData["MensajeExito"] = "Perfil actualizado correctamente.";
 
                 return RedirectToAction("Index");
@@ -111,15 +131,28 @@ namespace TPI_GESTION_HOGAR.Controllers
 
         private async Task<Usuario?> GetUsuarioActualAsync()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if(!int.TryParse(userIdClaim, out int userId))
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
                 return null;
 
             return await _context.Usuarios
                             .Where(u => u.Id == userId)
                             .Include(u => u.Personal)
                             .FirstOrDefaultAsync();
+        }
+
+        private readonly PasswordHasher<Usuario> _hasher = new();
+
+        private bool VerificarPassword(Usuario usuario, string passwordIngresada)
+        {
+            var resultado = _hasher.VerifyHashedPassword(usuario, usuario.Clave, passwordIngresada);
+            return resultado == PasswordVerificationResult.Success;
+        }
+
+        private string EncriptarPassword(Usuario usuario, string nuevaPassword)
+        {
+            return _hasher.HashPassword(usuario, nuevaPassword);
         }
     }
 }

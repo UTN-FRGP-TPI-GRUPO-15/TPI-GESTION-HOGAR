@@ -21,5 +21,19 @@ namespace TPI_GESTION_HOGAR.ViewModel.Perfil
         [Required]
         [EmailAddress(ErrorMessage = "Email inválido")]
         public required string Email { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña Actual")]
+        public string? PasswordActual { get; set; }
+
+        [DataType(DataType.Password)]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "La nueva contraseña debe tener al menos 6 caracteres.")]
+        [Display(Name = "Nueva Contraseña")]
+        public string? PasswordNueva { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("PasswordNueva", ErrorMessage = "La nueva contraseña y la confirmación no coinciden.")]
+        [Display(Name = "Confirmar Nueva Contraseña")]
+        public string? ConfirmarPasswordNueva { get; set; }
     }
 }
